@@ -61,3 +61,7 @@ obj-y					+= $(arm64-obj-y) vdso/ probes/
 obj-m					+= $(arm64-obj-m)
 head-y					:= head.o
 extra-y					+= $(head-y) vmlinux.lds
+
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
+obj-$(CONFIG_OPPO_ROOT_CHECK)		+= oppo_root.o oppo_root_check.o
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
