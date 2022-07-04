@@ -3953,6 +3953,7 @@ static void msm_isp_remove_buf_queue(struct vfe_device *vfe_dev,
 
 }
 
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 /**
  * msm_isp_stream_axi_cfg_update() - Apply axi config update to a stream
  * @vfe_dev: The vfe device on which the update is to be applied
@@ -4023,10 +4024,15 @@ static int msm_isp_stream_axi_cfg_update(struct vfe_device *vfe_dev,
 	spin_unlock_irqrestore(&stream_info->lock, flags);
 	return 0;
 }
+#endif
 
 int msm_isp_update_axi_stream(struct vfe_device *vfe_dev, void *arg)
 {
+#ifndef CONFIG_PRODUCT_REALME_SDM450
+	int rc = 0, i;
+#else
 	int rc = 0, i, j, k;
+#endif
 	struct msm_vfe_axi_stream *stream_info;
 	struct msm_vfe_axi_stream_update_cmd *update_cmd = arg;
 	struct msm_vfe_axi_stream_cfg_update_info *update_info = NULL;
@@ -4208,10 +4214,26 @@ int msm_isp_update_axi_stream(struct vfe_device *vfe_dev, void *arg)
 				pr_err("%s: stream_info is null", __func__);
 				return -EINVAL;
 			}
+			vfe_idx = msm_isp_get_vfe_idx_for_stream(
+              				vfe_dev, stream_info);
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			rc = msm_isp_stream_axi_cfg_update(vfe_dev, stream_info,
 						update_info);
-			if (rc)
-				return rc;
+		    if (rc)
+                return rc;
+#else
+			for (j = 0; j < stream_info->num_planes; j++) {
+			    stream_info->plane_cfg[vfe_idx][j] =
+			    update_info->plane_cfg[j];
+
+		        for (k = 0; k < stream_info->num_isp; k++) {
+			        vfe_dev = stream_info->vfe_dev[k];
+			        vfe_dev->hw_info->vfe_ops.axi_ops.
+			        cfg_wm_reg(vfe_dev, stream_info, j);
+			    }
+			}
+#endif
+
 		}
 		break;
 	}

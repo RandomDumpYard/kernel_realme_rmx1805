@@ -1236,6 +1236,10 @@ static void mmc_sd_detect(struct mmc_host *host)
 		       __func__, mmc_hostname(host), err);
 		err = _mmc_detect_card_removed(host);
 	}
+#if defined(MOUNT_EXSTORAGE_IF)
+	if (retries)
+		err = _mmc_detect_card_removed(host);
+#endif//MOUNT_EXSTORAGE_IF
 #else
 	err = _mmc_detect_card_removed(host);
 #endif
@@ -1473,6 +1477,12 @@ int mmc_attach_sd(struct mmc_host *host)
 	BUG_ON(!host);
 	WARN_ON(!host->claimed);
 
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
+	if (!host->detect_change_retry) {
+        pr_err("%s have init error 5 times\n", __func__);
+        return -ETIMEDOUT;
+    }
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	err = mmc_send_app_op_cond(host, 0, &ocr);
 	if (err)
 		return err;
@@ -1512,7 +1522,15 @@ int mmc_attach_sd(struct mmc_host *host)
 	 * Detect and init the card.
 	 */
 #ifdef CONFIG_MMC_PARANOID_SD_INIT
-	retries = 5;
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
+    retries = 5;
+#else /* CONFIG_PRODUCT_REALME_RMX1805 */
+    if (host->detect_change_retry < 5) 
+        retries = 1;
+    else
+        retries = 5;
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
+
 	while (retries) {
 		err = mmc_sd_init_card(host, rocr, NULL);
 		if (err) {
@@ -1549,7 +1567,9 @@ int mmc_attach_sd(struct mmc_host *host)
 		mmc_release_host(host);
 		goto remove_card;
 	}
-
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
+	host->detect_change_retry = 5;
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	return 0;
 
 remove_card:
@@ -1558,6 +1578,11 @@ remove_card:
 	mmc_claim_host(host);
 err:
 	mmc_detach_bus(host);
+
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
+    host->detect_change_retry--;
+    pr_err("detect_change_retry = %d !!!,err = %d\n", host->detect_change_retry,err);
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	pr_err("%s: error %d whilst initialising SD card\n",
 		mmc_hostname(host), err);

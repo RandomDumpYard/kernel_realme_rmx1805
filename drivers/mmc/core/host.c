@@ -695,6 +695,9 @@ again:
 	}
 
 	dev_set_name(&host->class_dev, "mmc%d", host->index);
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
+        host->card_stuck_in_programing_status = false;
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	host->parent = dev;
 	host->class_dev.parent = dev;
@@ -720,6 +723,10 @@ again:
 	setup_timer(&host->retune_timer, mmc_retune_timer, (unsigned long)host);
 
 	mutex_init(&host->rpmb_req_mutex);
+
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
+	host->detect_change_retry = 5;
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/*
 	 * By default, hosts do not support SGIO or large requests.
