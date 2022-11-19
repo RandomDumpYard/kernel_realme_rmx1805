@@ -33,6 +33,9 @@
 #include "avc.h"
 #include "avc_ss.h"
 #include "classmap.h"
+#ifdef VENDOR_EDIT
+#include "proc.h"
+#endif /* VENDOR_EDIT */
 
 #define AVC_CACHE_SLOTS			512
 #define AVC_DEF_CACHE_THRESHOLD		512
@@ -349,26 +352,26 @@ static struct avc_xperms_decision_node
 	struct extended_perms_decision *xpd;
 
 	xpd_node = kmem_cache_zalloc(avc_xperms_decision_cachep,
-				GFP_ATOMIC | __GFP_NOMEMALLOC);
+			GFP_NOWAIT | __GFP_NOWARN);
 	if (!xpd_node)
 		return NULL;
 
 	xpd = &xpd_node->xpd;
 	if (which & XPERMS_ALLOWED) {
 		xpd->allowed = kmem_cache_zalloc(avc_xperms_data_cachep,
-						GFP_ATOMIC | __GFP_NOMEMALLOC);
+						GFP_NOWAIT | __GFP_NOWARN);
 		if (!xpd->allowed)
 			goto error;
 	}
 	if (which & XPERMS_AUDITALLOW) {
 		xpd->auditallow = kmem_cache_zalloc(avc_xperms_data_cachep,
-						GFP_ATOMIC | __GFP_NOMEMALLOC);
+						GFP_NOWAIT | __GFP_NOWARN);
 		if (!xpd->auditallow)
 			goto error;
 	}
 	if (which & XPERMS_DONTAUDIT) {
 		xpd->dontaudit = kmem_cache_zalloc(avc_xperms_data_cachep,
-						GFP_ATOMIC | __GFP_NOMEMALLOC);
+						GFP_NOWAIT | __GFP_NOWARN);
 		if (!xpd->dontaudit)
 			goto error;
 	}
@@ -397,7 +400,7 @@ static struct avc_xperms_node *avc_xperms_alloc(void)
 	struct avc_xperms_node *xp_node;
 
 	xp_node = kmem_cache_zalloc(avc_xperms_cachep,
-				GFP_ATOMIC|__GFP_NOMEMALLOC);
+			GFP_NOWAIT | __GFP_NOWARN);
 	if (!xp_node)
 		return xp_node;
 	INIT_LIST_HEAD(&xp_node->xpd_head);
@@ -550,7 +553,7 @@ static struct avc_node *avc_alloc_node(void)
 {
 	struct avc_node *node;
 
-	node = kmem_cache_zalloc(avc_node_cachep, GFP_ATOMIC|__GFP_NOMEMALLOC);
+	node = kmem_cache_zalloc(avc_node_cachep, GFP_NOWAIT | __GFP_NOWARN);
 	if (!node)
 		goto out;
 
@@ -745,6 +748,11 @@ noinline int slow_avc_audit(u32 ssid, u32 tsid, u16 tclass,
 {
 	struct common_audit_data stack_data;
 	struct selinux_audit_data sad;
+
+#ifdef VENDOR_EDIT
+	if (!is_avc_audit_enable())
+		return 0;
+#endif /* VENDOR_EDIT */
 
 	if (!a) {
 		a = &stack_data;
@@ -985,14 +993,49 @@ static noinline int avc_denied(u32 ssid, u32 tsid,
 {
 	if (flags & AVC_STRICT)
 		return -EACCES;
-
+#ifdef VENDOR_EDIT
+    if (is_selinux_enforcing() && !(avd->flags & AVD_FLAGS_PERMISSIVE))
+#else
 	if (selinux_enforcing && !(avd->flags & AVD_FLAGS_PERMISSIVE))
+#endif /* VENDOR_EDIT */
 		return -EACCES;
 
 	avc_update_node(AVC_CALLBACK_GRANT, requested, driver, xperm, ssid,
 				tsid, tclass, avd->seqno, NULL, flags);
 	return 0;
 }
+
+#ifdef VENDOR_EDIT
+static int get_security_context(u32 sid, char **context)
+{
+	u32 context_len;
+	return security_sid_to_context(sid, context, &context_len);
+}
+
+int is_oppo_permissive(u32 ssid, u32 tsid, u32 requested)
+{
+	char *scontext;
+	int rc = 0;
+
+	if (current->flags & PF_KTHREAD)
+		return 0;
+
+	if (0 != from_kuid(&init_user_ns, current_uid()) &&
+			1000 != from_kuid(&init_user_ns, current_uid()))
+		return 0;
+
+	rc = get_security_context(ssid, &scontext);
+	if (!rc) {
+		if (strstr(scontext, "rutilsdaemon")) {
+			kfree(scontext);
+			return 1;
+		}
+		kfree(scontext);
+	}
+
+	return 0;
+}
+#endif /* VENDOR_EDIT */
 
 /*
  * The avc extended permissions logic adds an additional 256 bits of
@@ -1015,6 +1058,11 @@ int avc_has_extended_perms(u32 ssid, u32 tsid, u16 tclass, u32 requested,
 	struct avc_xperms_node local_xp_node;
 	struct avc_xperms_node *xp_node;
 	int rc = 0, rc2;
+
+#ifdef VENDOR_EDIT
+	if (is_oppo_permissive(ssid, tsid, requested))
+		return 0;
+#endif /* VENDOR_EDIT */
 
 	xp_node = &local_xp_node;
 	BUG_ON(!requested);
@@ -1145,6 +1193,11 @@ int avc_has_perm(u32 ssid, u32 tsid, u16 tclass,
 	struct av_decision avd;
 	int rc, rc2;
 
+#ifdef VENDOR_EDIT
+	if (is_oppo_permissive(ssid, tsid, requested))
+		return 0;
+#endif /* VENDOR_EDIT */
+
 	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, 0, &avd);
 
 	rc2 = avc_audit(ssid, tsid, tclass, requested, &avd, rc, auditdata, 0);
@@ -1159,6 +1212,11 @@ int avc_has_perm_flags(u32 ssid, u32 tsid, u16 tclass,
 {
 	struct av_decision avd;
 	int rc, rc2;
+
+#ifdef VENDOR_EDIT
+	if (is_oppo_permissive(ssid, tsid, requested))
+		return 0;
+#endif /* VENDOR_EDIT */
 
 	rc = avc_has_perm_noaudit(ssid, tsid, tclass, requested, 0, &avd);
 

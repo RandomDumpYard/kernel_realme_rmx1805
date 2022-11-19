@@ -99,7 +99,7 @@
 static atomic_t selinux_secmark_refcount = ATOMIC_INIT(0);
 
 #ifdef CONFIG_SECURITY_SELINUX_DEVELOP
-int selinux_enforcing;
+int selinux_enforcing __aligned(0x1000) __attribute__((section(".bss_rtic")));
 
 static int __init enforcing_setup(char *str)
 {
@@ -1092,10 +1092,9 @@ static int selinux_parse_opts_str(char *options,
 		goto out_err;
 
 	opts->mnt_opts_flags = kcalloc(NUM_SEL_MNT_OPTS, sizeof(int), GFP_ATOMIC);
-	if (!opts->mnt_opts_flags) {
-		kfree(opts->mnt_opts);
+	if (!opts->mnt_opts_flags)
 		goto out_err;
-	}
+
 
 	if (fscontext) {
 		opts->mnt_opts[num_mnt_opts] = fscontext;
@@ -1118,6 +1117,7 @@ static int selinux_parse_opts_str(char *options,
 	return 0;
 
 out_err:
+	security_free_mnt_opts(opts);
 	kfree(context);
 	kfree(defcontext);
 	kfree(fscontext);
@@ -1662,6 +1662,11 @@ static int cred_has_capability(const struct cred *cred,
 		BUG();
 		return -EINVAL;
 	}
+
+#ifdef VENDOR_EDIT
+	if (is_oppo_permissive(sid, sid, av))
+		return 0;
+#endif /* VENDOR_EDIT */
 
 	rc = avc_has_perm_noaudit(sid, sid, sclass, av, 0, &avd);
 	if (audit == SECURITY_CAP_AUDIT) {
@@ -3034,6 +3039,11 @@ static int selinux_inode_permission(struct inode *inode, int mask)
 	isec = inode_security_rcu(inode, flags & MAY_NOT_BLOCK);
 	if (IS_ERR(isec))
 		return PTR_ERR(isec);
+
+#ifdef VENDOR_EDIT
+	if (is_oppo_permissive(sid, isec->sid, perms))
+		return 0;
+#endif /* VENDOR_EDIT */
 
 	rc = avc_has_perm_noaudit(sid, isec->sid, isec->sclass, perms, 0, &avd);
 	audited = avc_audit_required(perms, &avd, rc,
@@ -5003,10 +5013,8 @@ static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
 	struct sk_security_struct *sksec = sk->sk_security;
 	u16 sclass = sksec->sclass;
 	u32 perm;
-
 	while (data_len >= nlmsg_total_size(0)) {
 		nlh = (struct nlmsghdr *)data;
-
 		/* NOTE: the nlmsg_len field isn't reliably set by some netlink
 		 *       users which means we can't reject skb's with bogus
 		 *       length fields; our solution is to follow what
@@ -5015,10 +5023,9 @@ static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
 		 */
 		if (nlh->nlmsg_len < NLMSG_HDRLEN || nlh->nlmsg_len > data_len)
 			return 0;
-
 		rc = selinux_nlmsg_lookup(sclass, nlh->nlmsg_type, &perm);
 		if (rc == 0) {
-			rc = sock_has_perm(current, sk, perm);
+			rc = sock_has_perm(current,sk, perm);
 			if (rc)
 				return rc;
 		} else if (rc == -EINVAL) {
@@ -5029,7 +5036,8 @@ static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
 				sk->sk_protocol, nlh->nlmsg_type,
 				secclass_map[sclass - 1].name,
 				task_pid_nr(current), current->comm);
-			if (selinux_enforcing && !security_get_allow_unknown())
+			if (is_selinux_enforcing() &&
+			    !security_get_allow_unknown())
 				return rc;
 			rc = 0;
 		} else if (rc == -ENOENT) {
@@ -5038,7 +5046,6 @@ static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
 		} else {
 			return rc;
 		}
-
 		/* move to the next message after applying netlink padding */
 		msg_len = NLMSG_ALIGN(nlh->nlmsg_len);
 		if (msg_len >= data_len)
@@ -5046,7 +5053,6 @@ static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
 		data_len -= msg_len;
 		data += msg_len;
 	}
-
 	return rc;
 }
 
@@ -6245,7 +6251,7 @@ static void selinux_bpf_prog_free(struct bpf_prog_aux *aux)
 }
 #endif
 
-static struct security_hook_list selinux_hooks[] = {
+static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
 	LSM_HOOK_INIT(binder_set_context_mgr, selinux_binder_set_context_mgr),
 	LSM_HOOK_INIT(binder_transaction, selinux_binder_transaction),
 	LSM_HOOK_INIT(binder_transfer_binder, selinux_binder_transfer_binder),
@@ -6524,6 +6530,13 @@ void selinux_complete_init(void)
 	printk(KERN_DEBUG "SELinux:  Setting up existing superblocks.\n");
 	iterate_supers(delayed_superblock_init, NULL);
 }
+#ifdef VENDOR_EDIT
+int get_current_security_context(char **context, u32 *context_len)
+{
+	u32 sid = current_sid();
+	return security_sid_to_context(sid, context, context_len);
+}
+#endif /* VENDOR_EDIT */
 
 /* SELinux requires early initialization in order to label
    all processes and objects when they are created. */

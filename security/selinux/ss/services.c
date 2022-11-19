@@ -78,8 +78,7 @@ static DEFINE_RWLOCK(policy_rwlock);
 
 static struct sidtab sidtab;
 struct policydb policydb;
-int ss_initialized;
-
+int ss_initialized __aligned(0x1000) __attribute__((section(".bss_rtic")));
 /*
  * The largest sequence number that has been used when
  * providing an access decision to the access vector cache.
@@ -747,7 +746,11 @@ out:
 	kfree(n);
 	kfree(t);
 
+#ifdef VENDOR_EDIT
+    if (!is_selinux_enforcing())
+#else
 	if (!selinux_enforcing)
+#endif /* VENDOR_EDIT */
 		return 0;
 	return -EPERM;
 }
@@ -1530,7 +1533,11 @@ out:
 	kfree(s);
 	kfree(t);
 	kfree(n);
+#ifdef VENDOR_EDIT
+    if (!is_selinux_enforcing())
+#else
 	if (!selinux_enforcing)
+#endif /* VENDOR_EDIT */
 		return 0;
 	return -EACCES;
 }
@@ -1821,7 +1828,11 @@ static inline int convert_context_handle_invalid_context(struct context *context
 	char *s;
 	u32 len;
 
+#ifdef VENDOR_EDIT
+    if (is_selinux_enforcing())
+#else
 	if (selinux_enforcing)
+#endif /* VENDOR_EDIT */
 		return -EINVAL;
 
 	if (!context_struct_to_string(context, &s, &len)) {
