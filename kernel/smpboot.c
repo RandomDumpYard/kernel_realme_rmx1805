@@ -106,6 +106,7 @@ static int smpboot_thread_fn(void *data)
 {
 	struct smpboot_thread_data *td = data;
 	struct smp_hotplug_thread *ht = td->ht;
+	unsigned long flags;
 
 	while (1) {
 		set_current_state(TASK_INTERRUPTIBLE);
@@ -121,7 +122,45 @@ static int smpboot_thread_fn(void *data)
 		}
 
 		if (kthread_should_park()) {
+			/*
+			 * Serialize against wakeup. If we take the lock first,
+			 * wakeup is skipped. If we run later, we observe,
+			 * TASK_RUNNING update from wakeup path, before moving
+			 * forward. This helps avoid the race, where wakeup
+			 * observes TASK_INTERRUPTIBLE, and also observes
+			 * the TASK_PARKED in kthread_parkme() before updating
+			 * task state to TASK_RUNNING. In this case, kthread
+			 * gets parked in TASK_RUNNING state. This results
+			 * in panic later on in kthread_unpark(), as it sees
+			 * KTHREAD_IS_PARKED flag set but fails to rebind the
+			 * kthread, due to it being not in TASK_PARKED state.
+			 *
+			 * Control thread                      Hotplug Thread
+			 *
+			 * kthread_park()
+			 *   set KTHREAD_SHOULD_PARK
+			 *                                smpboot_thread_fn()
+			 *                                  set_current_state(
+			 *                                  TASK_INTERRUPTIBLE);
+			 *                                  kthread_parkme()
+			 *
+			 *   wake_up_process()
+			 *
+			 * raw_spin_lock_irqsave(&p->pi_lock, flags);
+			 * if (!(p->state & state))
+			 *            goto out;
+			 *
+			 *                                  __set_current_state(
+			 *                                  TASK_PARKED);
+			 *
+			 * if (p->on_rq && ttwu_remote(p, wake_flags))
+			 *   ttwu_remote()
+			 *     p->state = TASK_RUNNING;
+			 *                                   schedule();
+			 */
+			raw_spin_lock_irqsave(&current->pi_lock, flags);
 			__set_current_state(TASK_RUNNING);
+			raw_spin_unlock_irqrestore(&current->pi_lock, flags);
 			preempt_enable();
 			if (ht->park && td->status == HP_THREAD_ACTIVE) {
 				BUG_ON(td->cpu != smp_processor_id());
@@ -254,11 +293,30 @@ static void smpboot_park_thread(struct smp_hotplug_thread *ht, unsigned int cpu)
 int smpboot_park_threads(unsigned int cpu)
 {
 	struct smp_hotplug_thread *cur;
+#ifdef VENDOR_EDIT
+	struct task_struct *tsk;
+	int cnt;
+#endif
 
 	mutex_lock(&smpboot_threads_lock);
 	list_for_each_entry_reverse(cur, &hotplug_threads, list)
 		smpboot_park_thread(cur, cpu);
 	mutex_unlock(&smpboot_threads_lock);
+#ifdef VENDOR_EDIT
+next:
+	cnt = 0;
+	list_for_each_entry(cur, &hotplug_threads, list) {
+		tsk = *per_cpu_ptr(cur->store, cpu);
+		cnt += tsk->on_rq;
+	}
+	if (cnt) {
+		if (cpu == raw_smp_processor_id()) {
+			set_current_state(TASK_INTERRUPTIBLE);
+			schedule_timeout(1);
+		}
+		goto next;
+	}
+#endif
 	return 0;
 }
 
