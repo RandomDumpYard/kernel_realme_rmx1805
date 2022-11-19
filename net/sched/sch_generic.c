@@ -154,6 +154,17 @@ bulk:
 	return skb;
 }
 
+#ifdef VENDOR_EDIT
+//Add for limit speed function
+struct sk_buff *qdisc_dequeue_skb(struct Qdisc *q, bool *validate)
+{
+	int packets;
+
+	return dequeue_skb(q, validate, &packets);
+}
+EXPORT_SYMBOL(qdisc_dequeue_skb);
+#endif /* VENDOR_EDIT */
+
 /*
  * Transmit possibly several skbs, and handle the return status as
  * required. Owning running seqcount bit guarantees that
@@ -178,8 +189,13 @@ int sch_direct_xmit(struct sk_buff *skb, struct Qdisc *q,
 
 	if (likely(skb)) {
 		HARD_TX_LOCK(dev, txq, smp_processor_id());
-		if (!netif_xmit_frozen_or_stopped(txq))
-			skb = dev_hard_start_xmit(skb, dev, txq, &ret);
+		if (!netif_xmit_frozen_or_stopped(txq)) {
+			if (unlikely(skb->fast_forwarded))
+				skb = dev_hard_start_xmit_list(skb, dev,
+							       txq, &ret);
+			else
+				skb = dev_hard_start_xmit(skb, dev, txq, &ret);
+		}
 
 		HARD_TX_UNLOCK(dev, txq);
 	} else {
