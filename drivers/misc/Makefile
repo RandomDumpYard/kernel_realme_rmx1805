@@ -49,13 +49,20 @@ obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
 obj-$(CONFIG_SRAM)		+= sram.o
 obj-y				+= mic/
 obj-$(CONFIG_GENWQE)		+= genwqe/
+obj-$(CONFIG_HDCP_QSEECOM)	+= hdcp_qseecom.o
+obj-$(CONFIG_HDCP_QSEECOM)	+= msm_hdcp.o
+obj-$(CONFIG_QSEECOM)		+= qseecom.o
 obj-$(CONFIG_ECHO)		+= echo/
 obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
 obj-$(CONFIG_CXL_BASE)		+= cxl/
 obj-$(CONFIG_PANEL)             += panel.o
+obj-$(CONFIG_QPNP_MISC) 	+= qpnp-misc.o
+obj-$(CONFIG_FPR_FPC) 	+= fpr_FingerprintCard/
+obj-$(CONFIG_MEMORY_STATE_TIME)	+= memory_state_time.o
 
 obj-$(CONFIG_UID_SYS_STATS)	+= uid_sys_stats.o
 obj-$(CONFIG_MEMORY_STATE_TIME)	+= memory_state_time.o
+obj-$(CONFIG_ODM_WT_EDIT)       += hardware_info.o
 
 lkdtm-$(CONFIG_LKDTM)		+= lkdtm_core.o
 lkdtm-$(CONFIG_LKDTM)		+= lkdtm_bugs.o

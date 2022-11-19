@@ -146,7 +146,6 @@ static const struct usb_device_id id_table[] = {
 	{ USB_DEVICE(0x10C4, 0x8977) },	/* CEL MeshWorks DevKit Device */
 	{ USB_DEVICE(0x10C4, 0x8998) }, /* KCF Technologies PRN */
 	{ USB_DEVICE(0x10C4, 0x89A4) }, /* CESINEL FTBC Flexible Thyristor Bridge Controller */
-	{ USB_DEVICE(0x10C4, 0x89FB) }, /* Qivicon ZigBee USB Radio Stick */
 	{ USB_DEVICE(0x10C4, 0x8A2A) }, /* HubZ dual ZigBee and Z-Wave dongle */
 	{ USB_DEVICE(0x10C4, 0x8A5E) }, /* CEL EM3588 ZigBee USB Stick Long Range */
 	{ USB_DEVICE(0x10C4, 0x8B34) }, /* Qivicon ZigBee USB Radio Stick */
@@ -760,7 +759,7 @@ static void cp210x_get_termios_port(struct usb_serial_port *port,
 	tcflag_t cflag;
 	struct cp210x_flow_ctl flow_ctl;
 	u32 baud;
-	u16 bits;
+	u16 bits = 0;
 	u32 ctl_hs;
 
 	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);

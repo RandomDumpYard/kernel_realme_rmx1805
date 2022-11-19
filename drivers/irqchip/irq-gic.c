@@ -41,6 +41,7 @@
 #include <linux/irqchip.h>
 #include <linux/irqchip/chained_irq.h>
 #include <linux/irqchip/arm-gic.h>
+#include <linux/msm_rtb.h>
 
 #include <asm/cputype.h>
 #include <asm/irq.h>
@@ -48,10 +49,12 @@
 #include <asm/smp_plat.h>
 #include <asm/virt.h>
 
+#include <linux/syscore_ops.h>
 #include "irq-gic-common.h"
 
 #ifdef CONFIG_ARM64
 #include <asm/cpufeature.h>
+#include <linux/syscore_ops.h>
 
 static void gic_check_cpu_features(void)
 {
@@ -69,6 +72,7 @@ union gic_base {
 };
 
 struct gic_chip_data {
+	unsigned int irq_offset;
 	struct irq_chip chip;
 	union gic_base dist_base;
 	union gic_base cpu_base;
@@ -88,6 +92,10 @@ struct gic_chip_data {
 	unsigned int gic_irqs;
 #ifdef CONFIG_GIC_NON_BANKED
 	void __iomem *(*get_base)(union gic_base *);
+#endif
+#ifdef CONFIG_PM
+	unsigned int wakeup_irqs[32];
+	unsigned int enabled_irqs[32];
 #endif
 };
 
@@ -122,7 +130,28 @@ static DEFINE_RAW_SPINLOCK(cpu_map_lock);
 static u8 gic_cpu_map[NR_GIC_CPU_IF] __read_mostly;
 
 static struct static_key supports_deactivate = STATIC_KEY_INIT_TRUE;
+#ifdef VENDOR_EDIT
+#define WAKEUP_SOURCE_WIFI_TX	177
+#define WAKEUP_SOURCE_WIFI_RX	178
+#define WAKEUP_SOURCE_MODEM_57	57
+#define WAKEUP_SOURCE_MODEM_58	58
+#define WAKEUP_SOURCE_AP_RPM	200
+#define WAKEUP_SOURCE_PMIC_ALARM	203
+#define WAKEUP_SOURCE_RTC_INT_NUM	2
+#define WAKEUP_SOURCE_INT_FIRST		1
+#define WAKEUP_SOURCE_INT_SECOND	2
 
+u64	wakeup_source_count_wifi;
+u64	wakeup_source_count_modem;
+#define MODEM_WAKEUP_SRC_NUM 3
+#define MODEM_DIAG_WS_INDEX 0
+#define MODEM_IPA_WS_INDEX 1
+#define MODEM_QMI_WS_INDEX 2
+extern int modem_wakeup_src_count[MODEM_WAKEUP_SRC_NUM];
+extern char modem_wakeup_src_string[MODEM_WAKEUP_SRC_NUM][10];
+//Yongyao.Song add end
+extern u64	wakeup_source_count_rtc;
+#endif //VENDOR_EDIT 
 static struct gic_chip_data gic_data[CONFIG_ARM_GIC_MAX_NR] __read_mostly;
 
 static struct gic_kvm_info gic_v2_kvm_info;
@@ -229,7 +258,7 @@ static void gic_unmask_irq(struct irq_data *d)
 
 static void gic_eoi_irq(struct irq_data *d)
 {
-	writel_relaxed(gic_irq(d), gic_cpu_base(d) + GIC_CPU_EOI);
+	writel_relaxed_no_log(gic_irq(d), gic_cpu_base(d) + GIC_CPU_EOI);
 }
 
 static void gic_eoimode1_eoi_irq(struct irq_data *d)
@@ -340,8 +369,8 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
 	gic_lock_irqsave(flags);
 	mask = 0xff << shift;
 	bit = gic_cpu_map[cpu] << shift;
-	val = readl_relaxed(reg) & ~mask;
-	writel_relaxed(val | bit, reg);
+	val = readl_relaxed_no_log(reg) & ~mask;
+	writel_relaxed_no_log(val | bit, reg);
 	gic_unlock_irqrestore(flags);
 
 	return IRQ_SET_MASK_OK_DONE;
@@ -355,19 +384,22 @@ static void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
 	void __iomem *cpu_base = gic_data_cpu_base(gic);
 
 	do {
-		irqstat = readl_relaxed(cpu_base + GIC_CPU_INTACK);
+		irqstat = readl_relaxed_no_log(cpu_base + GIC_CPU_INTACK);
 		irqnr = irqstat & GICC_IAR_INT_ID_MASK;
 
 		if (likely(irqnr > 15 && irqnr < 1020)) {
 			if (static_key_true(&supports_deactivate))
-				writel_relaxed(irqstat, cpu_base + GIC_CPU_EOI);
+				writel_relaxed_no_log(irqstat,
+						cpu_base + GIC_CPU_EOI);
 			handle_domain_irq(gic->domain, irqnr, regs);
+			uncached_logk(LOGK_IRQ, (void *)(uintptr_t)irqnr);
 			continue;
 		}
 		if (irqnr < 16) {
-			writel_relaxed(irqstat, cpu_base + GIC_CPU_EOI);
+			writel_relaxed_no_log(irqstat, cpu_base + GIC_CPU_EOI);
 			if (static_key_true(&supports_deactivate))
-				writel_relaxed(irqstat, cpu_base + GIC_CPU_DEACTIVATE);
+				writel_relaxed_no_log(irqstat,
+						cpu_base + GIC_CPU_DEACTIVATE);
 #ifdef CONFIG_SMP
 			/*
 			 * Ensure any shared data written by the CPU sending
@@ -379,6 +411,7 @@ static void __exception_irq_entry gic_handle_irq(struct pt_regs *regs)
 			smp_rmb();
 			handle_IPI(irqnr, regs);
 #endif
+			uncached_logk(LOGK_IRQ, (void *)(uintptr_t)irqnr);
 			continue;
 		}
 		break;
@@ -656,16 +689,18 @@ void gic_cpu_save(struct gic_chip_data *gic)
 
 	ptr = raw_cpu_ptr(gic->saved_ppi_enable);
 	for (i = 0; i < DIV_ROUND_UP(32, 32); i++)
-		ptr[i] = readl_relaxed(dist_base + GIC_DIST_ENABLE_SET + i * 4);
+		ptr[i] = readl_relaxed_no_log(dist_base +
+				GIC_DIST_ENABLE_SET + i * 4);
 
 	ptr = raw_cpu_ptr(gic->saved_ppi_active);
 	for (i = 0; i < DIV_ROUND_UP(32, 32); i++)
-		ptr[i] = readl_relaxed(dist_base + GIC_DIST_ACTIVE_SET + i * 4);
+		ptr[i] = readl_relaxed_no_log(dist_base +
+				GIC_DIST_ACTIVE_SET + i * 4);
 
 	ptr = raw_cpu_ptr(gic->saved_ppi_conf);
 	for (i = 0; i < DIV_ROUND_UP(32, 16); i++)
-		ptr[i] = readl_relaxed(dist_base + GIC_DIST_CONFIG + i * 4);
-
+		ptr[i] = readl_relaxed_no_log(dist_base +
+				GIC_DIST_CONFIG + i * 4);
 }
 
 void gic_cpu_restore(struct gic_chip_data *gic)
@@ -686,31 +721,36 @@ void gic_cpu_restore(struct gic_chip_data *gic)
 
 	ptr = raw_cpu_ptr(gic->saved_ppi_enable);
 	for (i = 0; i < DIV_ROUND_UP(32, 32); i++) {
-		writel_relaxed(GICD_INT_EN_CLR_X32,
+		writel_relaxed_no_log(GICD_INT_EN_CLR_X32,
 			       dist_base + GIC_DIST_ENABLE_CLEAR + i * 4);
-		writel_relaxed(ptr[i], dist_base + GIC_DIST_ENABLE_SET + i * 4);
+		writel_relaxed_no_log(ptr[i], dist_base +
+				GIC_DIST_ENABLE_SET + i * 4);
 	}
 
 	ptr = raw_cpu_ptr(gic->saved_ppi_active);
 	for (i = 0; i < DIV_ROUND_UP(32, 32); i++) {
-		writel_relaxed(GICD_INT_EN_CLR_X32,
+		writel_relaxed_no_log(GICD_INT_EN_CLR_X32,
 			       dist_base + GIC_DIST_ACTIVE_CLEAR + i * 4);
-		writel_relaxed(ptr[i], dist_base + GIC_DIST_ACTIVE_SET + i * 4);
+		writel_relaxed_no_log(ptr[i], dist_base +
+				GIC_DIST_ACTIVE_SET + i * 4);
 	}
 
 	ptr = raw_cpu_ptr(gic->saved_ppi_conf);
 	for (i = 0; i < DIV_ROUND_UP(32, 16); i++)
-		writel_relaxed(ptr[i], dist_base + GIC_DIST_CONFIG + i * 4);
+		writel_relaxed_no_log(ptr[i], dist_base +
+				GIC_DIST_CONFIG + i * 4);
 
 	for (i = 0; i < DIV_ROUND_UP(32, 4); i++)
-		writel_relaxed(GICD_INT_DEF_PRI_X4,
+		writel_relaxed_no_log(GICD_INT_DEF_PRI_X4,
 					dist_base + GIC_DIST_PRI + i * 4);
 
-	writel_relaxed(GICC_INT_PRI_THRESHOLD, cpu_base + GIC_CPU_PRIMASK);
+	writel_relaxed_no_log(GICC_INT_PRI_THRESHOLD,
+				cpu_base + GIC_CPU_PRIMASK);
 	gic_cpu_if_up(gic);
 }
 
-static int gic_notifier(struct notifier_block *self, unsigned long cmd,	void *v)
+static int gic_notifier(struct notifier_block *self, unsigned long cmd,
+			void *aff_level)
 {
 	int i;
 
@@ -729,11 +769,20 @@ static int gic_notifier(struct notifier_block *self, unsigned long cmd,	void *v)
 			gic_cpu_restore(&gic_data[i]);
 			break;
 		case CPU_CLUSTER_PM_ENTER:
-			gic_dist_save(&gic_data[i]);
+			/*
+			 * Affinity level of the node
+			 * eg:
+			 *    cpu level = 0
+			 *    l2 level  = 1
+			 *    cci level = 2
+			 */
+			if (!(unsigned long)aff_level)
+				gic_dist_save(&gic_data[i]);
 			break;
 		case CPU_CLUSTER_PM_ENTER_FAILED:
 		case CPU_CLUSTER_PM_EXIT:
-			gic_dist_restore(&gic_data[i]);
+			if (!(unsigned long)aff_level)
+				gic_dist_restore(&gic_data[i]);
 			break;
 		}
 	}
@@ -789,7 +838,7 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
 
 	if (unlikely(nr_cpu_ids == 1)) {
 		/* Only one CPU? let's do a self-IPI... */
-		writel_relaxed(2 << 24 | irq,
+		writel_relaxed_no_log(2 << 24 | irq,
 			       gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
 		return;
 	}
@@ -807,7 +856,8 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
 	dmb(ishst);
 
 	/* this always happens on GIC0 */
-	writel_relaxed(map << 16 | irq, gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
+	writel_relaxed_no_log(map << 16 | irq,
+			gic_data_dist_base(&gic_data[0]) + GIC_DIST_SOFTINT);
 
 	gic_unlock_irqrestore(flags);
 }
@@ -1213,6 +1263,126 @@ static int __init __gic_init_bases(struct gic_chip_data *gic,
 	return ret;
 }
 
+#ifdef CONFIG_PM
+static int gic_suspend(void)
+{
+	return 0;
+}
+
+extern int msm_show_resume_irq_mask;
+
+/*
+ * gic_show_pending_irq - Shows the pending interrupts
+ * Note: Interrupts should be disabled on the cpu from which
+ * this is called to get accurate list of pending interrupts.
+ */
+void gic_show_pending_irq(void)
+{
+	void __iomem *base;
+	unsigned long pending[32];
+	u32 enabled;
+	unsigned int i, j;
+
+	for (i = 0; i < CONFIG_ARM_GIC_MAX_NR; i++) {
+		base = gic_data_dist_base(&gic_data[i]);
+		for (j = 0; j * 32 < gic_data[i].gic_irqs; j++) {
+			enabled = readl_relaxed(base +
+						GIC_DIST_ENABLE_SET + j * 4);
+			pending[j] = readl_relaxed(base +
+						GIC_DIST_PENDING_SET + j * 4);
+			pending[j] &= enabled;
+			pr_err("Pending irqs[%d] %lx\n", j, pending[j]);
+		}
+	}
+}
+
+static void gic_show_resume_irq(struct gic_chip_data *gic)
+{
+	unsigned int i;
+	u32 enabled;
+	u32 pending[32];
+#ifdef VENDOR_EDIT
+	unsigned int int_id_1 = 0;
+	unsigned int int_id_2 = 0;
+	unsigned int int_count = 0;
+#endif //VENDOR_EDIT 	
+	void __iomem *base = gic_data_dist_base(gic);
+
+#if 0
+	if (!msm_show_resume_irq_mask)
+		return;
+#endif
+	for (i = 0; i * 32 < gic->gic_irqs; i++) {
+		enabled = readl_relaxed(base + GIC_DIST_ENABLE_CLEAR + i * 4);
+		pending[i] = readl_relaxed(base + GIC_DIST_PENDING_SET + i * 4);
+		pending[i] &= enabled;
+	}
+
+	for (i = find_first_bit((unsigned long *)pending, gic->gic_irqs);
+	i < gic->gic_irqs;
+	i = find_next_bit((unsigned long *)pending, gic->gic_irqs, i+1)) {
+		unsigned int irq = irq_find_mapping(gic->domain, i);
+		struct irq_desc *desc = irq_to_desc(irq);
+		const char *name = "null";
+
+		if (desc == NULL)
+			name = "stray irq";
+		else if (desc->action && desc->action->name)
+			name = desc->action->name;
+
+		pr_warn("%s: %d triggered %s\n", __func__, i, name);
+#ifdef VENDOR_EDIT
+		if ((WAKEUP_SOURCE_WIFI_TX == i ) || (WAKEUP_SOURCE_WIFI_RX == i ))
+			wakeup_source_count_wifi++;
+		if ((WAKEUP_SOURCE_MODEM_57 == i ) || (WAKEUP_SOURCE_MODEM_58 == i ))
+		{
+			wakeup_source_count_modem++;
+			if(WAKEUP_SOURCE_MODEM_57 == i)
+			{
+				modem_wakeup_src_count[MODEM_QMI_WS_INDEX]++;
+			}
+			//Yongyao.Song add end
+		}
+		int_count++;
+		if (int_count == WAKEUP_SOURCE_INT_FIRST)
+			int_id_1 = i;
+		if (int_count == WAKEUP_SOURCE_INT_SECOND)
+			int_id_2 = i;
+#endif //VENDOR_EDIT 	
+	}
+#ifdef VENDOR_EDIT
+	if ((WAKEUP_SOURCE_RTC_INT_NUM == int_count) && (WAKEUP_SOURCE_AP_RPM == int_id_1) && (WAKEUP_SOURCE_PMIC_ALARM == int_id_2))
+		wakeup_source_count_rtc++;
+#endif //VENDOR_EDIT 	
+	
+}
+
+static void gic_resume_one(struct gic_chip_data *gic)
+{
+	gic_show_resume_irq(gic);
+}
+
+static void gic_resume(void)
+{
+	int i;
+
+	for (i = 0; i < CONFIG_ARM_GIC_MAX_NR; i++)
+		gic_resume_one(&gic_data[i]);
+}
+
+static struct syscore_ops gic_syscore_ops = {
+	.suspend = gic_suspend,
+	.resume = gic_resume,
+};
+
+static int __init gic_init_sys(void)
+{
+	register_syscore_ops(&gic_syscore_ops);
+	return 0;
+}
+arch_initcall(gic_init_sys);
+#endif
+
 void __init gic_init(unsigned int gic_nr, int irq_start,
 		     void __iomem *dist_base, void __iomem *cpu_base)
 {
@@ -1406,6 +1576,10 @@ gic_of_init(struct device_node *node, struct device_node *parent)
 		gicv2m_init(&node->fwnode, gic_data[gic_cnt].domain);
 
 	gic_cnt++;
+#ifdef VENDOR_EDIT
+		wakeup_source_count_wifi = 0;
+		wakeup_source_count_modem = 0;		
+#endif //VENDOR_EDIT 
 	return 0;
 }
 IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);

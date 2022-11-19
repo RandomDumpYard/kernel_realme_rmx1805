@@ -917,7 +917,7 @@ int input_set_keycode(struct input_dev *dev,
 	 * Simulate keyup event if keycode is not present
 	 * in the keymap anymore
 	 */
-	if (old_keycode > KEY_MAX) {
+		if (old_keycode > KEY_MAX) {
 		dev_warn(dev->dev.parent ?: &dev->dev,
 			 "%s: got too big old keycode %#x\n",
 			 __func__, old_keycode);
