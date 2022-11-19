@@ -3906,7 +3906,7 @@ static int msm_isp_stream_axi_cfg_update(struct vfe_device *vfe_dev,
 int msm_isp_update_axi_stream(struct vfe_device *vfe_dev, void *arg)
 {
 #ifndef ODM_WT_EDIT
-	int rc = 0, i;
+	int rc = 0, i, j, k;
 #else
 	int rc = 0, i, j, k;
 #endif
