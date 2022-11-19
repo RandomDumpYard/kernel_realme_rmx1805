@@ -626,6 +626,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
 			embedded devices based on command line input.
 			See Documentation/block/cmdline-partition.txt
 
+	boot_cpus=	[SMP]
+			Rather than attempting to online all possible CPUs at
+			boot time, only online the specified set of CPUs.
+
 	boot_delay=	Milliseconds to delay each printk during boot.
 			Values larger than 10 seconds (10000) are changed to
 			no delay (0).
@@ -853,6 +857,12 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
 	consoleblank=	[KNL] The console blank (screen saver) timeout in
 			seconds. Defaults to 10*60 = 10mins. A value of 0
 			disables the blank timer.
+
+	core_ctl_disable_cpumask= [SMP]
+			Exempt the CPUs from being managed by core_ctl.
+			core_ctl operates on a cluster basis. So all the
+			CPUs in a given cluster must be specified to disable
+			core_ctl for that cluster.
 
 	coredump_filter=
 			[KNL] Change the default value for
@@ -4034,23 +4044,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
 	spia_fio_base=
 	spia_pedr=
 	spia_peddr=
-
-	ssbd=		[ARM64,HW]
-			Speculative Store Bypass Disable control
-
-			On CPUs that are vulnerable to the Speculative
-			Store Bypass vulnerability and offer a
-			firmware based mitigation, this parameter
-			indicates how the mitigation should be used:
-
-			force-on:  Unconditionally enable mitigation for
-				   for both kernel and userspace
-			force-off: Unconditionally disable mitigation for
-				   for both kernel and userspace
-			kernel:    Always enable mitigation in the
-				   kernel, and offer a prctl interface
-				   to allow userspace to register its
-				   interest in being mitigated too.
 
 	stack_guard_gap=	[MM]
 			override the default stack gap protection. The value
