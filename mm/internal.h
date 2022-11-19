@@ -38,8 +38,33 @@
 
 int do_swap_page(struct fault_env *fe, pte_t orig_pte);
 
+#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+extern struct vm_area_struct *get_vma(struct mm_struct *mm,
+				      unsigned long addr);
+extern void put_vma(struct vm_area_struct *vma);
+
+static inline bool vma_has_changed(struct fault_env *fe)
+{
+	int ret = RB_EMPTY_NODE(&fe->vma->vm_rb);
+	unsigned int seq = READ_ONCE(fe->vma->vm_sequence.sequence);
+
+	/*
+	 * Matches both the wmb in write_seqlock_{begin,end}() and
+	 * the wmb in vma_rb_erase().
+	 */
+	smp_rmb();
+
+	return ret || seq != fe->sequence;
+}
+#endif /* CONFIG_SPECULATIVE_PAGE_FAULT */
+
 void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
 		unsigned long floor, unsigned long ceiling);
+
+static inline bool can_madv_dontneed_vma(struct vm_area_struct *vma)
+{
+	return !(vma->vm_flags & (VM_LOCKED|VM_HUGETLB|VM_PFNMAP));
+}
 
 void unmap_page_range(struct mmu_gather *tlb,
 			     struct vm_area_struct *vma,
@@ -84,7 +109,6 @@ extern unsigned long highest_memmap_pfn;
  */
 extern int isolate_lru_page(struct page *page);
 extern void putback_lru_page(struct page *page);
-extern bool pgdat_reclaimable(struct pglist_data *pgdat);
 
 /*
  * in mm/rmap.c:
@@ -471,6 +495,9 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
 #define ALLOC_HIGH		0x20 /* __GFP_HIGH set */
 #define ALLOC_CPUSET		0x40 /* check for correct cpuset */
 #define ALLOC_CMA		0x80 /* allow allocations from CMA areas */
+#ifdef VENDOR_EDIT
+#define ALLOC_UNMOVABLE 0x200 /* migratetype is MIGRATE_UNMOVABLE */
+#endif
 
 enum ttu_flags;
 struct tlbflush_unmap_batch;
@@ -494,5 +521,11 @@ static inline void flush_tlb_batched_pending(struct mm_struct *mm)
 extern const struct trace_print_flags pageflag_names[];
 extern const struct trace_print_flags vmaflag_names[];
 extern const struct trace_print_flags gfpflag_names[];
-
+#ifdef VENDOR_EDIT
+#define SZ_1G_PAGES (SZ_1G >> PAGE_SHIFT)
+#define TOTALRAM_2GB (2*SZ_1G_PAGES)
+#define TOTALRAM_3GB (3*SZ_1G_PAGES)
+#define TOTALRAM_4GB (4*SZ_1G_PAGES)
+#define TOTALRAM_6GB (6*SZ_1G_PAGES)
+#endif /*VENDOR_EDIT*/
 #endif	/* __MM_INTERNAL_H */

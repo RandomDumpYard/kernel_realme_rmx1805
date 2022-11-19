@@ -47,6 +47,8 @@
 
 #include <asm/mman.h>
 
+int want_old_faultaround_pte = 1;
+
 /*
  * Shared mappings implemented 30.11.1994. It's not fully working yet,
  * though.
@@ -251,10 +253,12 @@ void __delete_from_page_cache(struct page *page, void *shadow)
 	 * invalidate any existing cleancache entries.  We can't leave
 	 * stale data around in the cleancache once our page is gone
 	 */
-	if (PageUptodate(page) && PageMappedToDisk(page))
+	if (PageUptodate(page) && PageMappedToDisk(page)) {
+		count_vm_event(PGPGOUTCLEAN);
 		cleancache_put_page(page);
-	else
+	} else {
 		cleancache_invalidate_page(mapping, page);
+	}
 
 	VM_BUG_ON_PAGE(PageTail(page), page);
 	VM_BUG_ON_PAGE(page_mapped(page), page);
@@ -2285,6 +2289,14 @@ repeat:
 		if (fe->pte)
 			fe->pte += iter.index - last_pgoff;
 		last_pgoff = iter.index;
+
+		if (want_old_faultaround_pte) {
+			if (fe->address == fe->fault_address)
+				fe->flags &= ~FAULT_FLAG_PREFAULT_OLD;
+			else
+				fe->flags |= FAULT_FLAG_PREFAULT_OLD;
+		}
+
 		if (alloc_set_pte(fe, NULL, page))
 			goto unlock;
 		unlock_page(page);
@@ -2717,6 +2729,7 @@ ssize_t generic_perform_write(struct file *file,
 						iov_iter_count(i));
 
 again:
+#ifndef VENDOR_EDIT
 		/*
 		 * Bring in the user page that we will copy from _first_.
 		 * Otherwise there's a nasty deadlock on copying from the
@@ -2731,7 +2744,7 @@ again:
 			status = -EFAULT;
 			break;
 		}
-
+#endif
 		if (fatal_signal_pending(current)) {
 			status = -EINTR;
 			break;
@@ -2744,8 +2757,21 @@ again:
 
 		if (mapping_writably_mapped(mapping))
 			flush_dcache_page(page);
-
+#if defined(VENDOR_EDIT)
+		/*
+		 * 'page' is now locked.  If we are trying to copy from a
+		 * mapping of 'page' in userspace, the copy might fault and
+		 * would need PageUptodate() to complete.  But, page can not be
+		 * made Uptodate without acquiring the page lock, which we hold.
+		 * Deadlock.  Avoid with pagefault_disable().  Fix up below with
+		 * iov_iter_fault_in_readable().
+		 */
+		pagefault_disable();
+#endif
 		copied = iov_iter_copy_from_user_atomic(page, i, offset, bytes);
+#if defined(VENDOR_EDIT)
+		pagefault_enable();
+#endif
 		flush_dcache_page(page);
 
 		status = a_ops->write_end(file, mapping, pos, bytes, copied,
@@ -2768,6 +2794,16 @@ again:
 			 */
 			bytes = min_t(unsigned long, PAGE_SIZE - offset,
 						iov_iter_single_seg_count(i));
+#if defined(VENDOR_EDIT)
+			/*
+			 * This is the fallback to recover if the copy from
+			 * userspace above faults.
+			 */
+			if (unlikely(iov_iter_fault_in_readable(i, bytes))) {
+				status = -EFAULT;
+				break;
+			}
+#endif
 			goto again;
 		}
 		pos += copied;
