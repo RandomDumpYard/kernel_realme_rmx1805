@@ -105,6 +105,11 @@ int sch_direct_xmit(struct sk_buff *skb, struct Qdisc *q,
 
 void __qdisc_run(struct Qdisc *q);
 
+#ifdef VENDOR_EDIT
+//Add for limit speed function
+struct sk_buff *qdisc_dequeue_skb(struct Qdisc *q, bool *validate);
+#endif /* VENDOR_EDIT */
+
 static inline void qdisc_run(struct Qdisc *q)
 {
 	if (qdisc_run_begin(q))
@@ -125,6 +130,8 @@ static inline __be16 tc_skb_protocol(const struct sk_buff *skb)
 	return skb->protocol;
 }
 
+extern int tc_qdisc_flow_control(struct net_device *dev, u32 tcm_handle,
+				  int flow_enable);
 /* Calculate maximal size of packet seen by hard_start_xmit
    routine of this device.
  */
