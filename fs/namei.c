@@ -123,6 +123,10 @@
 
 #define EMBEDDED_NAME_MAX	(PATH_MAX - offsetof(struct filename, iname))
 
+#ifdef VENDOR_EDIT
+#define DCIM_DELETE_ERR  999
+#endif /* VENDOR_EDIT */
+
 struct filename *
 getname_flags(const char __user *filename, int flags, int *empty)
 {
@@ -2796,7 +2800,13 @@ static int may_delete(struct vfsmount *mnt, struct inode *dir, struct dentry *vi
 		return -ENOENT;
 	BUG_ON(!inode);
 
+#ifdef VENDOR_EDIT
+	if (victim->d_parent->d_inode != dir) {
+		return -EBUSY;
+	}
+#else
 	BUG_ON(victim->d_parent->d_inode != dir);
+#endif /* VENDOR_EDIT */
 	audit_inode_child(dir, victim, AUDIT_TYPE_CHILD_DELETE);
 
 	error = inode_permission2(mnt, dir, MAY_WRITE | MAY_EXEC);
@@ -2905,6 +2915,11 @@ int vfs_create2(struct vfsmount *mnt, struct inode *dir, struct dentry *dentry,
 	if (error)
 		return error;
 	error = dir->i_op->create(dir, dentry, mode, want_excl);
+	if (error)
+		return error;
+	error = security_inode_post_create(dir, dentry, mode);
+	if (error)
+		return error;
 	if (!error)
 		fsnotify_create(dir, dentry);
 	return error;
@@ -3720,6 +3735,13 @@ int vfs_mknod2(struct vfsmount *mnt, struct inode *dir, struct dentry *dentry, u
 		return error;
 
 	error = dir->i_op->mknod(dir, dentry, mode, dev);
+	if (error)
+		return error;
+
+	error = security_inode_post_create(dir, dentry, mode);
+	if (error)
+		return error;
+
 	if (!error)
 		fsnotify_create(dir, dentry);
 	return error;
@@ -3953,6 +3975,10 @@ exit3:
 	dput(dentry);
 exit2:
 	inode_unlock(path.dentry->d_inode);
+#ifdef VENDOR_EDIT
+	if (error == DCIM_DELETE_ERR)
+		error = 0;
+#endif /* VENDOR_EDIT */
 	mnt_drop_write(path.mnt);
 exit1:
 	path_put(&path);
@@ -4083,6 +4109,10 @@ exit2:
 		dput(dentry);
 	}
 	inode_unlock(path.dentry->d_inode);
+#ifdef VENDOR_EDIT
+	if (error == DCIM_DELETE_ERR)
+		error = 0;
+#endif /* VENDOR_EDIT */
 	if (inode)
 		iput(inode);	/* truncate the inode here */
 	inode = NULL;

@@ -3457,6 +3457,8 @@ static int ext4_ext_convert_to_initialized(handle_t *handle,
 	ee_len = ext4_ext_get_actual_len(ex);
 	zero_ex1.ee_len = 0;
 	zero_ex2.ee_len = 0;
+	zero_ex1.ee_start_lo = 0;
+	zero_ex2.ee_start_lo = 0;
 
 	trace_ext4_ext_convert_to_initialized_enter(inode, map, ex);
 
@@ -5019,6 +5021,9 @@ long ext4_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
 	}
 out:
 	inode_unlock(inode);
+#if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
+	ext4_update_time(EXT4_SB(inode->i_sb));
+#endif
 	trace_ext4_fallocate_exit(inode, offset, max_blocks, ret);
 	return ret;
 }
