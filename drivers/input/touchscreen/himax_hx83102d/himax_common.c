@@ -14,7 +14,7 @@
 
 #include "himax_common.h"
 #include "himax_ic_core.h"
-
+#include <linux/update_tpfw_notifier.h>
 #define SUPPORT_FINGER_DATA_CHECKSUM 0x0F
 #define TS_WAKE_LOCK_TIMEOUT		(2 * HZ)
 #define FRAME_COUNT 5
