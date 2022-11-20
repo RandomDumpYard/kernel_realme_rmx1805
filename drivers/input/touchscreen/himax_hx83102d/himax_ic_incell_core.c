@@ -12,13 +12,14 @@
 **
 *******************************************************************************/
 #include "himax_ic_core.h"
+extern int hx_ctpmodule;
+
 #ifdef ODM_WT_EDIT
 #include <linux/hardware_info.h>
 extern char Ctp_name[HARDWARE_MAX_ITEM_LONGTH];
 extern void devinfo_info_tp_set(char *version, char *manufacture, char *fw_path);
 static char version[20] = {0};
 
-extern int hx_ctpmodule;
 #endif
 
 #if defined(HX_AUTO_UPDATE_FW) || defined(HX_ZERO_FLASH)
@@ -2513,7 +2514,7 @@ void resume_fw_update_func(struct work_struct *work)
 	g_core_fp.fp_resume_ic_action();
 
 	himax_int_enable(1);
-	I("%s\n",version);
+	//I("%s\n",version);
 	I("%s, end \n", __func__);
 
 	return;
@@ -2703,7 +2704,7 @@ if ( !(private_ts->SMWP_enable)) {
 	g_core_fp.fp_resume_ic_action();
 
 	himax_int_enable(1);
-	I("%s\n",version);
+	//I("%s\n",version);
 	I("%s: END \n", __func__);
 	mutex_unlock(&private_ts->w_fw_lock);
 	return;
