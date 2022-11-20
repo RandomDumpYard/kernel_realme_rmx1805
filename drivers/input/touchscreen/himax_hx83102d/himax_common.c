@@ -800,11 +800,7 @@ static struct file_operations himax_proc_Gesture_ops = {
 	.write = himax_GESTURE_write,
 };
 #endif
-#ifdef ODM_WT_EDIT
-#ifdef CONFIG_TOUCHSCREEN_HIMAX_INSPECT
 extern void (*fp_himax_baseline_test_init)(void);
-#endif
-#endif
 #ifdef ODM_WT_EDIT
 static ssize_t wt_hiamx_mptest_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)
 {
