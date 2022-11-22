@@ -28,7 +28,7 @@
 #include <linux/pm_qos.h>
 #include <linux/mdss_io_util.h>
 #include <linux/dma-buf.h>
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/update_tpfw_notifier.h>
 #endif
 
@@ -48,7 +48,7 @@ static struct mdss_dsi_data *mdss_dsi_res;
 #define DSI_DISABLE_PC_LATENCY 100
 #define DSI_ENABLE_PC_LATENCY PM_QOS_DEFAULT_VALUE
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern int ilitek_tp;
 extern void lcd_resume_load_ili_fw(void);
 extern int g_shutdown_pending;
@@ -386,7 +386,7 @@ static int mdss_dsi_panel_power_off(struct mdss_panel_data *pdata)
 		goto end;
 	}
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , +++\n", __func__);
 	#endif
 
@@ -407,7 +407,7 @@ static int mdss_dsi_panel_power_off(struct mdss_panel_data *pdata)
 					__func__);
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if(g_shutdown_pending == 1){
 		if (mdss_dsi_pinctrl_set_state(ctrl_pdata, false))
 			pr_debug("reset disable: pinctrl not enabled\n");
@@ -426,7 +426,7 @@ static int mdss_dsi_panel_power_off(struct mdss_panel_data *pdata)
 #endif
 
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if(pdata->panel_info.panel_dead == 0) {
 		if ( g_shutdown_pending == 0 && g_gesture == 1) {
 				pr_info("%s: lcd power-off and do not reset \n", __func__);
@@ -464,13 +464,13 @@ static int mdss_dsi_panel_power_off(struct mdss_panel_data *pdata)
 
 end:
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , ---\n", __func__);
 	#endif
 	return ret;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int mdss_dsi_panel_hx_power_off(struct mdss_panel_data *pdata)
 {
 	int ret = 0;
@@ -482,7 +482,7 @@ int mdss_dsi_panel_hx_power_off(struct mdss_panel_data *pdata)
 		goto end;
 	}
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , +++", __func__);
 	#endif
 
@@ -517,7 +517,7 @@ int mdss_dsi_panel_hx_power_off(struct mdss_panel_data *pdata)
 
 end:
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , ---", __func__);
 	#endif
 	return ret;
@@ -535,7 +535,7 @@ static int mdss_dsi_panel_power_on(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , +++\n", __func__);
 	#endif
 
@@ -551,7 +551,7 @@ static int mdss_dsi_panel_power_on(struct mdss_panel_data *pdata)
 					__func__);
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if(ctrl_pdata->panel_power_data.num_vreg == 0) { // no panel active
 		ret = msm_mdss_enable_vreg(
 			ctrl_pdata->panel_power_data.vreg_config,
@@ -613,7 +613,7 @@ static int mdss_dsi_panel_power_on(struct mdss_panel_data *pdata)
 					__func__, ret);
 	}
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , ---\n", __func__);
 	#endif
 
@@ -710,7 +710,7 @@ int mdss_dsi_panel_power_ctrl(struct mdss_panel_data *pdata,
 
 	switch (power_state) {
 	case MDSS_PANEL_POWER_OFF:
-		#ifdef ODM_WT_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (pinfo->gesture_off_cmd && (g_gesture == 0)) {
 			pr_err("%s  g_gesture hx831112a_huaxian not do power off \n", __func__);
 		} else {
@@ -1510,7 +1510,7 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata, int power_state)
 		return -EINVAL;
 	}
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , +++\n", __func__);
 	#endif
 
@@ -1530,7 +1530,7 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata, int power_state)
 
 	if (mdss_panel_is_power_on(power_state)) {
 		pr_debug("%s: dsi_off with panel always on\n", __func__);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (pdata->panel_info.mipi.lp11_deinit == true) {
 			ret = mdss_dsi_panel_power_ctrl(pdata, power_state);
 			if (ret) {
@@ -1540,7 +1540,7 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata, int power_state)
 #endif
 		goto panel_power_ctrl;
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			if (pdata->panel_info.mipi.lp11_deinit == true) {
 				ret = mdss_dsi_panel_power_ctrl(pdata, power_state);
 				if (ret) {
@@ -1576,7 +1576,7 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata, int power_state)
 			  MDSS_DSI_CORE_CLK, MDSS_DSI_CLK_OFF);
 
 panel_power_ctrl:
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (pdata->panel_info.mipi.lp11_deinit == false)
 		ret = mdss_dsi_panel_power_ctrl(pdata, power_state);
 #else
@@ -1596,7 +1596,7 @@ panel_power_ctrl:
 	ctrl_pdata->cur_max_pkt_size = 0;
 end:
 	pr_debug("%s-:\n", __func__);
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , ---\n", __func__);
 	#endif
 
@@ -1717,7 +1717,7 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , +++\n", __func__);
 #endif
 
@@ -1745,7 +1745,7 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		pr_debug("%s: panel already on\n", __func__);
 		goto end;
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (strncmp(pinfo->panel_name, "hx831112a_huaxian", strlen("hx831112a_huaxian")) == 0) {
 		if (mdss_dsi_pinctrl_set_state(ctrl_pdata, false))
 			pr_debug("reset disable: pinctrl not false\n");
@@ -1770,7 +1770,7 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		goto end;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if(strstr(pdata->panel_info.panel_name, "nt36525") != NULL){
 		if (mipi->lp11_init) {
 			if (mdss_dsi_pinctrl_set_state(ctrl_pdata, false))
@@ -1814,7 +1814,7 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 	 * data lanes for LP11 init
 	 */
 	if (mipi->lp11_init) {
-		#ifndef ODM_WT_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_SDM450
 		if (mdss_dsi_pinctrl_set_state(ctrl_pdata, true))
 			pr_debug("reset enable: pinctrl not enabled\n");
 		#else
@@ -1825,7 +1825,7 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		#endif
 		mdss_dsi_panel_reset(pdata, 1);
 	}
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if(novatek_tp ==1) {
 		lcd_resume_load_nvt_fw();
 	} else if(ilitek_tp == 1) {
@@ -1853,7 +1853,7 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 end:
 	pr_debug("%s-:\n", __func__);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , ---\n", __func__);
 #endif
 
@@ -1935,7 +1935,7 @@ static int mdss_dsi_unblank(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		pr_info("LCD_LOG : %s , +++\n", __func__);
 #endif
 
@@ -1998,7 +1998,7 @@ error:
 
 	pr_debug("%s-:\n", __func__);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s , ---\n", __func__);
 #endif
 

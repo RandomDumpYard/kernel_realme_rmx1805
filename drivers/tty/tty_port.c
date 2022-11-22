@@ -486,7 +486,7 @@ int tty_port_close_start(struct tty_port *port,
 		if (tty->flow_stopped)
 			tty_driver_flush_buffer(tty);
 		if (port->closing_wait != ASYNC_CLOSING_WAIT_NONE)
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			tty_wait_until_sent(tty, (tty->index == 0) ? HZ : port->closing_wait);
 #else
 			tty_wait_until_sent(tty, port->closing_wait);

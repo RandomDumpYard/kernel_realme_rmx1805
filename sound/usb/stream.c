@@ -744,7 +744,7 @@ int snd_usb_parse_audio_interface(struct snd_usb_audio *chip, int iface_no)
 		/* some quirks for attributes here */
 
 		switch (chip->usb_id) {
-		#ifdef ODM_WT_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_SDM450
 		case USB_ID(0x0451, 0x17ed):
 			if (stream == SNDRV_PCM_STREAM_PLAYBACK)
 				fp->attributes &= ~(UAC_EP_CS_ATTR_FILL_MAX);

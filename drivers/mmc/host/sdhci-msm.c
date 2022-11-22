@@ -42,7 +42,7 @@
 #include <linux/nvmem-consumer.h>
 #include <trace/events/mmc.h>
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/proc_fs.h>
 #endif
 
@@ -441,7 +441,7 @@ out:
 	return rc;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static int sdhci_irq_gpio = 0;
 
 static int card_tray_status_show(struct seq_file *m, void *v)
@@ -2036,7 +2036,7 @@ struct sdhci_msm_pltfm_data *sdhci_msm_populate_pdata(struct device *dev,
 
 	pdata->status_gpio = of_get_named_gpio_flags(np, "cd-gpios", 0, &flags);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	sdhci_irq_gpio = pdata->status_gpio;
 #endif
 
@@ -5248,7 +5248,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
 	if (sdhci_msm_is_bootdevice(&pdev->dev))
 		mmc_flush_detect_work(host->mmc);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (!strcmp(mmc_hostname(host->mmc), "mmc1")) {
 		ret = card_tray_detect_create_proc();
 		if (ret) {
@@ -5360,7 +5360,7 @@ static int sdhci_msm_remove(struct platform_device *pdev)
 		sdhci_msm_bus_cancel_work_and_set_vote(host, 0);
 		sdhci_msm_bus_unregister(msm_host);
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (!strcmp(mmc_hostname(host->mmc), "mmc1")) {
 		card_tray_detect_remove_proc();
 	}

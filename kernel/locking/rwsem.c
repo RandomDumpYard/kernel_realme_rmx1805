@@ -23,7 +23,7 @@ void __sched down_read(struct rw_semaphore *sem)
 
 	LOCK_CONTENDED(sem, __down_read_trylock, __down_read);
 	rwsem_set_reader_owned(sem);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	WRITE_ONCE(sem->debug_current, current);
 	sem->debug_address = _RET_IP_;
 #endif

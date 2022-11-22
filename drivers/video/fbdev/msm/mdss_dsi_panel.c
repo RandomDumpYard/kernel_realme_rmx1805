@@ -30,7 +30,7 @@
 #endif
 #include "mdss_debug.h"
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include "linux/hardware_info.h"
 #endif
 
@@ -45,7 +45,7 @@
 #define LCD_BACKLIGHT_OFF 0
 extern void wakeup_src_clean(void);
 #endif /* VENDOR_EDIT */
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern int g_shutdown_pending;
 extern int g_gesture;
 extern int himax_tp;
@@ -245,7 +245,7 @@ static void mdss_dsi_panel_cmds_send(struct mdss_dsi_ctrl_pdata *ctrl,
 }
 
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static char led_pwm1[3] = {0x51, 0x0, 0x0};	/* DTYPE_DCS_WRITE1 */
 
 static struct dsi_cmd_desc backlight_cmd = {
@@ -346,7 +346,7 @@ static void mdss_dsi_panel_bklt_dcs(struct mdss_dsi_ctrl_pdata *ctrl, int level)
 
 	pr_debug("%s: level=%d\n", __func__, level);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	led_pwm1[1] = (unsigned char)(level >> 8);
 	led_pwm1[2] = (unsigned char)level;
 
@@ -660,7 +660,7 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 			gpio_free(ctrl_pdata->disp_en_gpio);
 		}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (g_shutdown_pending == 0) {
 			if(pdata->panel_info.vddio_always_on) {
 				pr_debug("%s: not do reset \n", __func__);
@@ -1067,7 +1067,7 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 	struct dsi_panel_cmds *on_cmds;
 	int ret = 0;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	test_dimming = 0;
 #endif
 
@@ -1213,7 +1213,7 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 
 	if (ctrl->off_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->off_cmds, CMD_REQ_COMMIT);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (pinfo->gesture_off_cmd && (g_gesture == 0)) {
 		mdss_dsi_panel_hx_power_off(pdata);
 		if (ctrl->gesture_off_cmds.cmd_cnt)
@@ -1221,7 +1221,7 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 	}
 #endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ((strncmp(pinfo->panel_name, "ilt9881h_hlt", strlen("ilt9881h_hlt")) == 0) && (g_gesture == 0)) {
 		core_config_sleep_ctrl(false);
 		usleep_range(40000,41000);
@@ -1972,7 +1972,7 @@ static bool mdss_dsi_cmp_panel_reg_v2(struct mdss_dsi_ctrl_pdata *ctrl)
 
 	for (j = 0; j < ctrl->groups; ++j) {
 		for (i = 0; i < len; ++i) {
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 			if (himax_tp == 1) {
 				if (i == 0) {
 					pr_err("%s: himax_tp the first esd check not compare\n", __func__);
@@ -1997,7 +1997,7 @@ static bool mdss_dsi_cmp_panel_reg_v2(struct mdss_dsi_ctrl_pdata *ctrl)
 			return true;
 		group += len;
 	}
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (!ctrl->panel_data.panel_info.esd_check_running) {
 		return true;
 	} else {
@@ -2349,7 +2349,7 @@ static int mdss_dsi_parse_panel_features(struct device_node *np,
 		"qcom,ulps-enabled");
 	pr_info("%s: ulps feature %s\n", __func__,
 		(pinfo->ulps_feature_enabled ? "enabled" : "disabled"));
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pinfo->vddio_always_on = of_property_read_bool(np,
 		"qcom,vddio-always-on-enabled");
 	pr_info("%s: vddio_always_on feature %s\n", __func__,
@@ -2929,7 +2929,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	const char *data;
 	static const char *pdest;
 	struct mdss_panel_info *pinfo = &(ctrl_pdata->panel_data.panel_info);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	u32 *array;
 	int bl_i;
 #endif
@@ -2998,7 +2998,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	pinfo->bl_max = (!rc ? tmp : 255);
 	ctrl_pdata->bklt_max = pinfo->bl_max;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	rc = of_property_read_u32(np, "qcom,blmap-size", &tmp);
 		pinfo->blmap_size = (!rc ? tmp : 0);
 
@@ -3157,7 +3157,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 					"qcom,mdss-dsi-lp11-init");
 	rc = of_property_read_u32(np, "qcom,mdss-dsi-init-delay-us", &tmp);
 	pinfo->mipi.init_delay = (!rc ? tmp : 0);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pinfo->mipi.lp11_deinit = of_property_read_bool(np,
 					"qcom,mdss-dsi-lp11-deinit");
 #endif
@@ -3231,7 +3231,7 @@ error:
 	return -EINVAL;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern void devinfo_info_set(char *name, char *version, char *manufacture);
 extern char Lcm_name[HARDWARE_MAX_ITEM_LONGTH];
 #endif

@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - hiamx_ic_HX83102.c
 ** Description : This program is for hiamx driver
 ** Version: 1.0
@@ -575,7 +575,7 @@ static void himax_hx83102d_reload_to_active(void)
 	addr[2] = 0x00;
 	addr[1] = 0x00;
 	addr[0] = 0x48;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 
 	do {
 		data[3] = 0x00;

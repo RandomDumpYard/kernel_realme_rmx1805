@@ -269,7 +269,7 @@ static int _create_phy_ctrl_nodes(struct mdss_panel_debugfs_info *debugfs_info,
 			     pinfo->mipi.dsi_phy_db.lanecfg);
 	DEBUGFS_CREATE_ARRAY("timing", phy_node,
 			     pinfo->mipi.dsi_phy_db.timing);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	DEBUGFS_CREATE_ARRAY("timing_8996", phy_node,
 				pinfo->mipi.dsi_phy_db.timing_8996);
 #endif
@@ -316,7 +316,7 @@ static int _create_dsi_panel_nodes(struct mdss_panel_debugfs_info *dfs,
 			&pinfo->esd_check_enabled);
 	debugfs_create_bool("panel_ack_disabled", 0644, dfs->root,
 			&pinfo->panel_ack_disabled);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	debugfs_create_bool("vddio_always_on", 0644, dfs->root,
 			&pinfo->vddio_always_on);
 	debugfs_create_bool("gesture_off_cmd", 0644, dfs->root,
@@ -398,7 +398,7 @@ static int _create_dsi_panel_nodes(struct mdss_panel_debugfs_info *dfs,
 			(char *)&pinfo->mipi.tx_eot_append);
 	debugfs_create_u32("adjust_timer_ms", 0644, mipi_root,
 			(u32 *)&pinfo->adjust_timer_delay_ms);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	debugfs_create_u8("lp11_deinit", 0644, mipi_root,
 			(char *)&pinfo->mipi.lp11_deinit);
 #endif

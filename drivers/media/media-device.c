@@ -113,13 +113,13 @@ static long media_device_enum_entities(struct media_device *mdev, void *arg)
 	if (ent->name)
 		strlcpy(entd->name, ent->name, sizeof(entd->name));
 	entd->type = ent->function;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	entd->revision = ent->revision;
 #else
 	entd->revision = 0;		/* Unused */
 #endif
 	entd->flags = ent->flags;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	entd->group_id = ent->group_id;
 #else
 	entd->group_id = 0;		/* Unused */

@@ -32,12 +32,12 @@ proc-$(CONFIG_PROC_KCORE)	+= kcore.o
 proc-$(CONFIG_PROC_VMCORE)	+= vmcore.o
 proc-$(CONFIG_PRINTK)	+= kmsg.o
 proc-$(CONFIG_PROC_PAGE_MONITOR)	+= page.o
-ifeq ($(ODM_WT_EDIT),yes)
+ifeq ($(CONFIG_PRODUCT_REALME_SDM450),yes)
 
 obj-y += oppoversion.o
 endif
 
-ifeq ($(ODM_WT_EDIT),yes)
+ifeq ($(CONFIG_PRODUCT_REALME_SDM450),yes)
 obj-y += devinfo.o
 endif
 #ifdef VENDOR_EDIT

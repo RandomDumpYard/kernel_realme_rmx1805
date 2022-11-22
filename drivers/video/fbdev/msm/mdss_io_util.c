@@ -26,7 +26,7 @@
 
 #define MAX_I2C_CMDS  16
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern int g_shutdown_pending;
 extern int g_gesture;
 #endif
@@ -303,7 +303,7 @@ int msm_mdss_enable_vreg(struct mdss_vreg *in_vreg, int num_vreg, int enable)
 					in_vreg[i].vreg_name);
 				goto vreg_set_opt_mode_fail;
 			}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			if ( g_shutdown_pending == 0 && g_gesture == 1) {
 				if (!regulator_enable(in_vreg[i].vreg))
 					rc = regulator_enable(in_vreg[i].vreg);
@@ -331,7 +331,7 @@ int msm_mdss_enable_vreg(struct mdss_vreg *in_vreg, int num_vreg, int enable)
 					(in_vreg[i].pre_off_sleep * 1000) + 10);
 			regulator_set_load(in_vreg[i].vreg,
 				in_vreg[i].load[DSS_REG_MODE_DISABLE]);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			if ( g_shutdown_pending == 0 && g_gesture == 1) {
 				pr_debug("%s: not do reset \n", __func__);
 			} else {
@@ -370,7 +370,7 @@ vreg_set_opt_mode_fail:
 } /* msm_mdss_enable_vreg */
 EXPORT_SYMBOL(msm_mdss_enable_vreg);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int msm_mdss_enable_vreg_truly(struct mdss_vreg *in_vreg, int num_vreg, int enable)
 {
 	int i = 0, rc = 0;

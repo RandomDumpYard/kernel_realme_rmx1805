@@ -482,7 +482,7 @@ static int qpnp_flash_led_init_settings(struct qpnp_flash_led *led)
 	if (rc < 0)
 		return rc;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
     pr_debug("flashled num_snodes=%d", led->num_snodes);
     if (led->num_snodes > LED3 && led->fnode[LED3].strobe_sel == LPG_STROBE) {
 #else

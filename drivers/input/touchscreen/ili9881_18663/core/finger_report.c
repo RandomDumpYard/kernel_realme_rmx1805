@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - finger_report.c
 ** Description : This program is for ili9881 driver finger_report.c
 ** Version: 1.0
@@ -29,7 +29,7 @@
 #include "mp_test.h"
 #include "protocol.h"
 /*****************MING***************/
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern uint32_t buf_rawdata[576];
 extern uint32_t buf_delta[576];
 extern uint8_t buf_gesture[GESTURE_INFO_LENGTH+1];
@@ -71,7 +71,7 @@ struct fr_data_node {
 /* record the status of touch being pressed or released currently and previosuly */
 uint8_t g_current_touch[MAX_TOUCH_NUM];
 uint8_t g_previous_touch[MAX_TOUCH_NUM];
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 bool b_first_point =true;
 uint32_t last_nX = 0, last_nY = 0;
 #endif
@@ -420,7 +420,7 @@ static int parse_touch_package_v5_0(uint8_t pid)
 				g_mutual_data.mtp[g_mutual_data.touch_num].pressure = 1;
 
 			ipio_debug(DEBUG_FINGER_REPORT, "[x,y]=[%d,%d]\n", nX, nY);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			last_nX =nX;
 			last_nY =nY;
 			if(b_first_point)
@@ -573,7 +573,7 @@ static int finger_report_ver_5_0(void)
         #endif
 		goto out;
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 
 	if (pid == protocol->ges_pid && core_config->isEnableGesture) {
 		ipio_debug(DEBUG_FINGER_REPORT, "pid = 0x%x, code = %x\n", pid, g_fr_node->data[1]);
@@ -665,7 +665,7 @@ static int finger_report_ver_5_0(void)
 			input_sync(core_fr->input_device);
 
 			last_touch = 0;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			b_first_point =true;
 			oppo_debug(1, "[x,y]=[%d,%d]\n", last_nX, last_nY);
 #endif

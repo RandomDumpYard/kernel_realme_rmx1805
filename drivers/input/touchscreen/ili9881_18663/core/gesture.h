@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - generate.h
 ** Description : This program is for ili9881 driver gesture.h
 ** Version: 1.0

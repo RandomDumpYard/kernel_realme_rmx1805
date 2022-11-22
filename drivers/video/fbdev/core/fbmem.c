@@ -1064,7 +1064,7 @@ fb_blank(struct fb_info *info, int blank)
 	event.info = info;
 	event.data = &blank;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s blank = %d, +++\n", __func__, blank);
 #endif
 
@@ -1085,7 +1085,7 @@ fb_blank(struct fb_info *info, int blank)
 			fb_notifier_call_chain(FB_R_EARLY_EVENT_BLANK, &event);
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s blank = %d, ---\n", __func__, blank);
 #endif
 

@@ -33,7 +33,7 @@
 #include <soc/qcom/smem.h>
 
 #include "peripheral-loader.h"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/wt_system_monitor.h>
 #endif
 #define XO_FREQ			19200000
@@ -841,7 +841,7 @@ static struct pil_reset_ops pil_ops_trusted = {
 	.deinit_image = pil_deinit_image_trusted,
 };
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef WT_BOOT_REASON
 char subsys_restart_reason[MAX_SSR_REASON_LEN];
 #endif
@@ -869,7 +869,7 @@ static void log_failure_reason(const struct pil_tz_data *d)
 
 	strlcpy(reason, smem_reason, min(size, MAX_SSR_REASON_LEN));
 	pr_err("%s subsystem failure reason: %s.\n", name, reason);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef WT_BOOT_REASON
 	strlcpy(subsys_restart_reason, smem_reason, min(size, MAX_SSR_REASON_LEN));
 #endif
@@ -965,7 +965,7 @@ static irqreturn_t subsys_wdog_bite_irq_handler(int irq, void *dev_id)
 
 	if (d->subsys_desc.system_debug &&
 			!gpio_get_value(d->subsys_desc.err_fatal_gpio)) {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef WT_BOOT_REASON
 		set_reset_magic(RESET_MAGIC_SUBSYSTEM);
 #endif

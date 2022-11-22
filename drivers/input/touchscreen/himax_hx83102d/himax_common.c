@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - hiamx_common.c
 ** Description : This program is for hiamx driver
 ** Version: 1.0
@@ -50,7 +50,7 @@ int g_i_CFG_VER = 0;
 int g_i_CID_MAJ = 0; /*GUEST ID*/
 int g_i_CID_MIN = 0; /*VER for GUEST*/
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef HX_ZERO_FLASH
 int g_f_0f_updat = 0;
 #endif
@@ -800,12 +800,12 @@ static struct file_operations himax_proc_Gesture_ops = {
 	.write = himax_GESTURE_write,
 };
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef CONFIG_TOUCHSCREEN_HIMAX_INSPECT
 extern void (*fp_himax_baseline_test_init)(void);
 #endif
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static ssize_t wt_hiamx_mptest_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)
 {
 #if 0
@@ -981,7 +981,7 @@ static const struct file_operations himax_black_screen_test_fops = {
 
 int himax_common_proc_init(void)
 {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		struct proc_dir_entry *proc_mp_dir;
 		struct proc_dir_entry *proc_mptest_node;
 		proc_mp_dir = proc_mkdir("touchscreen", NULL);
@@ -1360,7 +1360,7 @@ static void himax_esd_hw_reset(void)
 	}
 
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef HX_ZERO_FLASH
 	I("It will update fw after esd event in zero flash mode!\n");
 	do {
@@ -3379,7 +3379,7 @@ int himax_chip_common_suspend(struct himax_ts_data *ts)
 
 int himax_chip_common_resume(struct himax_ts_data *ts)
 {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 
 //#ifndef HX_SMART_WAKEUP
 //#if defined(HX_RST_PIN_FUNC) && defined(HX_RESUME_HW_RESET) && defined(HX_ZERO_FLASH)
@@ -3436,7 +3436,7 @@ if ( !(ts->SMWP_enable)) {
 #if 0
 #ifdef HX_ZERO_FLASH
 	I("It will update fw after esd event in zero flash mode!\n");
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	result = g_core_fp.fp_0f_operation_dirly();
 	if(result) {
 		E("Something is wrong! Skip Update with zero flash! %s: END \n",__func__);

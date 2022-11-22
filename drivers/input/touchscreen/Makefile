@@ -73,7 +73,7 @@ obj-$(CONFIG_TOUCHSCREEN_STMPE)		+= stmpe-ts.o
 obj-$(CONFIG_TOUCHSCREEN_SUN4I)		+= sun4i-ts.o
 obj-$(CONFIG_TOUCHSCREEN_SUR40)		+= sur40.o
 obj-$(CONFIG_TOUCHSCREEN_SURFACE3_SPI)	+= surface3_spi.o
-ifeq ($(ODM_WT_EDIT),yes)
+ifeq ($(CONFIG_PRODUCT_REALME_SDM450),yes)
 #obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX) += synaptics_dsx/
 #obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_DSX_v26)	+= synaptics_dsx_2.6/
 endif
@@ -108,7 +108,7 @@ obj-$(CONFIG_TOUCHSCREEN_ROHM_BU21023)	+= rohm_bu21023.o
 obj-$(CONFIG_TOUCHSCREEN_FTS)		+= focaltech_touch/
 obj-$(CONFIG_TOUCHSCREEN_GT9XX_v28)		+= gt9xx_v2.8/
 obj-$(CONFIG_TOUCHSCREEN_HIMAX_CHIPSET)	+= hxchipset/
-ifeq ($(ODM_WT_EDIT),yes)
+ifeq ($(CONFIG_PRODUCT_REALME_SDM450),yes)
 obj-$(CONFIG_INPUT_TOUCHSCREEN)      += headset_notifier.o
 obj-$(CONFIG_INPUT_TOUCHSCREEN)      += update_tpfw_notifier.o
 obj-$(CONFIG_TOUCHSCREEN_ILI9881)	+= ili9881_18663/

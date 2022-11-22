@@ -1,6 +1,6 @@
 /***********************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** File: - devinfo.c
 ** Description: source  devinfo
 **

@@ -813,7 +813,7 @@ long msm_ion_custom_ioctl(struct ion_client *client,
 		start = (unsigned long)data.flush_data.vaddr +
 			data.flush_data.offset;
 		end = start + data.flush_data.length;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (start && check_vaddr_bounds(start, end)) {
 #else
 		if (check_vaddr_bounds(start, end)) {

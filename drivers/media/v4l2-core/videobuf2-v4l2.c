@@ -146,7 +146,7 @@ static void vb2_warn_zero_bytesused(struct vb2_buffer *vb)
 		return;
 
 	check_once = true;
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 	WARN_ON(1);
 	#else
 	#endif

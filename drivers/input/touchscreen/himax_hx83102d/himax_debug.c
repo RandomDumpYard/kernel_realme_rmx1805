@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - hiamx_debug.c
 ** Description : This program is for hiamx driver
 ** Version: 1.0
@@ -22,7 +22,7 @@ extern struct himax_debug *debug_data;
 extern unsigned char	IC_CHECKSUM;
 extern int i2c_error_count;
 extern struct proc_dir_entry *himax_touch_proc_dir;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern struct fw_operation *pfw_op;
 #endif
 extern int himax_input_register(struct himax_ts_data *ts);
@@ -182,7 +182,7 @@ static struct file_operations himax_proc_attn_ops = {
 	.read = himax_attn_read,
 };
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static ssize_t himax_i2c_device_test_read(struct file *file, char *buf,
 								size_t len, loff_t *pos)
 {
@@ -1220,7 +1220,7 @@ bool himax_ts_diag_func(void)
 	int dsram_type = 0;
 	char temp_buf[20];
 	char write_buf[total_size * 3];
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	//bool ret = false;
 	//int retry_cnt = 10;
 #endif
@@ -1246,7 +1246,7 @@ bool himax_ts_diag_func(void)
 	}
 
 	g_core_fp.fp_burst_enable(1);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	/*sram type = 5 for oppo test*/
 	if (dsram_type == 1 || dsram_type == 2 || dsram_type == 4 || dsram_type == 5) {
 #endif
@@ -1260,7 +1260,7 @@ bool himax_ts_diag_func(void)
 		self_data_new = getSelfNewBuffer();
 		self_data_old = getSelfOldBuffer();
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (g_core_fp.fp_get_DSRAM_data(info_data, DSRAM_Flag) == false)
 		return false;
 #endif
@@ -1790,7 +1790,7 @@ static ssize_t himax_debug_write(struct file *file, const char *buff,
 #ifdef HX_ZERO_FLASH
 		I("NOW Running Zero flash update!\n");
 		I("%s: upgrade from file(%s) start!\n", __func__, fileName);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 
 		result = g_core_fp.fp_0f_op_file_dirly(fileName);
 		if(result) {
@@ -2564,7 +2564,7 @@ static struct file_operations himax_proc_coor_ops = {
 	.owner = THIS_MODULE,
 	.read = himax_coor_read,
 };  */
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static void himax_oppo_raw_data_read(int ts_diag_cmd)
 {
 	struct himax_ts_data *ts = private_ts;
@@ -2767,7 +2767,7 @@ static ssize_t himax_main_reg_read(struct file *file, char *buf, /*main_register
 
 	return ret;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static struct file_operations himax_proc_main_reg_ops = {
 	.owner = THIS_MODULE,
 	.read = himax_main_reg_read,
@@ -2956,7 +2956,7 @@ static ssize_t himax_tp_fw_update_write(struct file *file, const char *buff, /*t
 #ifdef HX_ZERO_FLASH
 	if (buf_tmp[0] == '0') {
 		I("%s\n", __func__);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		g_core_fp.fp_0f_operation_dirly();
 		g_core_fp.fp_reload_disable(0);
 		msleep (10);
@@ -3122,7 +3122,7 @@ int himax_touch_proc_init(void)
 		E(" %s: proc CRC test file create failed!\n", __func__);
 		goto fail_18;
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 
 	himax_proc_i2c_device_test_file = proc_create(HIMAX_PROC_I2C_DEVICE_TEST_FILE, (S_IRUGO),
 										   himax_touch_proc_dir, &himax_proc_i2c_device_test_ops);

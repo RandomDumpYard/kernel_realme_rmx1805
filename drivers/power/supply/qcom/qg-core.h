@@ -16,7 +16,7 @@
 #include "fg-alg.h"
 #include "qg-defs.h"
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 enum batt_info_params {
 	BATT_INFO_NOTIFY = 0,
 	BATT_INFO_SOC,
@@ -176,7 +176,7 @@ struct qpnp_qg {
 	char			counter_buf[BUCKET_COUNT * 8];
 	/* ttf */
 	struct ttf		*ttf;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	/* Batt_info restore */
 	bool		soc_notify_ready;
 	int			batt_info[BATT_INFO_MAX];
@@ -213,7 +213,7 @@ enum debug_mask {
 	QG_DEBUG_BUS_READ	= BIT(8),
 	QG_DEBUG_BUS_WRITE	= BIT(9),
 	QG_DEBUG_ALG_CL		= BIT(10),
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	QG_DEBUG_RESTORE_SOC	= BIT(11),
 #endif
 };

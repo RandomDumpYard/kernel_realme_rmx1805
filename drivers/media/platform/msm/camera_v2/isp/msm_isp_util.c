@@ -410,7 +410,7 @@ static int msm_isp_start_fetch_engine_multi_pass(struct vfe_device *vfe_dev,
 			pr_err("%s: Fetch engine config failed\n", __func__);
 			return -EINVAL;
 		}
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
         for (i = 0; i < stream_info->num_planes; i++)
             wm_reload_mask |= (1 << stream_info->wm[vfe_idx][i]);
 #else

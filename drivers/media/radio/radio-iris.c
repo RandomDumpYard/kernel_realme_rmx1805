@@ -5369,7 +5369,7 @@ static int iris_vidioc_querycap(struct file *file, void *priv,
 	return 0;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static int  hci_fm_set_bend_tbl_default(struct radio_hci_dev *hdev, unsigned long param)
 {
 	int retval = 0;
@@ -5427,7 +5427,7 @@ static int initialise_recv(struct iris_device *radio)
 	retval = hci_cmd(HCI_FM_GET_RECV_CONF_CMD, radio->fm_hdev);
 	if (retval < 0)
 		FMDERR("Failed to get the Recv Config\n");
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	retval = hci_fm_set_bend_tbl_default((struct radio_hci_dev *)radio->fm_hdev,(unsigned long) 0);
      if (retval < 0)
 	FMDERR("Failed to  configure default Stereo Threshol \n");

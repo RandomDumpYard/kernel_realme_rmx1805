@@ -156,7 +156,7 @@ static u32 mdss_fb_pseudo_palette[16] = {
 
 static struct msm_mdp_interface *mdp_instance;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int g_shutdown_pending = 0;
 int g_gesture = 0;
 #endif
@@ -346,7 +346,7 @@ static int mdss_fb_notify_update(struct msm_fb_data_type *mfd,
 
 static int lcd_backlight_registered;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #else
 static void wt_mdss_bright_to_backlight_map(u64 *values, struct msm_fb_data_type *mfd)
 {
@@ -392,7 +392,7 @@ static void mdss_fb_set_bl_brightness(struct led_classdev *led_cdev,
 	struct msm_fb_data_type *mfd = dev_get_drvdata(led_cdev->dev->parent);
 	u64 bl_lvl;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int value_temp, value_a, value_b;
 #endif
 
@@ -401,7 +401,7 @@ static void mdss_fb_set_bl_brightness(struct led_classdev *led_cdev,
 		mfd->boot_notification_led = NULL;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 if ( value > 0) {
 	pr_debug(" %s  value %d \n", __func__, value);
 	if (mfd->panel_info->blmap){
@@ -432,7 +432,7 @@ if ( value > 0) {
 	/* This maps android backlight level 0 to 255 into
 	 * driver backlight level 0 to bl_max with rounding
 	 */
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	MDSS_BRIGHT_TO_BL(bl_lvl, value, mfd->panel_info->bl_max,
 				mfd->panel_info->brightness_max);
 #else
@@ -1399,7 +1399,7 @@ static void mdss_fb_shutdown(struct platform_device *pdev)
 	struct msm_fb_data_type *mfd = platform_get_drvdata(pdev);
 
 	mfd->shutdown_pending = true;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	g_shutdown_pending = 1;
 #endif
 
@@ -2373,7 +2373,7 @@ static int mdss_fb_blank_blank(struct msm_fb_data_type *mfd,
 		mutex_lock(&mfd->bl_lock);
 		current_bl = mfd->bl_level;
 		mfd->allow_bl_update = true;
-		#ifdef ODM_WT_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_SDM450
 		pr_info("LCD_LOG : %s: mdss_fb_set_backlight(0)\n", __func__);
 		#endif
 		mdss_fb_set_backlight(mfd, 0);
@@ -2478,7 +2478,7 @@ static int mdss_fb_blank_unblank(struct msm_fb_data_type *mfd)
 			 */
 			if (IS_CALIB_MODE_BL(mfd))
 			{
-				#ifdef ODM_WT_EDIT
+				#ifdef CONFIG_PRODUCT_REALME_SDM450
 				pr_info("LCD_LOG : %s: mdss_fb_set_backlight(%d)\n", __func__, mfd->calib_mode_bl);
 				#endif
 				mdss_fb_set_backlight(mfd, mfd->calib_mode_bl);
@@ -2486,7 +2486,7 @@ static int mdss_fb_blank_unblank(struct msm_fb_data_type *mfd)
 			else if ((!mfd->panel_info->mipi.post_init_delay) &&
 				(mfd->unset_bl_level != U32_MAX))
 			{
-				#ifdef ODM_WT_EDIT
+				#ifdef CONFIG_PRODUCT_REALME_SDM450
 				pr_info("LCD_LOG : %s: mdss_fb_set_backlight(%d)\n", __func__, mfd->unset_bl_level);
 				#endif
 				mdss_fb_set_backlight(mfd, mfd->unset_bl_level);
@@ -2612,7 +2612,7 @@ static int mdss_fb_blank(int blank_mode, struct fb_info *info)
 		return ret;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s blank_mode = %d, +++\n", __func__, blank_mode);
 #endif
 
@@ -2652,7 +2652,7 @@ static int mdss_fb_blank(int blank_mode, struct fb_info *info)
 end:
 	mutex_unlock(&mfd->mdss_sysfs_lock);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pr_info("LCD_LOG : %s blank_mode = %d, ---\n", __func__, blank_mode);
 #endif
 
@@ -3303,7 +3303,7 @@ static int mdss_fb_open(struct fb_info *info, int user)
 	struct mdss_fb_file_info *file_info = NULL;
 	int result;
 	struct task_struct *task = current->group_leader;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	g_shutdown_pending = 0;
 	#endif
 
@@ -3359,7 +3359,7 @@ static int mdss_fb_release_all(struct fb_info *info, bool release_all)
 	int ret = 0;
 	bool node_found = false;
 	struct task_struct *task = current->group_leader;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	g_shutdown_pending = 1;
 #endif
 

@@ -108,7 +108,7 @@ obj-$(CONFIG_QCOM_QDSS_BRIDGE) += qdss_bridge.o
 obj-$(CONFIG_MSM_BAM_DMUX) += bam_dmux.o
 obj-$(CONFIG_WCNSS_CORE) += wcnss/
 
-ifeq ($(ODM_WT_EDIT),yes)
+ifeq ($(CONFIG_PRODUCT_REALME_SDM450),yes)
 obj-y += serial_num.o
 obj-y += secboot_fuse.o
 endif

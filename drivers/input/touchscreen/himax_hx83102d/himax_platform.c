@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - hiamx_platform.c
 ** Description : This program is for hiamx driver
 ** Version: 1.0
@@ -29,7 +29,7 @@ extern enum hrtimer_restart himax_ts_timer_func(struct hrtimer *timer);
 
 extern int himax_chip_common_init(void);
 extern void himax_chip_common_deinit(void);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int hx_ctpmodule = -1;
 #endif
 int himax_dev_set(struct himax_ts_data *ts)
@@ -834,14 +834,14 @@ int himax_chip_common_probe(struct spi_device *spi)
 {
 	struct himax_ts_data *ts;
 	int ret = 0;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	char *temp = NULL;
 	char *temp_tcl = NULL;
 	char * cmdline_tp = NULL;
 	char * cmdline_tp_tcl = NULL;
 	int ctpmodule = 0;
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	cmdline_tp = strstr(saved_command_line,"qcom,mdss_dsi_hx83102d_");
 	if ( cmdline_tp == NULL ){
 		printk("get qcom,mdss_dsi_hx83102d_ fail ");

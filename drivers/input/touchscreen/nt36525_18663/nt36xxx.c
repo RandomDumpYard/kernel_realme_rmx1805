@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - nt36xxx.c
 ** Description : This program is for nt36xxx driver
 ** Version: 1.0
@@ -36,7 +36,7 @@
 #endif /* #if NVT_TOUCH_ESD_PROTECT */
 
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 //#include <linux/hardware_info.h>
 #include <linux/regulator/consumer.h>
 //extern char Ctp_name[HARDWARE_MAX_ITEM_LONGTH];
@@ -45,11 +45,11 @@ extern int usb_state_ctp;
 int novatek_tp = 0;
 int ctpmodule = -1;
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern void devinfo_info_tp_set(char *version, char *manufacture, char *fw_path);
 #endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	static char version[20] = {"0"};
 #endif
 
@@ -135,7 +135,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed.
 *******************************************************/
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 //static uint8_t rbuf[NVT_TANSFER_LEN+1] = {0};
 static uint8_t *rbuf = NULL;
 static inline void rbuf_init(void)
@@ -300,7 +300,7 @@ void nvt_boot_ready(void)
 	//---write POR_CD cmds---
 	nvt_write_addr(ts->mmap->POR_CD_ADDR, 0xA0);
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 /*******************************************************
 Description:
 	Novatek touchscreen eng reset cmd
@@ -588,7 +588,7 @@ info_retry:
 		NVT_LOG("fw_ver=%02X\n", ts->fw_ver);
 		ret = 0;
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ( ctpmodule == 0 ){
 //		sprintf(Ctp_name,"NT36525,TianMa,FW:0x%02x\n",ts->fw_ver);
 	}
@@ -596,7 +596,7 @@ info_retry:
 //		sprintf(Ctp_name,"NT36525,XinLi,FW:0x%02x\n",ts->fw_ver);
 	}
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ( ctpmodule == 0 ){
 	    sprintf(version,"TM_nt525_0x%02x",ts->fw_ver);
 	    devinfo_info_tp_set(version, "TIANMA",OPPO_BOOT_UPDATE_FIRMWARE_NAME_TM);
@@ -787,7 +787,7 @@ static int32_t nvt_flash_proc_init(void)
 #endif
 
 #if WAKEUP_GESTURE
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 enum {	/* oppo gesture type */
 	UnkownGesture = 0,
 	DouTap        = 1,
@@ -834,7 +834,7 @@ Description:
 return:
 	n.a.
 *******************************************************/
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 void nvt_ts_wakeup_gesture_report(uint8_t gesture_id, uint8_t *data, struct gesture_info *gesture)
 {
 	uint32_t keycode = 0;
@@ -1245,7 +1245,7 @@ static void nvt_esd_check_func(struct work_struct *work)
 		mutex_lock(&ts->lock);
 		NVT_ERR("do ESD recovery, timer = %d, retry = %d\n", timer, esd_retry);
 		/* do esd recovery, reload fw */
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (  ctpmodule == 0 ){
 			nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME_TM);
 		}
@@ -1424,7 +1424,7 @@ static void nvt_ts_work_func(struct work_struct *work)
    /* ESD protect by WDT */
    if (nvt_wdt_fw_recovery(point_data)) {
        NVT_ERR("Recover for fw reset, %02X\n", point_data[1]);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	   if (  ctpmodule == 0 ){
 			nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME_TM);
 		}
@@ -1855,7 +1855,7 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 #if (TOUCH_KEY_NUM > 0)
 	int32_t retry = 0;
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	char *temp = NULL;
 	char * cmdline_tp = NULL;
 	cmdline_tp = strstr(saved_command_line,"qcom,mdss_dsi_nt36525_");
@@ -1914,7 +1914,7 @@ static int32_t nvt_ts_probe(struct spi_device *client)
 	ts->g_gesture_bak = 0;
 	ts->nvt_fw_updating = 0;
 	ts->oppo_update_fw_flag = 0;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	rbuf_init();
 #endif
 	//---prepare for spi parameter---
@@ -2492,7 +2492,7 @@ static int32_t nvt_ts_resume(struct device *dev)
 	//schedule_work(&ts->nvt_resume_work);
 	NVT_LOG("%s\n",version);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ( ctpmodule == 0 ){
 		nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME_TM);
 	}

@@ -427,7 +427,7 @@ int qg_get_nominal_capacity(u32 *nom_cap_uah, int batt_temp, bool charging)
 	return 0;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int lookup_ocv_soc(u32 *ocv_uv, u32 soc, int batt_temp, bool charging)
 {
 	u8 table_index = charging ? TABLE_SOC_OCV1 : TABLE_SOC_OCV2;

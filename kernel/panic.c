@@ -28,7 +28,7 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/exception.h>
 #include <soc/qcom/minidump.h>
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/wt_system_monitor.h>
 #endif
 #define PANIC_TIMER_STEP 100
@@ -305,7 +305,7 @@ void panic(const char *fmt, ...)
 	va_end(args);
 	dump_stack_minidump(0);
 	pr_emerg("Kernel panic - not syncing: %s\n", buf);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef WT_BOOT_REASON
 	save_panic_key_log("Kernel panic - not syncing: %s\n", buf);
 #endif

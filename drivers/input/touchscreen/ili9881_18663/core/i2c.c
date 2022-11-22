@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - i2c.c
 ** Description : This program is for ili9881 driver i2c.c
 ** Version: 1.0

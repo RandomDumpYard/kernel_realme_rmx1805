@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - platform.c
 ** Description : This program is for ili9881 driver platform.c
 ** Version: 1.0
@@ -44,7 +44,7 @@ extern struct tpd_device *tpd;
 //static struct wake_lock ilitek_gestrue_wakelock;
 //extern int get_boot_mode(void);
 #define DEVICE_ID	"ILITEK_TDDI"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int ili_ctpmodule = -1;
 #endif
 
@@ -212,7 +212,7 @@ void ilitek_platform_tp_hw_reset(bool isEnable)
 	#endif
 	ilitek_platform_enable_irq();
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 void oppo_platform_tp_hw_reset(bool isEnable)
 {
 	ipio_info("HW Reset: %d\n", isEnable);
@@ -1188,7 +1188,7 @@ static int ilitek_platform_probe(struct spi_device *spi)
 #endif
 {
 	//int ret = 0;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	char *temp = NULL;
 	char * cmdline_tp = NULL;
 #endif
@@ -1199,7 +1199,7 @@ static int ilitek_platform_probe(struct spi_device *spi)
 		ipio_err("Failed to allocate ipd memory, %ld\n", PTR_ERR(ipd));
 		return -ENOMEM;
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		cmdline_tp = strstr(saved_command_line,"qcom,mdss_dsi_ilt9881h_");
 		printk("cmdline_tp = %s\n",cmdline_tp);
 		if ( cmdline_tp == NULL ){

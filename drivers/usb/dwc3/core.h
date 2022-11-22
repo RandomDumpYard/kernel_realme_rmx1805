@@ -44,7 +44,7 @@
 #define DWC3_EP0_BOUNCE_SIZE	512
 #define DWC3_ENDPOINTS_NUM	32
 #define DWC3_XHCI_RESOURCES_NUM	2
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define MAX_ERROR_RECOVERY_TRIES	3
 #endif
 #define DWC3_SCRATCHBUF_SIZE	4096	/* each buffer is assumed to be 4KiB */
@@ -847,7 +847,7 @@ struct dwc3_scratchpad_array {
 #define DWC3_GSI_EVT_BUF_ALLOC			10
 #define DWC3_GSI_EVT_BUF_SETUP			11
 #define DWC3_GSI_EVT_BUF_CLEANUP		12
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define DWC3_GSI_EVT_BUF_CLEAR			13
 #define DWC3_GSI_EVT_BUF_FREE			14
 #define DWC3_CONTROLLER_NOTIFY_CLEAR_DB		15
@@ -1180,7 +1180,7 @@ struct dwc3 {
 	bool			create_reg_debugfs;
 	u32			xhci_imod_value;
 	int			core_id;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 /*Hanxing.Duan@ODM.BSP.USB.Basic fix usb core error event 20170711*/
 	int			retries_on_error;
 #endif

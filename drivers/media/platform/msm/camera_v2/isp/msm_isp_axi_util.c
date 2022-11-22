@@ -3830,7 +3830,7 @@ static void msm_isp_remove_buf_queue(struct vfe_device *vfe_dev,
 
 }
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 /**
  * msm_isp_stream_axi_cfg_update() - Apply axi config update to a stream
  * @vfe_dev: The vfe device on which the update is to be applied
@@ -3905,7 +3905,7 @@ static int msm_isp_stream_axi_cfg_update(struct vfe_device *vfe_dev,
 
 int msm_isp_update_axi_stream(struct vfe_device *vfe_dev, void *arg)
 {
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	int rc = 0, i, j, k;
 #else
 	int rc = 0, i, j, k;
@@ -4093,7 +4093,7 @@ int msm_isp_update_axi_stream(struct vfe_device *vfe_dev, void *arg)
 			}
 			vfe_idx = msm_isp_get_vfe_idx_for_stream(
               				vfe_dev, stream_info);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			rc = msm_isp_stream_axi_cfg_update(vfe_dev, stream_info,
 						update_info);
 		    if (rc)

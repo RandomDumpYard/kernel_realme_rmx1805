@@ -326,7 +326,7 @@ static int32_t msm_flash_i2c_init(
 		goto msm_flash_i2c_init_fail;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	CDBG("Do not Parse and fill vreg params for powerup settings here");
 #else
 
@@ -1678,7 +1678,7 @@ static ssize_t flash_on_off(void)
                     flash_data.flash_current[0] = 64; /*64mA*/
                     flash_data.flash_current[1] = 64; /*64mA*/
                 } else {
-                    #ifdef ODM_WT_EDIT
+                    #ifdef CONFIG_PRODUCT_REALME_SDM450
                     flash_data.flash_current[0] = 50; /*100mA*/
                     flash_data.flash_current[1] = 50; /*100mA*/
                     #endif

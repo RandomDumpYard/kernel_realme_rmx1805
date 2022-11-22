@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - mp_test.c
 ** Description : This program is for ili9881 driver mp_test.c
 ** Version: 1.0
@@ -47,7 +47,7 @@
 #define OPPO_CSV_LCM_FAIL_NAME		"oppo_mp_lcm_fail"
 
 #define CSV_FILE_SIZE   (500 * 1024)
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int oppo_get_cdc_data(int index);
 int core_mp_init(void);
 static void mp_test_init_item(void);

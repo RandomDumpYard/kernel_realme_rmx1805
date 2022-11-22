@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - protocol.c
 ** Description : This program is for ili9881 driver protocol.c
 ** Version: 1.0
@@ -131,7 +131,7 @@ static void create_func_hash(void)
 #ifdef ILITEK_EDGE_LIMIT
 	insert_func(13, protocol->func_ctrl_len, protocol->edge_limit_ctrl, "edge_limit_ctrl");
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	insert_func(14, protocol->func_ctrl_len, protocol->play_mode_ctrl, "play_mode_ctrl");
 #endif
 }
@@ -226,7 +226,7 @@ static void config_protocol_v5_cmd(void)
 		protocol->edge_limit_ctrl[0] = 0x1;
 		protocol->edge_limit_ctrl[1] = 0x13;
 		protocol->edge_limit_ctrl[2] = 0x0;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		protocol->play_mode_ctrl[0] = 0x1;
 		protocol->play_mode_ctrl[1] = 0x14;
 		protocol->play_mode_ctrl[2] = 0x0;

@@ -4782,7 +4782,7 @@ static const struct mmc_fixup blk_fixups[] =
 	END_FIXUP
 };
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern void devinfo_info_set(char *name, char *version, char *manufacture);
 #endif
 
@@ -4790,7 +4790,7 @@ static int mmc_blk_probe(struct mmc_card *card)
 {
 	struct mmc_blk_data *md, *part_md;
 	char cap_str[10];
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	char *vendor_name = NULL;
 	char *emcp_name = NULL;
 	static char temp_version[10];
@@ -4807,7 +4807,7 @@ static int mmc_blk_probe(struct mmc_card *card)
 #endif
 	mmc_fixup_device(card, blk_fixups);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	switch (card->cid.manfid) {
 		case 0x11:
 			vendor_name = "TOSHIBA";

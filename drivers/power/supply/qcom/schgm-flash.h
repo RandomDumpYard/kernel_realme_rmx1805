@@ -36,7 +36,7 @@
 
 #define SCHGM_FLASH_CONTROL_REG			(SCHGM_FLASH_BASE + 0x60)
 #define SOC_LOW_FOR_FLASH_EN_BIT		BIT(7)
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 #define SCHGM_TORCH_PRIORITY_CONTROL		(SCHGM_FLASH_BASE + 0x63)
 #else
 #define SCHGM_TORCH_PRIORITY_CONTROL_REG	(SCHGM_FLASH_BASE + 0x63)
@@ -47,14 +47,14 @@
 
 #define SCHGM_SOC_BASED_FLASH_DISABLE_TH_CFG_REG \
 						(SCHGM_FLASH_BASE + 0x68)
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 enum torch_mode {
 	TORCH_BUCK_MODE = 0,
 	TORCH_BOOST_MODE,
 };
 #endif
 int schgm_flash_get_vreg_ok(struct smb_charger *chg, int *val);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 void schgm_flash_torch_priority(struct smb_charger *chg, enum torch_mode mode);
 #endif
 int schgm_flash_init(struct smb_charger *chg);

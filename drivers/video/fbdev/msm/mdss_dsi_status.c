@@ -167,7 +167,7 @@ static int fb_event_callback(struct notifier_block *self,
 	}
 
 	pdata->mfd = evdata->info->par;
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	if (event == FB_EVENT_BLANK) {
 		int *blank = evdata->data;
 		struct dsi_status_data *pdata = container_of(self,
@@ -206,7 +206,7 @@ static int fb_event_callback(struct notifier_block *self,
 			break;
 		case FB_BLANK_POWERDOWN:
 		case FB_BLANK_HSYNC_SUSPEND:
-			#ifdef ODM_WT_EDIT
+			#ifdef CONFIG_PRODUCT_REALME_SDM450
 			pinfo->esd_check_running = false;
 			#endif
 			pr_err("%s : LCD_LOG, ESD thread stop esd_check_running %d \n", __func__, pinfo->esd_check_running);
@@ -224,7 +224,7 @@ static int fb_event_callback(struct notifier_block *self,
 
 		switch (*blank) {
 		case FB_BLANK_UNBLANK:
-			#ifdef ODM_WT_EDIT
+			#ifdef CONFIG_PRODUCT_REALME_SDM450
 			pinfo->esd_check_running = true;
 			#endif
 			pr_err("%s : LCD_LOG, ESD thread start esd_check_running %d\n", __func__, pinfo->esd_check_running);

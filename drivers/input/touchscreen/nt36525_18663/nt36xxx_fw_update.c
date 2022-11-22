@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - nt36xxx_fw_update.c
 ** Description : This program is for nt36xxx driver
 ** Version: 1.0
@@ -37,7 +37,7 @@ extern void nvt_resume_tmp(void);
 extern int request_firmware_select(const struct firmware **firmware_p, const char *name,struct device *device);
 
 #define NVT_DUMP_SRAM   (0)
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern int ctpmodule;
 #endif
 struct timeval start, end;
@@ -636,7 +636,7 @@ static int32_t nvt_download_firmware(void)
 		gpio_set_value(ts->reset_gpio, 0);
 		mdelay(1);	//wait 1ms
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		nvt_eng_reset();
 #endif
 #if NVT_TOUCH_SUPPORT_HW_RST
@@ -751,7 +751,7 @@ return:
 void Boot_Update_Firmware(struct work_struct *work)
 {
 	mutex_lock(&ts->lock);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ( ctpmodule == 0 ){
 		printk("%s:nvt:this is tm module\n",__func__);
 		nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME_TM);
@@ -772,7 +772,7 @@ void resume_Update_Firmware(struct work_struct *work)
 #if NVT_TOUCH_SUPPORT_HW_RST
 	gpio_set_value(ts->reset_gpio, 1);
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ( ctpmodule == 0 ){
 		printk("%s:nvt:this is tm module\n",__func__);
 		nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME_TM);

@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - hiamx_debug.h
 ** Description : This program is for hiamx driver
 ** Version: 1.0
@@ -32,7 +32,7 @@
 #define HIMAX_PROC_LAYOUT_FILE		"layout"
 #define HIMAX_PROC_CRC_TEST_FILE		"CRC_test"
 #define HIMAX_PROC_IRQ_DEPTH_FILE		"irq_depth"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define HIMAX_PROC_I2C_DEVICE_TEST_FILE		"i2c_device_test"
 #endif
 
@@ -43,7 +43,7 @@ static struct proc_dir_entry *himax_proc_int_en_file;
 static struct proc_dir_entry *himax_proc_layout_file;
 static struct proc_dir_entry *himax_proc_CRC_test_file;
 static struct proc_dir_entry *himax_proc_irq_depth_file;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static struct proc_dir_entry *himax_proc_i2c_device_test_file;
 #endif
 

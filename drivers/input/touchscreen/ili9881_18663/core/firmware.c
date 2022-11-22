@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - firmware.c
 ** Description : This program is for ili9881 driver firmware.c
 ** Version: 1.0
@@ -1173,7 +1173,7 @@ static int tddi_fw_upgrade(bool isIRAM)
 		return res;
 	}
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	oppo_platform_tp_hw_reset(true);
 #endif
 	ipio_debug(DEBUG_FIRMWARE, "Enter to ICE Mode\n");

@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - hiamx_common.h
 ** Description : This program is for hiamx driver
 ** Version: 1.0
@@ -46,14 +46,14 @@
 	#include <linux/earlysuspend.h>
 #endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/update_tpfw_notifier.h>
 #endif
 
 #ifdef CONFIG_OF
 	#include <linux/of_gpio.h>
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define HIMAX_DRIVER_VER "1.2.2.36_OPPO_WINTECH_31"
 #endif
 #define FLASH_DUMP_FILE "/sdcard/HX_Flash_Dump.bin"
@@ -67,7 +67,7 @@
 #define HX_RESUME_SEND_CMD
 #define HX_ESD_RECOVERY
 /*#define HX_AUTO_UPDATE_FW*/
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define HX_SMART_WAKEUP
 #define HX_GESTURE_TRACK
 #endif

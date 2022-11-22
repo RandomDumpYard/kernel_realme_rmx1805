@@ -107,7 +107,7 @@ static ssize_t power_supply_show_property(struct device *dev,
 	if (off == POWER_SUPPLY_PROP_STATUS)
 		return scnprintf(buf, PAGE_SIZE, "%s\n",
 				status_text[value.intval]);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	else if (off == POWER_SUPPLY_PROP_REAL_STATUS)
 		return scnprintf(buf, PAGE_SIZE, "%s\n",
 				status_text[value.intval]);
@@ -317,11 +317,11 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(ctm_current_max),
 	POWER_SUPPLY_ATTR(hw_current_max),
 	POWER_SUPPLY_ATTR(real_type),
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_ATTR(StopCharging_Test),
 	POWER_SUPPLY_ATTR(StartCharging_Test),
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_ATTR(adapter_fw_update),
 	POWER_SUPPLY_ATTR(authenticate),
 	POWER_SUPPLY_ATTR(batt_cc),
@@ -368,11 +368,11 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(soh),
 	POWER_SUPPLY_ATTR(qc_opti_disable),
 	POWER_SUPPLY_ATTR(fcc_stepper_enable),
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_ATTR(otg_switch),
 	POWER_SUPPLY_ATTR(otg_online),
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_ATTR(recharge_uv),
 	#endif
 	POWER_SUPPLY_ATTR(cc_soc),
@@ -481,7 +481,7 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
 	for (j = 0; j < psy->desc->num_properties; j++) {
 		struct device_attribute *attr;
 		char *line;
-		#ifdef ODM_WT_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if ((psy->desc->properties[j] == POWER_SUPPLY_PROP_STOPCHARGING_TEST)
 			|| (psy->desc->properties[j] == POWER_SUPPLY_PROP_STARTCHARGING_TEST))
 			continue;

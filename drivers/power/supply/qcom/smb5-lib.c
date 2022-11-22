@@ -19,7 +19,7 @@
 #include <linux/irq.h>
 #include <linux/pmic-voter.h>
 #include <linux/of_batterydata.h>
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/of_gpio.h>
 #endif
 #include <linux/alarmtimer.h>
@@ -38,7 +38,7 @@
 extern void nvt_ts_usb_check_queue(void);
 extern int novatek_tp;
 int usb_state_ctp = -1;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include "schgm-flash.h"
 #include <linux/of_gpio.h>
 #endif
@@ -698,7 +698,7 @@ static const struct apsd_result *smblib_update_usb_type(struct smb_charger *chg)
 		 * Update real charger type only if its not FLOAT
 		 * detected as as SDP
 		 */
-		#ifndef ODM_WT_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_SDM450
 		if (!(apsd_result->pst == POWER_SUPPLY_TYPE_USB_FLOAT &&
 			chg->real_charger_type == POWER_SUPPLY_TYPE_USB))
 			chg->real_charger_type = apsd_result->pst;
@@ -738,7 +738,7 @@ static int smblib_notifier_call(struct notifier_block *nb,
 		schedule_work(&chg->pl_update_work);
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	//update_charger_notify_code(chg);
 #endif
 
@@ -821,7 +821,7 @@ static void smblib_uusb_removal(struct smb_charger *chg)
 	/* reset both usbin current and voltage votes */
 	vote(chg->pl_enable_votable_indirect, USBIN_I_VOTER, false, 0);
 	vote(chg->pl_enable_votable_indirect, USBIN_V_VOTER, false, 0);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER, true,
 			is_flash_active(chg) ? SDP_CURRENT_UA : SDP_100_MA);
 #endif
@@ -845,7 +845,7 @@ static void smblib_uusb_removal(struct smb_charger *chg)
 	chg->usb_icl_delta_ua = 0;
 	chg->pulse_cnt = 0;
 	chg->uusb_apsd_rerun_done = false;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	chg->usb_online_status = false;
 	#endif
 	/* write back the default FLOAT charger configuration */
@@ -1016,7 +1016,7 @@ int smblib_set_icl_current(struct smb_charger *chg, int icl_ua)
 #endif
 
 	/* suspend and return if 25mA or less is requested */
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 	if (icl_ua <= USBIN_25MA)
 		return smblib_set_usb_suspend(chg, true);
 	#else
@@ -1029,7 +1029,7 @@ int smblib_set_icl_current(struct smb_charger *chg, int icl_ua)
 	if (icl_ua == INT_MAX)
 		goto set_mode;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ((chg->real_charger_type == POWER_SUPPLY_TYPE_USB)
 			|| (chg->real_charger_type == POWER_SUPPLY_TYPE_USB_CDP)) {
 		icl_ua = 500000;
@@ -1084,7 +1084,7 @@ set_mode:
 	}
 
 	/* Re-run AICL */
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 	if (chg->real_charger_type != POWER_SUPPLY_TYPE_USB)
 		rc = smblib_run_aicl(chg, RERUN_AICL);
 	#else
@@ -1640,7 +1640,7 @@ int smblib_get_prop_batt_health(struct smb_charger *chg,
 			 * If Vbatt is within 40mV above Vfloat, then don't
 			 * treat it as overvoltage.
 			 */
-		#ifndef ODM_WT_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_SDM450
 			effective_fv_uv = get_effective_result(chg->fv_votable);
 		#else
 			effective_fv_uv = 4500000 - 40000; // 4.5V show battery overvoltage;
@@ -1660,7 +1660,7 @@ int smblib_get_prop_batt_health(struct smb_charger *chg,
 			rc);
 		return rc;
 	}
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	if (stat & BAT_TEMP_STATUS_TOO_COLD_BIT)
 		val->intval = POWER_SUPPLY_HEALTH_COLD;
 	else if (stat & BAT_TEMP_STATUS_TOO_HOT_BIT)
@@ -1772,7 +1772,7 @@ int smblib_get_prop_batt_charge_done(struct smb_charger *chg,
 	val->intval = (stat == TERMINATE_CHARGE);
 	return 0;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int smblib_get_prop_batt_authenticate(struct smb_charger *chg,
 				     union power_supply_propval *val)
 {
@@ -2044,7 +2044,7 @@ int smblib_disable_hw_jeita(struct smb_charger *chg, bool disable)
 	int rc;
 	u8 mask;
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	/* 20180731,Don't need hard jeita limit,using sw control stop/start charging in charger_monitor.c */
 	rc = smblib_masked_write(chg, JEITA_EN_CFG_REG, JEITA_EN_HARDLIMIT_BIT, 0 /*JEITA_EN_HARDLIMIT_BIT*/);
 	if (rc < 0) {
@@ -2059,7 +2059,7 @@ int smblib_disable_hw_jeita(struct smb_charger *chg, bool disable)
 		| JEITA_EN_HOT_SL_FCV_BIT
 		| JEITA_EN_HOT_SL_CCC_BIT
 		| JEITA_EN_COLD_SL_CCC_BIT,
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	#ifdef CONFIG_DISABLE_TEMP_PROTECT
 	 mask = JEITA_EN_COLD_SL_FCV_BIT
 		| JEITA_EN_HOT_SL_FCV_BIT
@@ -2171,7 +2171,7 @@ int smblib_get_prop_usb_online(struct smb_charger *chg,
 	int rc = 0;
 	u8 stat;
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if(chg->usb_online_status == true) {
 		rc = smblib_read(chg, USBIN_BASE + INT_RT_STS_OFFSET, &stat);
 	if (rc < 0) {
@@ -2559,7 +2559,7 @@ static int smblib_handle_usb_current(struct smb_charger *chg,
 			 * real_charger_type
 			 */
 			chg->real_charger_type = POWER_SUPPLY_TYPE_USB;
-			#ifdef ODM_WT_EDIT
+			#ifdef CONFIG_PRODUCT_REALME_SDM450
 			chg->usb_online_status = true;
 			#endif
 			rc = vote(chg->usb_icl_votable, USB_PSY_VOTER,
@@ -2571,7 +2571,7 @@ static int smblib_handle_usb_current(struct smb_charger *chg,
 			}
 		}
 	} else {
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (usb_current == 100000) {
 			usb_current = 500000;
 		}
@@ -2591,7 +2591,7 @@ static int smblib_handle_usb_current(struct smb_charger *chg,
 		return rc;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (chg->real_charger_type == POWER_SUPPLY_TYPE_USB_FLOAT) {
 		//do_charger_icl(chg);
 		set_icl_flags(chg, 4);
@@ -2731,11 +2731,11 @@ int smblib_set_prop_pd_active(struct smb_charger *chg,
 		 * pd_current_max
 		 */
 		vote(chg->usb_icl_votable, PD_VOTER, true, USBIN_500MA);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 		vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER, false, 0);
 #endif
 	} else {
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 		vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER, true, SDP_100_MA);
 #endif
 		vote(chg->usb_icl_votable, PD_VOTER, false, 0);
@@ -2967,7 +2967,7 @@ irqreturn_t default_irq_handler(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 irqreturn_t default_irq_handler_nolog(int irq, void *data)
 {
 	struct smb_irq_data *irq_data = data;
@@ -3279,7 +3279,7 @@ void smblib_usb_plugin_locked(struct smb_charger *chg)
 #endif
 
 	if (vbus_rising) {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		usb_state_ctp = 1;
 		if (novatek_tp == 1) {
 			nvt_ts_usb_check_queue();
@@ -3297,7 +3297,7 @@ void smblib_usb_plugin_locked(struct smb_charger *chg)
 		vote(chg->awake_votable, PL_DELAY_VOTER, true, 0);
 		schedule_delayed_work(&chg->pl_enable_work,
 					msecs_to_jiffies(PL_DELAY_MS));
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		vote(chg->awake_votable, USB_PSY_VOTER, true, 0);
 		if (get_rtc_time(&chg->charger_times) < 0) {
 			chg->charger_times = 0;
@@ -3305,7 +3305,7 @@ void smblib_usb_plugin_locked(struct smb_charger *chg)
 		wake_chg_monitor_work(chg, 20);
 	#endif
 	} else {
-		#ifdef ODM_WT_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_SDM450
 		usb_state_ctp = 0;
 		if (novatek_tp == 1) {
 			nvt_ts_usb_check_queue();
@@ -3359,7 +3359,7 @@ void smblib_usb_plugin_locked(struct smb_charger *chg)
 		rc = smblib_request_dpdm(chg, false);
 		if (rc < 0)
 			smblib_err(chg, "Couldn't disable DPDM rc=%d\n", rc);
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		chg->charger_times = 0;
 		vote(chg->fcc_votable, JEITA_VOTER, false, 0);
 		reset_charge_modify_setting(chg, 1);
@@ -3491,7 +3491,7 @@ static void smblib_handle_hvdcp_check_timeout(struct smb_charger *chg,
 		if (qc_charger) {
 			/* enable HDC and ICL irq for QC2/3 charger */
 			vote(chg->usb_irq_enable_votable, QC_VOTER, true, 0);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER, true,
 				HVDCP_CURRENT_UA);
 #endif
@@ -3514,7 +3514,7 @@ static void smblib_handle_hvdcp_detect_done(struct smb_charger *chg,
 		   rising ? "rising" : "falling");
 }
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 static void update_sw_icl_max(struct smb_charger *chg, int pst)
 {
 	int typec_mode;
@@ -3591,7 +3591,7 @@ static void smblib_handle_apsd_done(struct smb_charger *chg, bool rising)
 
 	apsd_result = smblib_update_usb_type(chg);
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	update_sw_icl_max(chg, apsd_result->pst);
 #endif
 
@@ -3606,7 +3606,7 @@ static void smblib_handle_apsd_done(struct smb_charger *chg, bool rising)
 	case OCP_CHARGER_BIT:
 	case DCP_CHARGER_BIT:
 		vote(chg->usb_icl_votable, DEFAULT_100MA_VOTER, false, 0);
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		//do_charger_icl(chg); // Do ICL here maybe cause setting dcp online later.
 		set_icl_flags(chg, 1);
 	#endif
@@ -3615,7 +3615,7 @@ static void smblib_handle_apsd_done(struct smb_charger *chg, bool rising)
 		break;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ((apsd_result->bit == CDP_CHARGER_BIT) || (apsd_result->bit == SDP_CHARGER_BIT)) {
 		vote(chg->usb_icl_votable, DEFAULT_100MA_VOTER, false, 0);
 		vote(chg->usb_icl_votable, USB_PSY_VOTER, true, CDP_CURRENT_UA);
@@ -3796,7 +3796,7 @@ static void typec_src_removal(struct smb_charger *chg)
 		alarm_cancel(&chg->chg_termination_alarm);
 
 	/* reset input current limit voters */
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER, true,
 			is_flash_active(chg) ? SDP_CURRENT_UA : SDP_100_MA);
 #endif
@@ -4245,7 +4245,7 @@ static void smblib_uusb_otg_work(struct work_struct *work)
 	u8 stat = 0;
 	bool otg;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (gpio_is_valid(chg->usb_id_gpio)) {
 		if (chg->otg_switch == false)
 			otg = 0;
@@ -4333,7 +4333,7 @@ static void smblib_icl_change_work(struct work_struct *work)
 
 	power_supply_changed(chg->usb_main_psy);
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	smblib_dbg(chg, PR_INTERRUPT, "icl_settled=%d\n", settled_ua);
 #else
 	smblib_dbg(chg, PR_OTHERS, "icl_settled=%d\n", settled_ua);

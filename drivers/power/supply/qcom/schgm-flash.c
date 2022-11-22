@@ -151,7 +151,7 @@ int schgm_flash_get_vreg_ok(struct smb_charger *chg, int *val)
 
 	return 0;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 void schgm_flash_torch_priority(struct smb_charger *chg, enum torch_mode mode)
 {
 	int rc;
@@ -219,7 +219,7 @@ int schgm_flash_init(struct smb_charger *chg)
 
 		reg = (chg->headroom_mode == FIXED_MODE)
 					? TORCH_PRIORITY_CONTROL_BIT : 0;
-		#ifndef ODM_WT_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_SDM450
 		rc = smblib_write(chg, SCHGM_FORCE_BOOST_CONTROL, reg);
 		#else
 		rc = smblib_write(chg, SCHGM_TORCH_PRIORITY_CONTROL_REG, reg);

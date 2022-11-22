@@ -1,6 +1,6 @@
 /*******************************************************************************
  *  Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
- *  ODM_WT_EDIT
+ *  CONFIG_PRODUCT_REALME_SDM450
  *  FILE: - charger_monitor.c
  *  Description : Add charger monitor function
  *  Version: 1.0
@@ -10,7 +10,7 @@
  *   <author>	 <data> 	<version >			<desc>
  *  Bin2.Zhang	2018/6/20	1.0				Add charger monitor function
  ******************************************************************************/
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 //#define DEBUG
 #define pr_fmt(fmt) "CHG-CHK: " fmt
 

@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - nt36xxx_mp_ctrlram.c
 ** Description : This program is for nt36xxx driver
 ** Version: 1.0
@@ -19,7 +19,7 @@
 
 #include "nt36xxx.h"
 #include "nt36xxx_mp_ctrlram.h"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern int ctpmodule;
 #endif
 #if NVT_TOUCH_MP
@@ -30,7 +30,7 @@ extern int ctpmodule;
 #define MP_MODE_CC 0x41
 #define FREQ_HOP_DISABLE 0x66
 #define FREQ_HOP_ENABLE 0x65
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 //#define SHORT_TEST_CSV_FILE "/data/local/tmp/ShortTest.csv"
 //#define OPEN_TEST_CSV_FILE "/data/local/tmp/OpenTest.csv"
 //#define FW_RAWDATA_CSV_FILE "/data/local/tmp/FWMutualTest.csv"
@@ -1291,17 +1291,17 @@ void print_selftest_result(struct seq_file *m, int32_t TestResult, uint8_t Recor
 
 	switch (TestResult) {
 		case 0:
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			nvt_mp_seq_printf(m, " PASS!\n");
 #endif
 			break;
 
 		case 1:
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			nvt_mp_seq_printf(m, " ERROR! Read Data FAIL!\n");
 #endif
 			break;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		case -1:
 #endif
 			nvt_mp_seq_printf(m, " FAIL!\n");
@@ -1337,7 +1337,7 @@ void print_selftest_result(struct seq_file *m, int32_t TestResult, uint8_t Recor
 #endif /* #if TOUCH_KEY_NUM > 0 */
 			break;
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	//nvt_mp_seq_printf(m, "\n");
 #endif
 }
@@ -1352,7 +1352,7 @@ return:
 *******************************************************/
 static int32_t c_show_selftest(struct seq_file *m, void *v)
 {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	NVT_LOG("++\n");
 	if(ts->sleep_flag == 1){
 		NVT_LOG("%s:sleep in mode,can not do selftest\n",__func__);
@@ -1380,11 +1380,11 @@ static int32_t c_show_selftest(struct seq_file *m, void *v)
 			print_selftest_result(m, TestResult_Short, RecordResult_Short, RawData_Short, X_Channel, Y_Channel);
 		}
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	nvt_mp_seq_printf(m, "Open Test");
 #endif
 	print_selftest_result(m, TestResult_Open, RecordResult_Open, RawData_Open, X_Channel, Y_Channel);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	nvt_mp_seq_printf(m, "FW Rawdata Test");
 	if ((TestResult_FW_Rawdata == 0) || (TestResult_FW_Rawdata == 1)) {
 #endif
@@ -1411,7 +1411,7 @@ static int32_t c_show_selftest(struct seq_file *m, void *v)
 			}
 		}
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	nvt_mp_seq_printf(m, "Noise Test");
 	if ((TestResult_Noise == 0) || (TestResult_Noise == 1)) {
 #endif
@@ -1430,7 +1430,7 @@ static int32_t c_show_selftest(struct seq_file *m, void *v)
 	}
 
 	nvt_mp_test_result_printed = 1;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (TestResult_Short == 0 && TestResult_Open == 0 && TestResult_FWMutual == 0 && TestResult_FW_DiffMax ==0 ) {
         if ( ts->selft_test_flg == 1 ) {
 			printk("ts->selft_test_flg2 = %d\n",ts->selft_test_flg);
@@ -1537,7 +1537,7 @@ int32_t nvt_selftest_open(struct inode *inode, struct file *file)
 #endif /* #if NVT_TOUCH_ESD_PROTECT */
 
 	//---Download MP FW---
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ( ctpmodule == 0 ){
 
 		nvt_update_firmware(MP_UPDATE_FIRMWARE_NAME_TM);
@@ -1714,7 +1714,7 @@ int32_t nvt_selftest_open(struct inode *inode, struct file *file)
 	}
 
 	//---Download Normal FW---
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (  ctpmodule == 0 ){
 		nvt_update_firmware(BOOT_UPDATE_FIRMWARE_NAME_TM);
 	}
@@ -2525,7 +2525,7 @@ return:
 *******************************************************/
 int32_t nvt_mp_proc_init(void)
 {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	struct proc_dir_entry *ctp_device_proc = NULL;
     ctp_device_proc = proc_mkdir(CTP_TOUCHSCREEN_PROC_NAME, NULL);
 	NVT_proc_selftest_entry = proc_create(CTP_OPEN_PROC_NAME, 0664, ctp_device_proc, &nvt_selftest_fops);

@@ -18,7 +18,7 @@
 #include "msm_cci.h"
 #include "msm_camera_dt_util.h"
 #include "msm_sensor_driver.h"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include "linux/hardware_info.h"
 #define CAM_BACK_CAMERA		0x0
 #define CAM_FRONT_CAMERA	0x1
@@ -815,7 +815,7 @@ int32_t msm_sensor_driver_probe(void *setting,
 	unsigned long                        mount_pos = 0;
 	uint32_t                             is_yuv;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int32_t				i = 0;
 	struct camera_vreg_t *cam_vreg = NULL;
 #endif
@@ -1026,7 +1026,7 @@ int32_t msm_sensor_driver_probe(void *setting,
 		goto free_slave_info;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
     if (!strcmp(slave_info->sensor_name, "s5k3l6")){
         if(0x1 != g_main_module_id){
             pr_err("sensor is not %s. module id=%d", slave_info->sensor_name, g_main_module_id);
@@ -1219,7 +1219,7 @@ int32_t msm_sensor_driver_probe(void *setting,
 	cci_client->id_map = 0;
 	cci_client->i2c_freq_mode = slave_info->i2c_freq_mode;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	cam_vreg = s_ctrl->sensordata->power_info.cam_vreg;
 	if (!(strcmp(slave_info->sensor_name, "hi1333") ) && cam_vreg != NULL) {
 		pr_err("dump cam_vreg");
@@ -1247,7 +1247,7 @@ int32_t msm_sensor_driver_probe(void *setting,
 		}
 	}
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	cam_vreg = s_ctrl->sensordata->power_info.cam_vreg;
 	if (!(strcmp(slave_info->sensor_name, "s5k3p9sp") ) && cam_vreg != NULL) {
 		pr_err("dump cam_vreg");
@@ -1463,7 +1463,7 @@ CSID_TG:
 
 	msm_sensor_fill_sensor_info(s_ctrl, probed_info, entity_name);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (probed_info->position == CAM_FRONT_CAMERA){
 		pr_err("probe sensor: position=%d, sensor_name=%s, module_info=%s",
 			probed_info->position, probed_info->sensor_name,

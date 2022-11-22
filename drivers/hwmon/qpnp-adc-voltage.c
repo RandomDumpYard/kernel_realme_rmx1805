@@ -511,7 +511,7 @@ static int qpnp_vadc_hc_pre_configure_usb_in(struct qpnp_vadc_chip *vadc,
 						int dt_index)
 {
 	int rc = 0;
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 /*Hanxing.Duan@ODM.BSP.CHG.Basic  Write regs separately for VADC conversion 2019.07.15*/
 	u8 buf;
 #else
@@ -559,7 +559,7 @@ static int qpnp_vadc_hc_pre_configure_usb_in(struct qpnp_vadc_chip *vadc,
 	if (rc < 0)
 		return rc;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 /*Hanxing.Duan@ODM.BSP.CHG.Basic  Write regs separately for VADC conversion 2019.07.15*/
 	rc = qpnp_vadc_read_reg(vadc, QPNP_VADC_HC1_EN_CTL1, &check, 1);
 	if (rc < 0) {
@@ -586,7 +586,7 @@ static int qpnp_vadc_hc_pre_configure_usb_in(struct qpnp_vadc_chip *vadc,
 	if (rc < 0)
 		return rc;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 /*Hanxing.Duan@ODM.BSP.CHG.Basic  Write regs separately for VADC conversion 2019.07.15*/
 	rc = qpnp_vadc_read_reg(vadc, QPNP_VADC_HC1_ADC_DIG_PARAM, &check, 1);
 	if (rc < 0) {
@@ -630,7 +630,7 @@ static int qpnp_vadc_hc_pre_configure_usb_in(struct qpnp_vadc_chip *vadc,
 static int qpnp_vadc_hc_configure(struct qpnp_vadc_chip *vadc,
 				struct qpnp_adc_amux_properties *amux_prop)
 {
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 /*Hanxing.Duan@ODM.BSP.CHG.Basic  Write regs separately for VADC conversion 2019.07.15*/
 	int rc = 0;
 	u8 buf[5];
@@ -678,7 +678,7 @@ static int qpnp_vadc_hc_configure(struct qpnp_vadc_chip *vadc,
 	pr_debug("dig:0x%x, fast_avg:0x%x, channel:0x%x, hw_settle:0x%x\n",
 		buf[0], buf[1], buf[2], buf[3]);
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 /*Hanxing.Duan@ODM.BSP.CHG.Basic  Write regs separately for VADC conversion 2019.07.15*/
 	/* Block register write from 0x42 through 0x46 */
 	rc = qpnp_vadc_write_reg(vadc, QPNP_VADC_HC1_ADC_DIG_PARAM, buf, 5);
@@ -724,7 +724,7 @@ static int qpnp_vadc_hc_configure(struct qpnp_vadc_chip *vadc,
 		if (rc)
 			return rc;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 /*Hanxing.Duan@ODM.BSP.CHG.Basic  Write regs separately for VADC conversion 2019.07.15*/
 		rc = qpnp_vadc_read_reg(vadc, QPNP_VADC_HC1_ADC_DIG_PARAM, check, 5);
 		if (rc < 0) {
@@ -828,7 +828,7 @@ int32_t qpnp_vadc_hc_read(struct qpnp_vadc_chip *vadc,
 				QPNP_VADC_CAL_DELAY_CTL_1, &val, 1);
 		if (rc < 0) {
 			pr_err("qpnp adc write cal_delay failed with %d\n", rc);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 /*Hanxing.Duan@ODB.RH.BSP.CHG.Basic fix do not release adc_lock 2019.07.29*/
 			goto fail_unlock;
 #else

@@ -430,7 +430,7 @@ struct mipi_panel_info {
 	char hw_vsync_mode;
 
 	char lp11_init;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	char lp11_deinit;
 #endif
 	u32  init_delay;
@@ -644,7 +644,7 @@ struct mdss_panel_info {
 	u32 brightness_max;
 	u32 bl_max;
 	u32 bl_min;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int blmap_size;
 	int *blmap;
 #endif
@@ -669,7 +669,7 @@ struct mdss_panel_info {
 	bool panel_ack_disabled;
 	bool esd_check_enabled;
 	bool allow_phy_power_off;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	u32 tp_rst_seq[MDSS_DSI_RST_SEQ_LEN];
 	u32 tp_rst_seq_len;
 	bool vddio_always_on;

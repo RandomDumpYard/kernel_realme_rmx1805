@@ -29,7 +29,7 @@
 #include "smb5-reg.h"
 #include "smb5-lib.h"
 #include "schgm-flash.h"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/of_gpio.h>
 #endif
 
@@ -224,7 +224,7 @@ struct smb5 {
 	struct smb_dt_props	dt;
 };
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 static int __debug_mask;
 #else
 #ifdef WT_FINAL_RELEASE
@@ -370,7 +370,7 @@ static int smb5_configure_internal_pull(struct smb_charger *chg, int type,
 	return rc;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static int smb5_usbid_config_gpio(struct smb_charger *chg, int enable)
 {
 	int err = 0;
@@ -485,7 +485,7 @@ static int smb5_parse_dt(struct smb5 *chip)
 				"qcom,fv-max-uv", &chip->dt.batt_profile_fv_uv);
 	if (rc < 0)
 		chip->dt.batt_profile_fv_uv = -EINVAL;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	#ifdef CONFIG_DISABLE_TEMP_PROTECT
 		chg->batt_profile_fcc_ua = 1500000;
 		chg->batt_profile_fv_uv = 4100000;
@@ -570,7 +570,7 @@ static int smb5_parse_dt(struct smb5 *chip)
 		pr_err("qcom,auto-recharge-vbat-mv is incorrect\n");
 		return -EINVAL;
 	}
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	chg->auto_recharge_mv = chip->dt.auto_recharge_vbat_mv;
 	#endif
 
@@ -597,7 +597,7 @@ static int smb5_parse_dt(struct smb5 *chip)
 	chg->moisture_protection_enabled = of_property_read_bool(node,
 					"qcom,moisture-protection-enable");
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	chg->usb_id_gpio = of_get_named_gpio(node, "qcom,usbid-gpio", 0);
 	if (gpio_is_valid(chg->usb_id_gpio)
 		&& (!devm_gpio_request(chg->dev, chg->usb_id_gpio, "qcom,usbid-gpio"))) {
@@ -728,7 +728,7 @@ static enum power_supply_property smb5_usb_props[] = {
 	POWER_SUPPLY_PROP_HVDCP_OPTI_ALLOWED,
 	POWER_SUPPLY_PROP_QC_OPTI_DISABLE,
 	POWER_SUPPLY_PROP_MOISTURE_DETECTED,
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_PROP_OTG_SWITCH,
 	POWER_SUPPLY_PROP_OTG_ONLINE,
 #endif
@@ -742,7 +742,7 @@ static int smb5_usb_get_prop(struct power_supply *psy,
 	struct smb_charger *chg = &chip->chg;
 	union power_supply_propval pval;
 	int rc = 0;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int ret_number = 0;
 #endif
 
@@ -757,7 +757,7 @@ static int smb5_usb_get_prop(struct power_supply *psy,
 
 		if (((chg->typec_mode == POWER_SUPPLY_TYPEC_SOURCE_DEFAULT) ||
 		   (chg->connector_type == POWER_SUPPLY_CONNECTOR_MICRO_USB))
-			#ifndef ODM_WT_EDIT
+			#ifndef CONFIG_PRODUCT_REALME_SDM450
 			&& (chg->real_charger_type == POWER_SUPPLY_TYPE_USB)
 			#else
 			&& ((chg->real_charger_type == POWER_SUPPLY_TYPE_USB) || (chg->real_charger_type == POWER_SUPPLY_TYPE_USB_CDP))
@@ -865,14 +865,14 @@ static int smb5_usb_get_prop(struct power_supply *psy,
 			rc = smb5_get_adc_data(chg, USBIN_CURRENT, val);
 		break;
 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		rc = smblib_get_prop_usb_present(chg, &pval);
 		if (rc < 0 || !pval.intval) {
 			val->intval = 0;
 			return rc;
 		}
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (chg->smb_version == PMI632_SUBTYPE){
 			do{
 				rc = smb5_get_adc_data(chg, USBIN_VOLTAGE, val);
@@ -903,7 +903,7 @@ static int smb5_usb_get_prop(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_MOISTURE_DETECTED:
 		val->intval = chg->moisture_present;
 		break;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_OTG_SWITCH:
 		val->intval = chg->otg_switch;
 		break;
@@ -968,7 +968,7 @@ static int smb5_usb_set_prop(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_SDP_CURRENT_MAX:
 		rc = smblib_set_prop_sdp_current_max(chg, val);
 		break;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_OTG_SWITCH:
 		if (chg->otg_switch != !!val->intval) {
 			chg->otg_switch = !!val->intval;
@@ -992,7 +992,7 @@ static int smb5_usb_prop_is_writeable(struct power_supply *psy,
 	switch (psp) {
 	case POWER_SUPPLY_PROP_CTM_CURRENT_MAX:
 		return 1;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_OTG_SWITCH:
 		return 1;
 #endif
@@ -1060,7 +1060,7 @@ static int smb5_usb_port_get_prop(struct power_supply *psy,
 
 		if (((chg->typec_mode == POWER_SUPPLY_TYPEC_SOURCE_DEFAULT) ||
 		   (chg->connector_type == POWER_SUPPLY_CONNECTOR_MICRO_USB))
-			#ifndef ODM_WT_EDIT
+			#ifndef CONFIG_PRODUCT_REALME_SDM450
 			&& (chg->real_charger_type == POWER_SUPPLY_TYPE_USB)
 			#else
 			&& ((chg->real_charger_type == POWER_SUPPLY_TYPE_USB) || (chg->real_charger_type == POWER_SUPPLY_TYPE_USB_CDP))
@@ -1243,7 +1243,7 @@ static int smb5_usb_main_set_prop(struct power_supply *psy,
 				else
 					chg->pulse_cnt = 0;
 			}
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 				else {
 				/* USB absent & flash not-active - vote 100mA */
 				vote(chg->usb_icl_votable, SW_ICL_MAX_VOTER,
@@ -1399,7 +1399,7 @@ static int smb5_init_dc_psy(struct smb5 *chip)
 	return 0;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 /*************************
  * AC PSY REGISTRATION   *
  *************************/
@@ -1426,7 +1426,7 @@ static int smb5_ac_get_prop(struct power_supply *psy,
 
 		if (((chg->typec_mode == POWER_SUPPLY_TYPEC_SOURCE_DEFAULT) ||
 		   (chg->connector_type == POWER_SUPPLY_CONNECTOR_MICRO_USB))
-			#ifndef ODM_WT_EDIT
+			#ifndef CONFIG_PRODUCT_REALME_SDM450
 			&& (chg->real_charger_type == POWER_SUPPLY_TYPE_USB)
 			#else
 			&& ((chg->real_charger_type == POWER_SUPPLY_TYPE_USB) || (chg->real_charger_type == POWER_SUPPLY_TYPE_USB_CDP))
@@ -1543,14 +1543,14 @@ static enum power_supply_property smb5_batt_props[] = {
 	POWER_SUPPLY_PROP_CYCLE_COUNT,
 	POWER_SUPPLY_PROP_RECHARGE_SOC,
 	POWER_SUPPLY_PROP_CHARGE_FULL,
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_PROP_RECHARGE_UV,
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_PROP_STOPCHARGING_TEST,
 	POWER_SUPPLY_PROP_STARTCHARGING_TEST,
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_PROP_ADAPTER_FW_UPDATE,
 	POWER_SUPPLY_PROP_AUTHENTICATE,
 	POWER_SUPPLY_PROP_BATT_CC,
@@ -1625,31 +1625,31 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 {
 	struct smb_charger *chg = power_supply_get_drvdata(psy);
 	int rc = 0;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	union power_supply_propval pval = {0, };
 	#endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int ret_number = 0;
 	static int last_temp = 250;
 	int temp_back[]={0,0,0};
 #endif
 	switch (psp) {
 	case POWER_SUPPLY_PROP_STATUS:
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 		rc = smblib_get_prop_batt_status(chg, val);
 	#else
 		val->intval = get_battery_status_modify(chg);
 	#endif
 		break;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_REAL_STATUS:
 		rc = smblib_get_prop_batt_status(chg, val);
 		break;
 	#endif
 	case POWER_SUPPLY_PROP_HEALTH:
 		rc = smblib_get_prop_batt_health(chg, val);
-		#ifdef ODM_WT_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_SDM450
 		#ifdef CONFIG_DISABLE_TEMP_PROTECT
 		val->intval = POWER_SUPPLY_HEALTH_GOOD;
 		#endif /* CONFIG_DISABLE_TEMP_PROTECT */
@@ -1669,7 +1669,7 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 		rc = smblib_get_prop_batt_charge_type(chg, val);
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
-		#ifndef ODM_WT_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_SDM450
 		rc = smblib_get_prop_batt_capacity(chg, val);
 		#else
 		if (chg->fake_capacity >= 0) {
@@ -1679,7 +1679,7 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 		else
 			rc = smblib_get_prop_batt_capacity(chg, val);
 		#endif
-		#ifdef ODM_WT_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_SDM450
 		#ifdef CONFIG_DISABLE_TEMP_PROTECT
 		if (val->intval < 4)
 			val->intval = 4;
@@ -1712,7 +1712,7 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CURRENT_NOW:
 		rc = smblib_get_prop_from_bms(chg,
 				POWER_SUPPLY_PROP_CURRENT_NOW, val);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 		if (!rc)
 			val->intval *= (-1);
 #endif
@@ -1725,7 +1725,7 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 		rc = smb5_get_prop_batt_iterm(chg, val);
 		break;
 	case POWER_SUPPLY_PROP_TEMP:
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		do{
 			rc = smblib_get_prop_batt_temp(chg, val);
 			//pr_err("ADC BATT_TEMP=%d,last_temp=%d,ret_number=%d\n", val->intval,last_temp,ret_number);
@@ -1745,7 +1745,7 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 	#else
 		rc = smblib_get_prop_batt_temp(chg, val);
 	#endif
-		#ifdef ODM_WT_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_SDM450
 		#ifdef CONFIG_DISABLE_TEMP_PROTECT
 		pr_err("WINGTECH disable temp protect version; real temp:%d\n",val->intval);
 		val->intval = 250;
@@ -1789,12 +1789,12 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_RECHARGE_SOC:
 		val->intval = chg->auto_recharge_soc;
 		break;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_RECHARGE_UV:
 		val->intval = chg->auto_recharge_mv * 1000;
 		break;
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_STOPCHARGING_TEST:
 		pval.intval = 1;
 		rc = smblib_set_prop_input_suspend(chg, &pval);
@@ -1806,7 +1806,7 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 		pr_err("show_StartCharging_Test : %x success\n", rc);
 		break;
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_ADAPTER_FW_UPDATE:
 		val->intval = -1;
 		break;
@@ -1827,7 +1827,7 @@ static int smb5_batt_get_prop(struct power_supply *psy,
 		val->intval = -1; //Don't support,return -1.
 		break;
 	case POWER_SUPPLY_PROP_CHARGE_NOW:
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		rc = smblib_get_prop_usb_present(chg, &pval);
 		if (rc < 0 || !pval.intval) {
 			val->intval = 0;
@@ -1978,7 +1978,7 @@ static int smb5_batt_set_prop(struct power_supply *psy,
 			/* toggle charging to force recharge */
 			vote(chg->chg_disable_votable, FORCE_RECHARGE_VOTER,
 					true, 0);
-		#ifndef ODM_WT_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_SDM450
 			/* charge disable delay */
 			msleep(50);
 		#endif
@@ -1986,7 +1986,7 @@ static int smb5_batt_set_prop(struct power_supply *psy,
 					false, 0);
 		}
 		break;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_RECHARGE_UV:
 		chg->auto_recharge_mv = val->intval / 1000;
 		/* program the auto-recharge VBAT threshold */
@@ -2023,7 +2023,7 @@ static int smb5_batt_set_prop(struct power_supply *psy,
 		}
 		break;
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_MMI_CHARGING_ENABLE:
 		//Stop charging the battery.
 		vote(chg->chg_disable_votable, USER_VOTER, !val->intval, 0);
@@ -2064,7 +2064,7 @@ static int smb5_batt_prop_is_writeable(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_SW_JEITA_ENABLED:
 	case POWER_SUPPLY_PROP_DIE_HEALTH:
 	case POWER_SUPPLY_PROP_BATTERY_CHARGING_ENABLED:
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_MMI_CHARGING_ENABLE:
 	case POWER_SUPPLY_PROP_CALL_MODE:
 	case POWER_SUPPLY_PROP_UI_SOC:
@@ -2467,7 +2467,7 @@ static int smb5_init_hw(struct smb5 *chip)
 
 	smblib_get_charge_param(chg, &chg->param.usb_icl,
 				&chg->default_icl_ua);
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	smblib_get_charge_param(chg, &chg->param.aicl_5v_threshold,
 				&chg->default_aicl_5v_threshold_mv);
 	chg->aicl_5v_threshold_mv = chg->default_aicl_5v_threshold_mv;
@@ -2528,7 +2528,7 @@ static int smb5_init_hw(struct smb5 *chip)
 		return rc;
 	}
 
-        #ifdef ODM_WT_EDIT
+        #ifdef CONFIG_PRODUCT_REALME_SDM450
         /* set OTG current limit */
         rc = smblib_set_charge_param(chg, &chg->param.otg_cl,
                 chg->param.otg_cl.max_u);
@@ -2598,7 +2598,7 @@ static int smb5_init_hw(struct smb5 *chip)
 	/* Some h/w limit maximum supported ICL */
 	vote(chg->usb_icl_votable, HW_LIMIT_VOTER,
 			chg->hw_max_icl_ua > 0, chg->hw_max_icl_ua);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	vote(chg->usb_icl_votable, DEFAULT_100MA_VOTER, true, 100000);
 	vote(chg->fcc_votable, JEITA_VOTER, true, 300000);
 	rc = smblib_masked_write(chg, USBIN_AICL_OPTIONS_CFG_REG, BIT(7) | BIT(5) | BIT(3), 0);
@@ -2770,7 +2770,7 @@ static int smb5_init_hw(struct smb5 *chip)
 		return rc;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	rc = smblib_masked_write(chg, CHGR_CFG2_REG, VBAT_BASED_RECHG_BIT, 0);
 	if (rc < 0) {
 		dev_err(chg->dev, "Couldn't clean CHG_CFG2_REG VBAT_BASED_RECHG_BIT rc=%d\n", rc);
@@ -2800,7 +2800,7 @@ static int smb5_init_hw(struct smb5 *chip)
 		}
 	}
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	rc = smblib_masked_write(chg, 0x1286, 0x03, 0x01);
 	#endif
 
@@ -2812,7 +2812,7 @@ static int smb5_init_hw(struct smb5 *chip)
 		}
 	}
 
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	#ifdef CONFIG_DISABLE_TEMP_PROTECT
 	chg->sw_jeita_enabled = false;
 	rc = smblib_disable_hw_jeita(chg, true);
@@ -3121,7 +3121,7 @@ static struct smb_irq_info smb5_irqs[] = {
 	},
 	[AICL_DONE_IRQ] = {
 		.name		= "aicl-done",
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 		.handler	= default_irq_handler,
 	#else
 		.handler	= default_irq_handler_nolog,
@@ -3405,7 +3405,7 @@ static int smb5_probe(struct platform_device *pdev)
 	chg->die_health = -EINVAL;
 	chg->otg_present = false;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	chg->otg_switch = false; //default status
 	chg->ui_soc = -EINVAL;
 	chg->prop_status = POWER_SUPPLY_STATUS_UNKNOWN;
@@ -3485,7 +3485,7 @@ static int smb5_probe(struct platform_device *pdev)
 		}
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	rc = smb5_init_ac_psy(chip);
 	if (rc < 0) {
 		pr_err("Couldn't initialize ac psy rc=%d\n", rc);
@@ -3535,7 +3535,7 @@ static int smb5_probe(struct platform_device *pdev)
 		goto free_irq;
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (chip->chg.usb_id_gpio != 0){
 		smb5_usbid_irq_register(chip);
 	}
@@ -3551,7 +3551,7 @@ static int smb5_probe(struct platform_device *pdev)
 
 	device_init_wakeup(chg->dev, true);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef __WT_BATTERY_CHARGER_LOG_OUTPUT__
 	init_fg_chg_work(chg);
 #endif
@@ -3576,7 +3576,7 @@ static int smb5_remove(struct platform_device *pdev)
 	struct smb5 *chip = platform_get_drvdata(pdev);
 	struct smb_charger *chg = &chip->chg;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef __WT_BATTERY_CHARGER_LOG_OUTPUT__
 	deinit_fg_chg_work(chg);
 #endif
@@ -3615,7 +3615,7 @@ static void smb5_shutdown(struct platform_device *pdev)
 				BC1P2_SRC_DETECT_BIT, BC1P2_SRC_DETECT_BIT);
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static unsigned long sleep_times = 0;
 static int smb5_suspend(struct device *dev)
 {
@@ -3652,7 +3652,7 @@ static struct platform_driver smb5_driver = {
 		.name		= "qcom,qpnp-smb5",
 		.owner		= THIS_MODULE,
 		.of_match_table	= match_table,
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 		.pm		= &smb5_pm_ops,
 	#endif
 	},

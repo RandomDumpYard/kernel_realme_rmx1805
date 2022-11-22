@@ -135,7 +135,7 @@ struct dwc3_msm_req_complete {
 			      struct usb_request *req);
 };
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 enum dwc3_drd_state {
 	DRD_STATE_UNDEFINED = 0,
 
@@ -205,7 +205,7 @@ static const struct usb_irq usb_irq_info[USB_MAX_IRQ] = {
 #define ID			0
 #define B_SESS_VLD		1
 #define B_SUSPEND		2
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define WAIT_FOR_LPM		3
 #endif
 #define PM_QOS_SAMPLE_SEC	2
@@ -252,7 +252,7 @@ struct dwc3_msm {
 	unsigned long		inputs;
 	unsigned int		max_power;
 	bool			charging_disabled;
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	enum usb_otg_state	otg_state;
 #else
 	enum dwc3_drd_state	drd_state;
@@ -1895,7 +1895,7 @@ static void dwc3_msm_notify_event(struct dwc3 *dwc, unsigned int event,
 		reg = dwc3_msm_read_reg(mdwc->base, DWC3_GCTL);
 		reg |= DWC3_GCTL_CORESOFTRESET;
 		dwc3_msm_write_reg(mdwc->base, DWC3_GCTL, reg);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 		/* restart USB which performs full reset and reconnect */
 		schedule_work(&mdwc->restart_usb_work);
 #else
@@ -2060,7 +2060,7 @@ static void dwc3_msm_notify_event(struct dwc3 *dwc, unsigned int event,
 			dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT((i+1)), 0);
 		}
 		break;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case DWC3_GSI_EVT_BUF_CLEAR:
 		dev_dbg(mdwc->dev, "DWC3_GSI_EVT_BUF_CLEAR\n");
 		for (i = 0; i < mdwc->num_gsi_event_buffers; i++) {
@@ -2164,7 +2164,7 @@ static void dwc3_msm_power_collapse_por(struct dwc3_msm *mdwc)
 	dwc3_msm_write_reg_field(mdwc->base, PWR_EVNT_IRQ_MASK_REG,
 				PWR_EVNT_POWERDOWN_IN_P3_MASK, 1);
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	if (mdwc->otg_state == OTG_STATE_A_HOST) {
 #else
 	if (mdwc->drd_state == DRD_STATE_HOST) {
@@ -2356,7 +2356,7 @@ static int dwc3_msm_suspend(struct dwc3_msm *mdwc, bool hibernation)
 	}
 
 	if (!mdwc->vbus_active && dwc->is_drd &&
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 		mdwc->otg_state == OTG_STATE_B_PERIPHERAL) {
 #else
 		mdwc->drd_state == DRD_STATE_PERIPHERAL) {
@@ -2382,7 +2382,7 @@ static int dwc3_msm_suspend(struct dwc3_msm *mdwc, bool hibernation)
 	 * then check controller state of L2 and break
 	 * LPM sequence. Check this for device bus suspend case.
 	 */
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	if ((dwc->is_drd && mdwc->otg_state == OTG_STATE_B_SUSPEND) &&
 #else
 	if ((dwc->is_drd && mdwc->drd_state == DRD_STATE_PERIPHERAL_SUSPEND) &&
@@ -2394,7 +2394,7 @@ static int dwc3_msm_suspend(struct dwc3_msm *mdwc, bool hibernation)
 		mutex_unlock(&mdwc->suspend_resume_mutex);
 		return -EBUSY;
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	/*
 	 * Check if remote wakeup is received and pending before going
 	 * ahead with suspend routine as part of device bus suspend.
@@ -2530,7 +2530,7 @@ static int dwc3_msm_suspend(struct dwc3_msm *mdwc, bool hibernation)
 
 	dev_info(mdwc->dev, "DWC3 in low power mode\n");
 	dbg_event(0xFF, "Ctl Sus", atomic_read(&dwc->in_lpm));
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	/* kick_sm if it is waiting for lpm sequence to finish */
 	if (test_and_clear_bit(WAIT_FOR_LPM, &mdwc->inputs))
 		schedule_delayed_work(&mdwc->sm_work, 0);
@@ -4171,7 +4171,7 @@ static int dwc3_otg_start_host(struct dwc3_msm *mdwc, int on)
 
 		dwc3_usb3_phy_suspend(dwc, false);
 		mdwc->in_host_mode = false;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		/* wait for LPM, to ensure h/w is reset after stop_host */
 		set_bit(WAIT_FOR_LPM, &mdwc->inputs);
 #endif
@@ -4258,7 +4258,7 @@ static int dwc3_otg_start_peripheral(struct dwc3_msm *mdwc, int on)
 		usb_phy_notify_disconnect(mdwc->ss_phy, USB_SPEED_SUPER);
 		dwc3_override_vbus_status(mdwc, false);
 		dwc3_usb3_phy_suspend(dwc, false);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		/* wait for LPM, to ensure h/w is reset after stop_peripheral */
 		set_bit(WAIT_FOR_LPM, &mdwc->inputs);
 #endif
@@ -4336,7 +4336,7 @@ static int dwc3_restart_usb_host_mode(struct notifier_block *nb,
 	dbg_event(0xFF, "pm_runtime_sus", ret);
 
 	dwc->maximum_speed = usb_speed;
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	mdwc->otg_state = OTG_STATE_B_IDLE;
 #else
 	mdwc->drd_state = DRD_STATE_IDLE;
@@ -4433,7 +4433,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		return;
 	}
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	state = usb_otg_state_string(mdwc->otg_state);
 #else
 	state = dwc3_drd_state_string(mdwc->drd_state);
@@ -4442,7 +4442,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 	dbg_event(0xFF, state, 0);
 
 	/* Check OTG state */
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	switch (mdwc->otg_state) {
 	case OTG_STATE_UNDEFINED:
 #else
@@ -4460,7 +4460,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 			pm_runtime_put_sync(mdwc->dev);
 			dbg_event(0xFF, "Undef NoUSB",
 				atomic_read(&mdwc->dev->power.usage_count));
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_B_IDLE;
 #else
 			mdwc->drd_state = DRD_STATE_IDLE;
@@ -4469,7 +4469,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		}
 
 		dbg_event(0xFF, "Exit UNDEF", 0);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 		mdwc->otg_state = OTG_STATE_B_IDLE;
 #else
 		mdwc->drd_state = DRD_STATE_IDLE;
@@ -4477,7 +4477,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		pm_runtime_set_suspended(mdwc->dev);
 		pm_runtime_enable(mdwc->dev);
 		/* fall-through */
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	case OTG_STATE_B_IDLE:
 #else
 	case DRD_STATE_IDLE:
@@ -4488,7 +4488,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 #endif
 		if (!test_bit(ID, &mdwc->inputs)) {
 			dev_dbg(mdwc->dev, "!id\n");
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_A_IDLE;
 #else
 			mdwc->drd_state = DRD_STATE_HOST_IDLE;
@@ -4509,7 +4509,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 			dbg_event(0xFF, "BIDLE gsync",
 				atomic_read(&mdwc->dev->power.usage_count));
 			dwc3_otg_start_peripheral(mdwc, 1);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_B_PERIPHERAL;
 #else
 			mdwc->drd_state = DRD_STATE_PERIPHERAL;
@@ -4521,7 +4521,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		}
 		break;
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	case OTG_STATE_B_PERIPHERAL:
 #else
 	case DRD_STATE_PERIPHERAL:
@@ -4529,7 +4529,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		if (!test_bit(B_SESS_VLD, &mdwc->inputs) ||
 				!test_bit(ID, &mdwc->inputs)) {
 			dev_dbg(mdwc->dev, "!id || !bsv\n");
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_B_IDLE;
 #else
 			mdwc->drd_state = DRD_STATE_IDLE;
@@ -4548,7 +4548,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		} else if (test_bit(B_SUSPEND, &mdwc->inputs) &&
 			test_bit(B_SESS_VLD, &mdwc->inputs)) {
 			dev_dbg(mdwc->dev, "BPER bsv && susp\n");
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_B_SUSPEND;
 #else
 			mdwc->drd_state = DRD_STATE_PERIPHERAL_SUSPEND;
@@ -4566,14 +4566,14 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 				atomic_read(&mdwc->dev->power.usage_count));
 		}
 		break;
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	case OTG_STATE_B_SUSPEND:
 #else
 	case DRD_STATE_PERIPHERAL_SUSPEND:
 #endif
 		if (!test_bit(B_SESS_VLD, &mdwc->inputs)) {
 			dev_dbg(mdwc->dev, "BSUSP: !bsv\n");
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_B_IDLE;
 #else
 			mdwc->drd_state = DRD_STATE_IDLE;
@@ -4582,7 +4582,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 			dwc3_otg_start_peripheral(mdwc, 0);
 		} else if (!test_bit(B_SUSPEND, &mdwc->inputs)) {
 			dev_dbg(mdwc->dev, "BSUSP !susp\n");
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_B_PERIPHERAL;
 #else
 			mdwc->drd_state = DRD_STATE_PERIPHERAL;
@@ -4598,7 +4598,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 				atomic_read(&mdwc->dev->power.usage_count));
 		}
 		break;
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	case OTG_STATE_A_IDLE:
 #else
 	case DRD_STATE_HOST_IDLE:
@@ -4606,7 +4606,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		/* Switch to A-Device*/
 		if (test_bit(ID, &mdwc->inputs)) {
 			dev_dbg(mdwc->dev, "id\n");
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_B_IDLE;
 #else
 			mdwc->drd_state = DRD_STATE_IDLE;
@@ -4614,7 +4614,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 			mdwc->vbus_retry_count = 0;
 			work = 1;
 		} else {
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_A_HOST;
 #else
 			mdwc->drd_state = DRD_STATE_HOST;
@@ -4626,7 +4626,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 				 * Get regulator failed as regulator driver is
 				 * not up yet. Will try to start host after 1sec
 				 */
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 				mdwc->otg_state = OTG_STATE_A_IDLE;
 #else
 				mdwc->drd_state = DRD_STATE_HOST_IDLE;
@@ -4637,7 +4637,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 				mdwc->vbus_retry_count++;
 			} else if (ret) {
 				dev_err(mdwc->dev, "unable to start host\n");
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 				mdwc->otg_state = OTG_STATE_A_IDLE;
 #else
 				mdwc->drd_state = DRD_STATE_HOST_IDLE;
@@ -4647,7 +4647,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		}
 		break;
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	case OTG_STATE_A_HOST:
 #else
 	case DRD_STATE_HOST:
@@ -4655,7 +4655,7 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 		if (test_bit(ID, &mdwc->inputs) || mdwc->hc_died) {
 			dev_dbg(mdwc->dev, "id || hc_died\n");
 			dwc3_otg_start_host(mdwc, 0);
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 			mdwc->otg_state = OTG_STATE_B_IDLE;
 #else
 			mdwc->drd_state = DRD_STATE_IDLE;
@@ -4772,7 +4772,7 @@ static int dwc3_msm_pm_restore(struct device *dev)
 	pm_runtime_enable(dev);
 
 	/* Restore PHY flags if hibernated in host mode */
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	if (mdwc->otg_state == OTG_STATE_A_HOST) {
 #else
 	if (mdwc->drd_state == DRD_STATE_HOST) {

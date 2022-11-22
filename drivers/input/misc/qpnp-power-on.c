@@ -34,7 +34,7 @@
 #include <linux/qpnp/qpnp-pbs.h>
 #include <linux/qpnp/qpnp-misc.h>
 #include <linux/power_supply.h>
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/hardware_info.h>
 #endif
 
@@ -2147,7 +2147,7 @@ static int read_gen2_pon_off_reason(struct qpnp_pon *pon, u16 *reason,
 	return 0;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 void oppoversion_info_set(char *name, char *version);
 extern char board_id[HARDWARE_MAX_ITEM_LONGTH];
 enum{
@@ -2833,7 +2833,7 @@ static int qpnp_pon_probe(struct platform_device *pdev)
 					"qcom,use-legacy-hard-reset-offset");
 
 	qpnp_pon_debugfs_init(pdev);
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	probe_board_and_set();
 	#endif
 	return 0;

@@ -320,7 +320,7 @@ config ARCH_VEXPRESS
 	help
 	  This enables support for the ARMv8 software model (Versatile
 	  Express).
-config ODM_WT_EDIT
+config CONFIG_PRODUCT_REALME_SDM450
 	bool "Enable Support for ODM WT Projects"
 	depends on ARCH_QCOM
 	select CPU_FREQ_QCOM

@@ -876,7 +876,7 @@ static ssize_t mmc_fwrev_show(struct device *dev,
 
 static DEVICE_ATTR(fwrev, S_IRUGO, mmc_fwrev_show, NULL);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static int calc_mem_size(void)
 {
 	int temp_size;
@@ -1019,7 +1019,7 @@ static struct attribute *mmc_std_attrs[] = {
 	&dev_attr_rel_sectors.attr,
 	&dev_attr_ocr.attr,
 	&dev_attr_dsr.attr,
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	&dev_attr_flash_name.attr,
 #endif
 	NULL,
@@ -3250,7 +3250,7 @@ static const struct mmc_bus_ops mmc_ops = {
 	.post_hibernate = mmc_post_hibernate
 };
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern void oppoversion_info_set(char *name, char *version);
 static void oppoversion_info_set_4_ramsize(void)
 {
@@ -3338,7 +3338,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 
 	register_reboot_notifier(&host->card->reboot_notify);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	oppoversion_info_set_4_ramsize();
 #endif
 

@@ -41,7 +41,7 @@
 #include <linux/timer.h>
 
 #include "peripheral-loader.h"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/wt_system_monitor.h>
 #endif
 #define DISABLE_SSR 0x9889deed
@@ -1222,7 +1222,7 @@ int subsystem_restart_dev(struct subsys_device *dev)
 
 	name = dev->desc->name;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef WT_BOOT_REASON
 	if (dev->restart_level == RESET_SOC) {
 		if (!strcmp(name,"wcnss"))
@@ -1797,7 +1797,7 @@ struct subsys_device *subsys_register(struct subsys_desc *desc)
 	strlcpy(subsys->desc->fw_name, desc->name,
 			sizeof(subsys->desc->fw_name));
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #if defined(WT_FINAL_RELEASE) || defined(WT_COMPILE_FACTORY_VERSION)
 	subsys->restart_level = RESET_SUBSYS_COUPLED;
 #else

@@ -310,7 +310,7 @@ static void __iomem * __arm_ioremap_pfn_caller(unsigned long pfn,
  		return NULL;
  	addr = (unsigned long)area->addr;
 	area->phys_addr = paddr;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	prot = __pgprot(type->prot_pte);
     #ifdef CONFIG_ARCH_MSM8953_SOC_SETTINGS
 	if (paddr >= MSM8953_TLMM_START_ADDR &&

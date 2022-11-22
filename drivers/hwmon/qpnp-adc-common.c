@@ -677,7 +677,7 @@ static const struct qpnp_vadc_map_pt adcmap_batt_therm[] = {
 	{124,	980}
 };
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 /* Voltage to temperature */
 static const struct qpnp_vadc_map_pt adcmap_batt_therm_qrd[] = {
 	{1840,	-400},

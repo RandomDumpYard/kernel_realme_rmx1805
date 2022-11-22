@@ -1623,7 +1623,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
 	if (!pskb_may_pull(skb, th->doff * 4))
 		goto discard_it;
 
-    #ifdef ODM_WT_EDIT
+    #ifdef CONFIG_PRODUCT_REALME_SDM450
     /* Assuming a trustworthy entity did the checksum and found the csum
     invalid, drop the packet.*/
     if (skb->ip_summed == CHECKSUM_COMPLETE && skb->csum_valid == 0)

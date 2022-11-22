@@ -40,7 +40,7 @@
 #include "qg-battery-profile.h"
 #include "qg-defs.h"
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 static int qg_debug_mask;
 #else
 static int qg_debug_mask = QG_DEBUG_SOC | QG_DEBUG_RESTORE_SOC;
@@ -49,7 +49,7 @@ module_param_named(
 	debug_mask, qg_debug_mask, int, 0600
 );
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static bool qg_batt_valid_ocv = false;
 module_param_named(batt_valid_ocv, qg_batt_valid_ocv, bool, S_IRUSR | S_IWUSR);
 
@@ -206,7 +206,7 @@ static void qg_notify_charger(struct qpnp_qg *chip)
 	if (!chip->batt_psy)
 		return;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (chip->profile_loaded == false) {
 		prop.intval = 0;
 		power_supply_set_property(chip->batt_psy,
@@ -1564,7 +1564,7 @@ static int qg_get_battery_capacity(struct qpnp_qg *chip, int *soc)
 	return 0;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static const char *qg_get_cycle_counts(struct qpnp_qg *chip)
 {
 	int i, rc, len = 0;
@@ -1592,7 +1592,7 @@ static const char *qg_get_cycle_counts(struct qpnp_qg *chip)
 }
 #endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static void qg_restore_battery_info(struct qpnp_qg *chip)
 {
 	int rc, batt_temp = 0;
@@ -1871,7 +1871,7 @@ static int qg_psy_set_property(struct power_supply *psy,
 			chip->cl->learned_cap_uah = pval->intval;
 		mutex_unlock(&chip->cl->lock);
 		break;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_BATTERY_INFO:
 		pr_info("Healthd init, Set %d:%d.\n", chip->batt_info_id, pval->intval);
 		rc = qg_set_battery_info(chip, pval->intval);
@@ -1962,7 +1962,7 @@ static int qg_psy_get_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
 		rc = qg_get_charge_counter(chip, &pval->intval);
 		break;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_AUTHENTICATE:
 		pval->intval = chip->profile_loaded ? 1 : 0;
 		break;
@@ -2047,7 +2047,7 @@ static int qg_property_is_writeable(struct power_supply *psy,
 {
 	switch (psp) {
 	case POWER_SUPPLY_PROP_CHARGE_FULL:
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	case POWER_SUPPLY_PROP_BATTERY_INFO:
 	case POWER_SUPPLY_PROP_BATTERY_INFO_ID:
 	case POWER_SUPPLY_PROP_SOC_NOTIFY_READY:
@@ -2080,7 +2080,7 @@ static enum power_supply_property qg_psy_props[] = {
 	POWER_SUPPLY_PROP_VOLTAGE_MAX,
 	POWER_SUPPLY_PROP_BATT_FULL_CURRENT,
 	POWER_SUPPLY_PROP_BATT_PROFILE_VERSION,
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_PROP_AUTHENTICATE,
 	POWER_SUPPLY_PROP_BATT_CC,
 	POWER_SUPPLY_PROP_BATT_FCC,
@@ -2117,7 +2117,7 @@ static int qg_charge_full_update(struct qpnp_qg *chip)
 {
 	union power_supply_propval prop = {0, };
 	int rc, recharge_soc, health;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int batt_uv = 0;
 	int recharge_uv = 0;
 #endif
@@ -2141,7 +2141,7 @@ static int qg_charge_full_update(struct qpnp_qg *chip)
 	}
 	recharge_soc = prop.intval;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	rc = power_supply_get_property(chip->batt_psy,
 			POWER_SUPPLY_PROP_RECHARGE_UV, &prop);
 	if (rc < 0 || prop.intval < 0) {
@@ -2166,7 +2166,7 @@ static int qg_charge_full_update(struct qpnp_qg *chip)
 			qg_dbg(chip, QG_DEBUG_STATUS, "Terminated charging @ msoc=%d\n",
 					chip->msoc);
 		}
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	} else if ((!chip->charge_done || chip->msoc < recharge_soc)
 				&& chip->charge_full) {
 #else
@@ -2174,7 +2174,7 @@ static int qg_charge_full_update(struct qpnp_qg *chip)
 				|| ((batt_uv < recharge_uv) && (chip->charge_status == POWER_SUPPLY_STATUS_FULL))) {
 #endif
 
-		#ifndef ODM_WT_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_SDM450
 		if (chip->wa_flags & QG_RECHARGE_SOC_WA) {
 			/* Force recharge */
 			prop.intval = 0;
@@ -2196,7 +2196,7 @@ static int qg_charge_full_update(struct qpnp_qg *chip)
 		 * the USB is removed, if linearize-soc is set scale
 		 * msoc from 100% for better UX.
 		 */
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 		if (chip->dt.linearize_soc && chip->msoc < 99) {
 			chip->maint_soc = FULL_SOC;
 			qg_scale_soc(chip, false);
@@ -2207,7 +2207,7 @@ static int qg_charge_full_update(struct qpnp_qg *chip)
 			qg_scale_soc(chip, false);
 		}
 	#endif
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 		qg_dbg(chip, QG_DEBUG_STATUS, "msoc=%d recharge_soc=%d charge_full (1->0)\n",
 					chip->msoc, recharge_soc);
 		chip->charge_full = false;
@@ -2217,7 +2217,7 @@ static int qg_charge_full_update(struct qpnp_qg *chip)
 	#endif
 	}
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ((chip->charge_status != POWER_SUPPLY_STATUS_CHARGING) && (chip->charge_status != POWER_SUPPLY_STATUS_FULL)) {
 		chip->charge_full = false;
 	}
@@ -2287,7 +2287,7 @@ static void qg_status_change_work(struct work_struct *work)
 		goto out;
 	}
 
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	rc = power_supply_get_property(chip->batt_psy,
 			POWER_SUPPLY_PROP_STATUS, &prop);
 #else
@@ -2658,7 +2658,7 @@ static int qg_load_battery_profile(struct qpnp_qg *chip)
 		pr_err("Failed to read battery fastcharge current rc:%d\n", rc);
 		chip->bp.fastchg_curr_ma = -EINVAL;
 	}
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	#ifdef CONFIG_DISABLE_TEMP_PROTECT
 		chip->bp.float_volt_uv = 4100000;
 		chip->bp.fastchg_curr_ma = 1500;
@@ -3533,7 +3533,7 @@ static int qg_parse_dt(struct qpnp_qg *chip)
 	else
 		chip->dt.rbat_conn_mohm = temp;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	chip->batt_info_restore = of_property_read_bool(node,
 					"qcom,qg-restore-batt-info");
 
@@ -3663,7 +3663,7 @@ static int process_suspend(struct qpnp_qg *chip)
 		return 0;
 
 	/* disable GOOD_OCV IRQ in sleep */
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 	vote(chip->good_ocv_irq_disable_votable,
 			QG_INIT_STATE_IRQ_DISABLE, true, 0);
 	#endif
@@ -3747,7 +3747,7 @@ static int process_resume(struct qpnp_qg *chip)
 {
 	u8 status2 = 0, rt_status = 0, val = 0;
 	u32 ocv_uv = 0, ocv_raw = 0;
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 	int rc, batt_temp = 0;
 #else
 	int rc = 0;
@@ -3758,7 +3758,7 @@ static int process_resume(struct qpnp_qg *chip)
 		return 0;
 
 	/* enable GOOD_OCV IRQ when awake */
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 	vote(chip->good_ocv_irq_disable_votable,
 			QG_INIT_STATE_IRQ_DISABLE, false, 0);
 	#endif
@@ -3775,7 +3775,7 @@ static int process_resume(struct qpnp_qg *chip)
 			pr_err("Failed to read good_ocv, rc=%d\n", rc);
 			return rc;
 		}
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 		rc = qg_get_battery_temp(chip, &batt_temp);
 		if (rc < 0) {
 			pr_err("Failed to read BATT_TEMP, rc=%d\n", rc);
@@ -3860,7 +3860,7 @@ static int qpnp_qg_resume_noirq(struct device *dev)
 	return 0;
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static int qpnp_qg_suspend(struct device *dev)
 {
        struct qpnp_qg *chip = dev_get_drvdata(dev);
@@ -3895,7 +3895,7 @@ static int qpnp_qg_resume(struct device *dev)
 static const struct dev_pm_ops qpnp_qg_pm_ops = {
 	.suspend_noirq	= qpnp_qg_suspend_noirq,
 	.resume_noirq	= qpnp_qg_resume_noirq,
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	.suspend        = qpnp_qg_suspend,
 	.resume         = qpnp_qg_resume,
 	#endif
@@ -4070,7 +4070,7 @@ static int qpnp_qg_probe(struct platform_device *pdev)
 	}
 
 	qg_get_battery_capacity(chip, &soc);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	chip->soc_reporting_ready = true;
 	chip->batt_range_ocv = qg_batt_valid_ocv;
 	chip->batt_range_pct = qg_batt_range_pct;

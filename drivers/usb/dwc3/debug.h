@@ -43,7 +43,7 @@
 
 #define dbg_setup(ep_num, req) \
 	dwc3_dbg_setup(dwc, ep_num, req)
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define dbg_log_string(fmt, ...) \
 	ipc_log_string(dwc->dwc_ipc_log_ctxt,\
 			"%s: " fmt, __func__, ##__VA_ARGS__)

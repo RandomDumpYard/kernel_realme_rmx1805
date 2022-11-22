@@ -25,7 +25,7 @@
 #include <linux/delay.h>
 #include <linux/input/qpnp-power-on.h>
 #include <linux/of_address.h>
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/wt_system_monitor.h>
 #endif
 
@@ -65,7 +65,7 @@ static phys_addr_t tcsr_boot_misc_detect;
  * So the SDI cannot be re-enabled when it already by-passed.
  */
 #if 0 /*Use OPPO switch*/
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 static int download_mode = 1;
 #else
 #ifdef WT_FINAL_RELEASE
@@ -316,7 +316,7 @@ static void msm_restart_prepare(const char *cmd)
 	if (qpnp_pon_check_hard_reset_stored()) {
 		/* Set warm reset as true when device is in dload mode */
 		if (get_dload_mode() ||
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 			in_panic ||
 #endif
 			((cmd != NULL && cmd[0] != '\0') &&
@@ -324,12 +324,12 @@ static void msm_restart_prepare(const char *cmd)
 			need_warm_reset = true;
 	} else {
 		need_warm_reset = (get_dload_mode() ||
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 				in_panic ||
 #endif
 				(cmd != NULL && cmd[0] != '\0'));
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (in_panic) {
 		//warm reset
 		qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
@@ -343,7 +343,7 @@ static void msm_restart_prepare(const char *cmd)
 	}
 #endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (in_panic) {
 		//warm reset
 		qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
@@ -364,13 +364,13 @@ static void msm_restart_prepare(const char *cmd)
 		qpnp_pon_system_pwr_off(PON_POWER_OFF_HARD_RESET);
 
 	if (cmd != NULL) {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef WT_SYSTEM_MONITOR
 		set_reset_magic(RESET_MAGIC_CMD_REBOOT);
 #endif
 #endif
 		if (!strncmp(cmd, "bootloader", 10)) {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifndef WT_FINAL_RELEASE
 			qpnp_pon_set_restart_reason(
 				PON_RESTART_REASON_BOOTLOADER);
@@ -424,7 +424,7 @@ static void msm_restart_prepare(const char *cmd)
 			}
 		} else if (!strncmp(cmd, "edl", 3)) {
 			enable_emergency_dload_mode();
-		#ifndef ODM_WT_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_SDM450
 		} else {
 			__raw_writel(0x77665501, restart_reason);
 		}

@@ -1,6 +1,6 @@
 /*******************************************************************************
  *  Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
- *  ODM_WT_EDIT
+ *  CONFIG_PRODUCT_REALME_SDM450
  *  FILE: - wt_charger_log.c
  *  Description : Add charger log
  *  Version: 1.0
@@ -213,11 +213,11 @@ static char *power_supply_name[] = {
 	POWER_SUPPLY_NAME(ctm_current_max),
 	POWER_SUPPLY_NAME(hw_current_max),
 	POWER_SUPPLY_NAME(real_type),
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_NAME(StopCharging_Test),
 	POWER_SUPPLY_NAME(StartCharging_Test),
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_NAME(adapter_fw_update),
 	POWER_SUPPLY_NAME(authenticate),
 	POWER_SUPPLY_NAME(batt_fcc),
@@ -236,7 +236,7 @@ static char *power_supply_name[] = {
 	POWER_SUPPLY_NAME(ui_soc),
 	POWER_SUPPLY_NAME(real_status),
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_NAME(otg_switch),
 	POWER_SUPPLY_NAME(otg_online),
 	#endif
@@ -255,7 +255,7 @@ static char *power_supply_name[] = {
 	POWER_SUPPLY_NAME(batt_profile_version),
 	POWER_SUPPLY_NAME(batt_full_current),
 	POWER_SUPPLY_NAME(recharge_soc),
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_NAME(recharge_uv),
 	#endif
 	POWER_SUPPLY_NAME(hvdcp_opti_allowed),
@@ -266,7 +266,7 @@ static char *power_supply_name[] = {
 	POWER_SUPPLY_NAME(manufacturer),
 	POWER_SUPPLY_NAME(serial_number),
 	POWER_SUPPLY_NAME(battery_type),
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_NAME(batt_cc),
 	#endif
 };
@@ -299,14 +299,14 @@ static enum power_supply_property smb5_batt_props[] = {
 	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
 	POWER_SUPPLY_PROP_CHARGE_COUNTER,
 	POWER_SUPPLY_PROP_RECHARGE_SOC,
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_PROP_RECHARGE_UV,
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	//POWER_SUPPLY_PROP_STOPCHARGING_TEST,
 	//POWER_SUPPLY_PROP_STARTCHARGING_TEST,
 	#endif
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	//POWER_SUPPLY_PROP_ADAPTER_FW_UPDATE,
 	POWER_SUPPLY_PROP_AUTHENTICATE,
 	//POWER_SUPPLY_PROP_BATT_CC,
@@ -351,7 +351,7 @@ static enum power_supply_property smb5_usb_props[] = {
 	POWER_SUPPLY_PROP_CONNECTOR_TYPE,
 	POWER_SUPPLY_PROP_VOLTAGE_MAX,
 	POWER_SUPPLY_PROP_SCOPE,
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_PROP_OTG_SWITCH,
 	POWER_SUPPLY_PROP_OTG_ONLINE,
 #endif
@@ -382,7 +382,7 @@ static enum power_supply_property qg_psy_props[] = {
 	POWER_SUPPLY_PROP_VOLTAGE_MAX,
 	POWER_SUPPLY_PROP_BATT_FULL_CURRENT,
 	POWER_SUPPLY_PROP_BATT_PROFILE_VERSION,
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	POWER_SUPPLY_PROP_AUTHENTICATE,
 	//POWER_SUPPLY_PROP_BATT_CC,
 	//POWER_SUPPLY_PROP_BATT_FCC,

@@ -26,7 +26,7 @@ DEFINE_MSM_MUTEX(msm_eeprom_mutex);
 static struct v4l2_file_operations msm_eeprom_v4l2_subdev_fops;
 #endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int g_main_module_id = 0;
 int g_front_module_id = 0;
 int g_aux_module_id = 0;
@@ -413,7 +413,7 @@ static int read_eeprom_memory(struct msm_eeprom_ctrl_t *e_ctrl,
 	struct msm_eeprom_memory_map_t *emap = block->map;
 	struct msm_eeprom_board_info *eb_info;
 	uint8_t *memptr = block->mapdata;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	uint16_t id_for_sensor;
 #endif
 
@@ -424,7 +424,7 @@ static int read_eeprom_memory(struct msm_eeprom_ctrl_t *e_ctrl,
 
 	eb_info = e_ctrl->eboard_info;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (!strcmp(eb_info->eeprom_name, "sunny_s5k4h7yx")) {
 		pr_info("g_front_module_id %d", g_front_module_id);
 		if (g_front_module_id != 0) return -1;
@@ -582,7 +582,7 @@ static int read_eeprom_memory(struct msm_eeprom_ctrl_t *e_ctrl,
 			}
 		}
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 }
 #endif
 	return rc;
@@ -1018,7 +1018,7 @@ static int msm_eeprom_config(struct msm_eeprom_ctrl_t *e_ctrl,
 		rc = msm_eeprom_get_cmm_data(e_ctrl, cdata);
 		break;
 	case CFG_EEPROM_INIT:
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		CDBG("%s:%d userspace_probe=%d, Eeprom will probed at kernel boot",
 			__func__, __LINE__, e_ctrl->userspace_probe);
 #else
@@ -1992,7 +1992,7 @@ static int msm_eeprom_config32(struct msm_eeprom_ctrl_t *e_ctrl,
 		rc = eeprom_config_read_cal_data32(e_ctrl, argp);
 		break;
 	case CFG_EEPROM_INIT:
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		CDBG("%s:%d userspace_probe=%d, Eeprom will probed at kernel boot",
 			__func__, __LINE__, e_ctrl->userspace_probe);
 #else
@@ -2070,7 +2070,7 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 	struct device_node *of_node = pdev->dev.of_node;
 	struct msm_camera_power_ctrl_t *power_info = NULL;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int module_id = 0;
 #endif
 
@@ -2206,7 +2206,7 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 		for (j = 0; j < e_ctrl->cal_data.num_data; j++)
 			CDBG("memory_data[%d] = 0x%X\n", j,
 				e_ctrl->cal_data.mapdata[j]);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (!strcmp(eb_info->eeprom_name, "sunny_s5k3l6")) {
 			CDBG("match id for %s", eb_info->eeprom_name);
 			if (e_ctrl->cal_data.mapdata[0] == 0x55) {

@@ -91,7 +91,7 @@ module_param(mtp_tx_reqs, uint, 0644);
 
 static const char mtp_shortname[] = DRIVER_NAME "_usb";
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 volatile int mtp_use_flag;
 #endif
 
@@ -1280,7 +1280,7 @@ fail:
 static int mtp_open(struct inode *ip, struct file *fp)
 {
 	printk(KERN_INFO "mtp_open\n");
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if (!mtp_use_flag) {
 		pr_err("%s mtp_function_bind not called returning EFAULT\n", __func__);
 		return -EFAULT;
@@ -1504,7 +1504,7 @@ mtp_function_bind(struct usb_configuration *c, struct usb_function *f)
 		gadget_is_superspeed(c->cdev->gadget) ? "super" :
 		(gadget_is_dualspeed(c->cdev->gadget) ? "dual" : "full"),
 		f->name, dev->ep_in->name, dev->ep_out->name);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
         mtp_use_flag = 0x5A;
 #endif
 	return 0;
@@ -1534,7 +1534,7 @@ mtp_function_unbind(struct usb_configuration *c, struct usb_function *f)
 	kfree(f->os_desc_table);
 	f->os_desc_n = 0;
 	fi_mtp->func_inst.f = NULL;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
         mtp_use_flag = 0;
 #endif
 }
@@ -1598,7 +1598,7 @@ static void mtp_function_disable(struct usb_function *f)
 
 	/* readers may be blocked waiting for us to go online */
 	wake_up(&dev->read_wq);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	mtp_use_flag = 0;
 #endif
 

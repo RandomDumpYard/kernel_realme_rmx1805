@@ -486,7 +486,7 @@ struct mdss_dsi_ctrl_pdata {
 	struct dsi_panel_cmds post_dms_on_cmds;
 	struct dsi_panel_cmds post_panel_on_cmds;
 	struct dsi_panel_cmds off_cmds;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	struct dsi_panel_cmds gesture_off_cmds;
 #endif
 	struct dsi_panel_cmds lp_on_cmds;

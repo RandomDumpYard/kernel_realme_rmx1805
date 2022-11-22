@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - protocol.h
 ** Description : This program is for ili9881 driver protocol.h
 ** Version: 1.0
@@ -93,7 +93,7 @@ struct protocol_cmd_list {
 #ifdef ILITEK_EDGE_LIMIT
 	uint8_t edge_limit_ctrl[3];
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		uint8_t play_mode_ctrl[3];	
 #endif
 	uint8_t phone_cover_window[9];

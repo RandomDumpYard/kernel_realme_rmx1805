@@ -19,7 +19,7 @@
 #include <linux/types.h>
 #include <linux/batterydata-lib.h>
 #include <linux/power_supply.h>
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/hardware_info.h>
 #endif
 
@@ -394,7 +394,7 @@ struct device_node *of_batterydata_get_best_profile(
 
 	rc = of_property_read_string(best_node, "qcom,battery-type",
 							&battery_type);
-	#ifndef ODM_WT_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_SDM450
 	if (!rc)
 		pr_info("%s found\n", battery_type);
 	else

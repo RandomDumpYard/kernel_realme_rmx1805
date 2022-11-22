@@ -27,7 +27,7 @@
 		|| ((left) <= (right) && (left) <= (value) \
 			&& (value) <= (right)))
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define dump_all_soc(chip)	\
 	do { \
 		qg_dbg(chip, QG_DEBUG_SOC, \

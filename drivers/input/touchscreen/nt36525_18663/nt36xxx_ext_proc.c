@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - nt36xxx_ext_proc.c
 ** Description : This program is for nt36xxx driver
 ** Version: 1.0
@@ -23,7 +23,7 @@
 #define NVT_BASELINE "nvt_baseline"
 #define NVT_RAW "nvt_raw"
 #define NVT_DIFF "nvt_diff"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define OPPO_TOUCHPANEL_NAME "touchpanel"
 #define OPPO_BASELINE_TEST "baseline_test"
 #define OPPO_COORDINATE "coordinate"
@@ -606,7 +606,7 @@ Description:
 return:
 	Executive outcomes. 0---succeed. -12---failed.
 *******************************************************/
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 /* coordinate */
 static int32_t c_oppo_coordinate_show(struct seq_file *m, void *v)
 {
@@ -1378,7 +1378,7 @@ static const struct file_operations oppo_tp_area_fops =
 
 int32_t nvt_extra_proc_init(void)
 {
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	struct proc_dir_entry *oppo_touchpanel_proc = NULL;
 	struct proc_dir_entry *debug_info = NULL;
 	oppo_touchpanel_proc = proc_mkdir(OPPO_TOUCHPANEL_NAME, NULL);

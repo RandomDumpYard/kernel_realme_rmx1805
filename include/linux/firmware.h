@@ -65,7 +65,7 @@ static inline int request_firmware_nowait(
 {
 	return -EINVAL;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int request_firmware_select(const struct firmware **fw, const char *name,+
 	struct device *device);
 #endif

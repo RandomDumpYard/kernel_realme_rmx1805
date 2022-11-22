@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - userspce.c
 ** Description : This program is for ili9881 driver userspace.c
 ** Version: 1.0
@@ -54,7 +54,7 @@
 #define ILITEK_IOCTL_TP_MODE_STATUS			_IOWR(ILITEK_IOCTL_MAGIC, 18, int*)
 #define ILITEK_IOCTL_ICE_MODE_SWITCH		_IOWR(ILITEK_IOCTL_MAGIC, 19, int)
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define X_CHANGLE 18
 #define Y_CHANGLE 32
 #define FRAME_NODE 18*32
@@ -312,7 +312,7 @@ static ssize_t ilitek_proc_debug_message_read(struct file *filp, char __user *bu
 	mutex_unlock(&ipd->ilitek_debug_read_mutex);
 	return send_data_len;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static ssize_t ilitek_proc_oppo_upgrade_fw_write(struct file *filp, const char *buff, size_t size, loff_t *pPos)
 {
 	int res = 0;
@@ -1348,7 +1348,7 @@ static ssize_t ilitek_proc_debug_level_write(struct file *filp, const char *buff
 
 	return size;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static ssize_t ilitek_proc_oppo_debug_level_write(struct file *filp, const char *buff, size_t size, loff_t *pPos)
 {
 	int res = 0;
@@ -1419,7 +1419,7 @@ static ssize_t ilitek_proc_gesture_write(struct file *filp, const char *buff, si
 
 	return size;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static ssize_t oppo_proc_gesture_write(struct file *filp, const char *buff, size_t size, loff_t *pPos)
 {
 	int res = 0;
@@ -1593,7 +1593,7 @@ static ssize_t ilitek_proc_check_battery_write(struct file *filp, const char *bu
 
 	return size;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static ssize_t wt_mptest_read(struct file *filp, char __user *buff, size_t size, loff_t *pPos)
 {
 	int len = 0;
@@ -1869,7 +1869,7 @@ static ssize_t ilitek_proc_iram_upgrade_read(struct file *filp, char __user *buf
 
 	return len;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static ssize_t oppo_proc_register_read(struct file *filp, char __user *buff, size_t count, loff_t *ppos)
 {
 		int ret = 0;
@@ -2468,7 +2468,7 @@ static long ilitek_proc_ioctl(struct file *filp, unsigned int cmd, unsigned long
 
 	return res;
 }
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 struct proc_dir_entry *proc_dir_oppo;
 struct proc_dir_entry *proc_dir_debug_info;
 struct proc_dir_entry *proc_baseline_test;
@@ -2500,7 +2500,7 @@ struct file_operations proc_ioctl_fops = {
 struct file_operations proc_fw_process_fops = {
 	.read = ilitek_proc_fw_process_read,
 };
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 struct file_operations wt_open_test_fops = {
 	.read = wt_mptest_read,
 };
@@ -2527,7 +2527,7 @@ struct file_operations proc_debug_level_fops = {
 	.write = ilitek_proc_debug_level_write,
 	.read = ilitek_proc_debug_level_read,
 };
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 struct file_operations proc_oppo_debug_level_fops = {
 	.write = ilitek_proc_oppo_debug_level_write,
 };
@@ -2536,7 +2536,7 @@ struct file_operations proc_mp_test_fops = {
 	.write = ilitek_proc_mp_test_write,
 	.read = ilitek_proc_mp_test_read,
 };
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #if 0
 struct file_operations proc_coordinate_fops = {
 	.read = ilitek_proc_coordinate_read,
@@ -2790,7 +2790,7 @@ static int netlink_init(void)
 int ilitek_proc_init(void)
 {
 	int i = 0, res = 0;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	struct proc_dir_entry *proc_oppo_upgrade_fw_dir;
 	struct proc_dir_entry *proc_oppo_gesture_dir;
 	struct proc_dir_entry *proc_oppo_irq_depth_dir;
@@ -2803,14 +2803,14 @@ int ilitek_proc_init(void)
 #endif
 #endif
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	struct proc_dir_entry *proc_mp_dir;
 	struct proc_dir_entry *proc_mptest_node;
 	proc_mp_dir = proc_mkdir("touchscreen", NULL);
 	proc_mptest_node = proc_create("ctp_openshort_test", 0666, proc_mp_dir, &wt_open_test_fops);
 #endif
 	proc_dir_ilitek = proc_mkdir("ilitek", NULL);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
     proc_dir_oppo = proc_mkdir("touchpanel", NULL);
 	proc_dir_debug_info = proc_mkdir("debug_info", proc_dir_oppo);
 	//proc_baseline_test = proc_create("baseline_test", 0666, proc_dir_oppo, &proc_oppo_mp_test_fops);

@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - config.c
 ** Description : This program is for ili9881 driver config.c
 ** Version: 1.0
@@ -115,7 +115,7 @@ extern void core_config_set_phone_cover(uint8_t *pattern);
 #ifdef ILITEK_EDGE_LIMIT
 extern void core_config_edge_limit_ctrl(bool enable);
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern void core_config_game_switch_ctrl(bool enable);
 #endif
 /* Touch IC information */

@@ -42,7 +42,7 @@ MODULE_LICENSE("GPL");
 /* Builtin firmware support */
 
 #ifdef CONFIG_FW_LOADER
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define FW_OPT_COMPARE (1U << 5)
 #endif
 extern struct builtin_fw __start_builtin_fw[];
@@ -296,7 +296,7 @@ static void fw_free_buf(struct firmware_buf *buf)
 static char fw_path_para[256];
 static const char * const fw_path[] = {
 	fw_path_para,
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	"/vendor/firmware/",
 	"/etc/firmware/",
 #endif
@@ -939,7 +939,7 @@ static int _request_firmware_load(struct firmware_priv *fw_priv,
 	int retval = 0;
 	struct device *f_dev = &fw_priv->dev;
 	struct firmware_buf *buf = fw_priv->buf;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	char *envp[2]={"FwUp=compare", NULL};
 #endif
 	/* fall back on userspace loading */
@@ -963,7 +963,7 @@ static int _request_firmware_load(struct firmware_priv *fw_priv,
 		dev_set_uevent_suppress(f_dev, false);
 		dev_dbg(f_dev, "firmware: requesting %s\n", buf->fw_id);
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 		if (opt_flags & FW_OPT_COMPARE) {
 			kobject_uevent_env(&fw_priv->dev.kobj, KOBJ_CHANGE,envp);
 		} else {
@@ -1280,7 +1280,7 @@ int request_firmware_direct(const struct firmware **firmware_p,
 	return ret;
 }
 EXPORT_SYMBOL_GPL(request_firmware_direct);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int request_firmware_select(const struct firmware **firmware_p, const char *name,
 		 struct device *device)
 {

@@ -341,7 +341,7 @@ static int console_may_schedule;
  * with a space character and terminated by a newline. All possible
  * non-prinatable characters are escaped in the "\xff" notation.
  */
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/sched.h>
 #endif
 enum log_flags {
@@ -359,7 +359,7 @@ struct printk_log {
 	u8 facility;		/* syslog facility */
 	u8 flags:5;		/* internal record flags */
 	u8 level:3;		/* syslog level */
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	pid_t pid;
 	char comm[TASK_COMM_LEN];
 #endif
@@ -599,7 +599,7 @@ static int log_store(int facility, int level,
 	msg->facility = facility;
 	msg->level = level & 7;
 	msg->flags = flags & 0x1f;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	msg->pid = current->pid;
 	memset(msg->comm, 0, TASK_COMM_LEN);
 	memcpy(msg->comm, current->comm, TASK_COMM_LEN-1);
@@ -1223,7 +1223,7 @@ static size_t print_time(u64 ts, char *buf)
 		       (unsigned long)ts, rem_nsec / 1000);
 }
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 static bool printk_task_info = 1;
 module_param_named(task_info, printk_task_info, bool, S_IRUGO | S_IWUSR);
 static size_t print_task_info(pid_t pid, const char *task_name,char *buf)
@@ -1256,7 +1256,7 @@ static size_t print_prefix(const struct printk_log *msg, bool syslog, char *buf)
 	}
 
 	len += print_time(msg->ts_nsec, buf ? buf + len : NULL);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	len += print_task_info(msg->pid, msg->comm, buf ? buf + len : NULL);
 #endif
 	return len;

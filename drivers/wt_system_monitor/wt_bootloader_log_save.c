@@ -1,6 +1,6 @@
 /******************************************************************
  * ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
- * ** ODM_WT_EDIT
+ * ** CONFIG_PRODUCT_REALME_SDM450
  * ** File: - wt_bootloader_log_save.c
  * ** Description: Add for crash log saving machanism
  * ** Version: 1.0

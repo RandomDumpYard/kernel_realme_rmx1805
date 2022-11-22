@@ -27,7 +27,7 @@ enum print_reason {
 	PR_MISC		= BIT(2),
 	PR_PARALLEL	= BIT(3),
 	PR_OTG		= BIT(4),
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	PR_OTHERS	= BIT(5),
 #endif
 };
@@ -73,13 +73,13 @@ enum print_reason {
 #define DYNAMIC_RP_VOTER		"DYNAMIC_RP_VOTER"
 #define DEFAULT_100MA_VOTER		"DEFAULT_100MA_VOTER"
 #define FORCE_RECHARGE_VOTER		"FORCE_RECHARGE_VOTER"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define FB_BLANK_VOTER			"FB_BLANK_VOTER"
 #define CHG_CHK_VOTER			"CHG_CHK_VOTER"
 #define CALL_VOTER				"CALL_VOTER"
 #define JEITA_VOTER				"JEITA_VOTER"
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #define AICL_THRESHOLD_VOTER		"AICL_THRESHOLD_VOTER"
 #endif
 #define MOISTURE_VOTER			"MOISTURE_VOTER"
@@ -94,7 +94,7 @@ enum print_reason {
 
 #define SDP_100_MA			100000
 #define SDP_CURRENT_UA			500000
-#ifndef ODM_WT_EDIT
+#ifndef CONFIG_PRODUCT_REALME_SDM450
 #define CDP_CURRENT_UA			1500000
 #define DCP_CURRENT_UA			1500000
 #else
@@ -333,7 +333,7 @@ struct smb_charger {
 	struct power_supply		*batt_psy;
 	struct power_supply		*usb_psy;
 	struct power_supply		*dc_psy;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	struct power_supply		*ac_psy;
 #endif
 	struct power_supply		*bms_psy;
@@ -379,7 +379,7 @@ struct smb_charger {
 
 	/* alarm */
 	struct alarm		moisture_protection_alarm;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef __WT_BATTERY_CHARGER_LOG_OUTPUT__
 	struct delayed_work	log_output_work;
 	struct class 		log_output_class;
@@ -428,7 +428,7 @@ struct smb_charger {
 	bool			otg_present;
 	int			hw_max_icl_ua;
 	int			auto_recharge_soc;
-	#ifdef ODM_WT_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int			auto_recharge_mv;
 	#endif
 	bool			jeita_configured;
@@ -470,12 +470,12 @@ struct smb_charger {
 	u32			headroom_mode;
 	bool			flash_init_done;
 	bool			flash_active;
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int usb_id_gpio;
 	int usb_id_irq;
 	bool otg_switch;
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	int notify_code;
 	unsigned long charger_times;
 	int call_mode;
@@ -483,7 +483,7 @@ struct smb_charger {
 	int prop_status;
 	unsigned long sleep_tm_sec;
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	bool         usb_online_status;
 #endif
 
@@ -526,7 +526,7 @@ int smblib_vconn_regulator_disable(struct regulator_dev *rdev);
 int smblib_vconn_regulator_is_enabled(struct regulator_dev *rdev);
 
 irqreturn_t default_irq_handler(int irq, void *data);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 irqreturn_t default_irq_handler_nolog(int irq, void *data);
 #endif
 irqreturn_t chg_state_change_irq_handler(int irq, void *data);
@@ -567,7 +567,7 @@ int smblib_get_prop_input_current_limited(struct smb_charger *chg,
 				union power_supply_propval *val);
 int smblib_get_prop_batt_temp(struct smb_charger *chg,
 				union power_supply_propval *val);
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 int smblib_get_prop_batt_authenticate(struct smb_charger *chg,
 				     union power_supply_propval *val);
 int smblib_get_prop_batt_fcc(struct smb_charger *chg,
@@ -665,7 +665,7 @@ int smblib_deinit(struct smb_charger *chg);
 int smblib_set_opt_switcher_freq(struct smb_charger *chg, int fsw_khz);
 #endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #ifdef __WT_BATTERY_CHARGER_LOG_OUTPUT__
 int init_fg_chg_work(struct smb_charger *chg);
 int deinit_fg_chg_work(struct smb_charger *chg);

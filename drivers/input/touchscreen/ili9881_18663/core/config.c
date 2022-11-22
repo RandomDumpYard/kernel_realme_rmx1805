@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2018, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - config.c
 ** Description : This program is for ili9881 driver confic.c
 ** Version: 1.0
@@ -23,7 +23,7 @@
 #include "mp_test.h"
 #include "firmware.h"
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/hardware_info.h>
 extern char Ctp_name[HARDWARE_MAX_ITEM_LONGTH];
 extern int ili_ctpmodule;
@@ -32,14 +32,14 @@ extern struct ili_gesture_info * gesture_report_data;
 #ifdef ILITEK_ESD_CHECK
 extern void ilitek_cancel_esd_check(void);
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	char ili_version[20] = {"0"};
 #endif
 
 bool gesture_done = false;
 extern bool psensor_close;
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 extern void devinfo_info_tp_set(char *version, char *manufacture, char *fw_path);
 
 #endif
@@ -353,7 +353,7 @@ void core_config_edge_limit_ctrl(bool enable)
 EXPORT_SYMBOL(core_config_edge_limit_ctrl);
 #endif
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 void core_config_game_switch_ctrl(bool enable)
 {
 	ipio_debug(DEBUG_CONFIG, "play_mode = %d\n", enable);
@@ -1026,7 +1026,7 @@ int core_config_get_fw_ver(void)
 		ipio_info("Firmware Version = %d.%d.%d\n",
 			core_config->firmware_ver[1], core_config->firmware_ver[2], core_config->firmware_ver[3]);
 	}
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ( ili_ctpmodule == 0 ){
 		sprintf(Ctp_name,"TXD,ILI9881,FW:0x%x\n",core_config->firmware_ver[3]);
 	}
@@ -1034,7 +1034,7 @@ int core_config_get_fw_ver(void)
 		sprintf(Ctp_name,"HLT,ILI9881,FW:0x%x\n",core_config->firmware_ver[3]);
 	}
 #endif
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 	if ( ili_ctpmodule == 0 ) {
 	    sprintf(ili_version,"Txd_Ili_%x",core_config->firmware_ver[3]);
 	    devinfo_info_tp_set(ili_version, "TXD",OPPO_FIRMWARE_NAME_PATH);

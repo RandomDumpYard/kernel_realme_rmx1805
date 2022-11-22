@@ -1,6 +1,6 @@
 /*******************************************************************************
 ** Copyright (C), 2008-2016, OPPO Mobile Comm Corp., Ltd.
-** ODM_WT_EDIT
+** CONFIG_PRODUCT_REALME_SDM450
 ** FILE: - hiamx_ic_incell_core.c
 ** Description : This program is for hiamx driver
 ** Version: 1.0
@@ -12,7 +12,7 @@
 **
 *******************************************************************************/
 #include "himax_ic_core.h"
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
 #include <linux/hardware_info.h>
 extern char Ctp_name[HARDWARE_MAX_ITEM_LONGTH];
 extern void devinfo_info_tp_set(char *version, char *manufacture, char *fw_path);
@@ -1105,7 +1105,7 @@ static void himax_mcu_read_FW_ver(void)
 	ic_data->vendor_panel_ver, ic_data->vendor_fw_ver, ic_data->vendor_touch_cfg_ver, ic_data->vendor_display_cfg_ver
 	, (ic_data->vendor_cid_maj_ver << 8 | ic_data->vendor_cid_min_ver));
 
-#ifdef ODM_WT_EDIT
+#ifdef CONFIG_PRODUCT_REALME_SDM450
     if ( hx_ctpmodule == 0 ) {
         sprintf(Ctp_name,"HLT,HX83102d,FW:0x%x\n",ic_data->vendor_touch_cfg_ver);
         sprintf(version,"Hlt_Hx8310_0x%x",ic_data->vendor_touch_cfg_ver);
