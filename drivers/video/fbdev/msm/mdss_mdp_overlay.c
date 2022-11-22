@@ -5953,7 +5953,7 @@ static int mdss_mdp_overlay_on(struct msm_fb_data_type *mfd)
 			goto end;
 	}
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	mdata = mfd_to_mdata(mfd);
 	mdata->scm_set_allowable = true;
 	#endif
@@ -6019,7 +6019,7 @@ static int mdss_mdp_overlay_off(struct msm_fb_data_type *mfd)
 	int need_cleanup;
 	int retire_cnt;
 	bool destroy_ctl = false;
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//struct mdss_data_type *mdata = mfd_to_mdata(mfd);
 	#endif
 
@@ -6175,7 +6175,7 @@ ctl_stop:
 		mdss_mdp_wfd_deinit(mdp5_data->wfd);
 		mdp5_data->wfd = NULL;
 	}
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//mdata = mfd_to_mdata(mfd);
 	mdata->scm_set_allowable = false;
 	#endif

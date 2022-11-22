@@ -1,7 +1,7 @@
-# ifdef VENDOR_EDIT
+# ifdef CONFIG_PRODUCT_REALME_RMX1805
 #//Kun.Hu@PSW.TECH 2018/11/15, Add phoenix base
 config PHOENIX_BASE
 bool "config phoenix base"
 help
     Provide base functions for phoenix.
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */

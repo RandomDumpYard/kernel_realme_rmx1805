@@ -1,6 +1,6 @@
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 config OPPO_HEALTHINFO
 bool "config oppo healthinfo"
 help
     define this config to init oppo healthinfo.
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */

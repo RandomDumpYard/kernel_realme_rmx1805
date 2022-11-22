@@ -29,7 +29,7 @@
 #include "schgm-flash.h"
 #include "step-chg-jeita.h"
 #include "storm-watch.h"
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  OPPO.BSP.CHG  2018-06-21  don't charge in factory mode */
 #include <soc/oppo/boot_mode.h>
 #endif
@@ -1006,7 +1006,7 @@ int smblib_set_icl_current(struct smb_charger *chg, int icl_ua)
 	int rc = 0;
 	bool hc_mode = false, override = false;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  OPPO.BSP.CHG  2018-06-21  don't charge in factory mode */
         int boot_mode;
         boot_mode = get_boot_mode();
@@ -2204,7 +2204,7 @@ int smblib_get_prop_usb_online(struct smb_charger *chg,
 	smblib_dbg(chg, PR_REGISTER, "POWER_PATH_STATUS = 0x%02x\n",
 		   stat);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  PSW.BSP.CHG  2018-06-07  avoid flash shoot cause USB connect off */
         if (chg->real_charger_type == POWER_SUPPLY_TYPE_USB_CDP
                         || chg->real_charger_type == POWER_SUPPLY_TYPE_USB) {
@@ -3267,7 +3267,7 @@ void smblib_usb_plugin_locked(struct smb_charger *chg)
 
 	vbus_rising = (bool)(stat & USBIN_PLUGIN_RT_STS_BIT);
 
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  PSW.BSP.CHG  2018-06-28  avoid flash current ripple when flash work */
         smblib_set_opt_switcher_freq(chg, vbus_rising ? chg->chg_freq.freq_5V :
                                                 chg->chg_freq.freq_removal);
@@ -3633,7 +3633,7 @@ irqreturn_t usb_source_change_irq_handler(int irq, void *data)
 	int rc = 0;
 	u8 stat;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  PSW.BSP.CHG  2018-06-27  accelerate recognize USB */
         u8 reg_value = 0;
 #endif
@@ -3660,7 +3660,7 @@ irqreturn_t usb_source_change_irq_handler(int irq, void *data)
 		 * Force re-run APSD to handle slow insertion related
 		 * charger-mis-detection.
 		 */
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  PSW.BSP.CHG  2018-06-27  accelerate recognize USB */
                 rc = smblib_read(chg, APSD_RESULT_STATUS_REG, &reg_value);
                 if (rc < 0) {

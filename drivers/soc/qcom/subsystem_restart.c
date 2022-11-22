@@ -1192,7 +1192,7 @@ static void device_restart_work_hdlr(struct work_struct *work)
 							dev->desc->name);
 }
 
-#ifdef VENDOR_EDIT //yixue.ge add for modem subsystem crash 
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge add for modem subsystem crash 
 int subsystem_restart_dev_level(struct subsys_device *dev,int restart_level)
 {
 	int rc = 0; 
@@ -1786,7 +1786,7 @@ struct subsys_device *subsys_register(struct subsys_desc *desc)
 	subsys->dev.bus = &subsys_bus_type;
 	subsys->dev.release = subsys_device_release;
 	subsys->notif_state = -1;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	#ifndef CONFIG_OPPO_DAILY_BUILD
 		#ifndef CONFIG_OPPO_SPECIAL_BUILD
 		subsys->restart_level = RESET_SUBSYS_COUPLED;

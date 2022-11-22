@@ -32,17 +32,17 @@
 
 //#define NETLINK_OPPO_KEVENT 34
 
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Add for WeChat lucky money recognition
 #define MAX_LINKS 33
-#else /* VENDOR_EDIT */
+#else /* CONFIG_PRODUCT_REALME_RMX1805 */
 #define NETLINK_OPPO_NF_HOOKS	32	/*OPPO netfilter hooks*/
 
 //Add code for appo sla function
 #define NETLINK_OPPO_SLA  33      /*SLA NETLINK SOCK*/
 
 #define MAX_LINKS 36
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 struct sockaddr_nl {
 	__kernel_sa_family_t	nl_family;	/* AF_NETLINK	*/

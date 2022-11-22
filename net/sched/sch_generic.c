@@ -154,7 +154,7 @@ bulk:
 	return skb;
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 struct sk_buff *qdisc_dequeue_skb(struct Qdisc *q, bool *validate)
 {
@@ -163,7 +163,7 @@ struct sk_buff *qdisc_dequeue_skb(struct Qdisc *q, bool *validate)
 	return dequeue_skb(q, validate, &packets);
 }
 EXPORT_SYMBOL(qdisc_dequeue_skb);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 /*
  * Transmit possibly several skbs, and handle the return status as

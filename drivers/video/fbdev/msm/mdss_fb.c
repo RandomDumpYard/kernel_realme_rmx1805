@@ -55,7 +55,7 @@
 #include "mdp3_ctrl.h"
 #include "mdss_sync.h"
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*
 * add for erase power by android
 */
@@ -117,7 +117,7 @@ static ssize_t mdss_set_ffl_setting(struct device *dev,
 static int mdss_fb_start_ffl_thread(struct msm_fb_data_type *mfd);
 
 static void mdss_fb_stop_ffl_thread(struct msm_fb_data_type *mfd);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 #ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
 #define MDSS_FB_NUM 3
 #else
@@ -448,7 +448,7 @@ if ( value > 0) {
 
 	if (!IS_CALIB_MODE_BL(mfd) && (!mfd->ext_bl_ctrl || !value ||
 							!mfd->bl_level)) {
-		#ifndef VENDOR_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_RMX1805
 		/*
 		* add for support face fill light feature
 		*/
@@ -481,7 +481,7 @@ if ( value > 0) {
 			}
 		}
 		pr_debug("mdss_fb_set_bl_brightness 1 bl_lvl =%d\n",system_backlight_target);
-		#endif /*VENDOR_EDIT*/
+		#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	}
 }
 
@@ -1082,7 +1082,7 @@ static ssize_t mdss_fb_get_persist_mode(struct device *dev,
 	return ret;
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*
 * add for lcd driver
 */
@@ -1328,7 +1328,7 @@ static DEVICE_ATTR(measured_fps, 0664,
 	mdss_fb_get_fps_info, NULL);
 static DEVICE_ATTR(msm_fb_persist_mode, 0644,
 	mdss_fb_get_persist_mode, mdss_fb_change_persist_mode);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*
 * add for lcd driver
 */
@@ -1357,7 +1357,7 @@ static struct attribute *mdss_fb_attrs[] = {
 	&dev_attr_msm_fb_dfps_mode.attr,
 	&dev_attr_measured_fps.attr,
 	&dev_attr_msm_fb_persist_mode.attr,
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for lcd driver
 	*/
@@ -1706,7 +1706,7 @@ static int mdss_fb_probe(struct platform_device *pdev)
 
 	mfd->ext_ad_ctrl = -1;
 
-	#ifndef VENDOR_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* modify for lcd happen esd set backlight 127 before set system backlight
 	*/
@@ -1848,7 +1848,7 @@ static int mdss_fb_probe(struct platform_device *pdev)
 
 	INIT_DELAYED_WORK(&mfd->idle_notify_work, __mdss_fb_idle_notify_work);
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for silence and sau mode
 	*/
@@ -1857,7 +1857,7 @@ static int mdss_fb_probe(struct platform_device *pdev)
 		pr_debug("lcd_closebl_flag = 1\n");
 		lcd_closebl_flag = 1;
 	}
-	#endif /* VENDOR_EDIT */
+	#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	return rc;
 }
@@ -2359,13 +2359,13 @@ static int mdss_fb_blank_blank(struct msm_fb_data_type *mfd,
 
 	mfd->op_enable = false;
 	if (mdss_panel_is_power_off(req_power_state)) {
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for support face fill light feature
 	*/
 		if (mfd->ffl_thread)
 			mdss_fb_stop_ffl_thread(mfd);
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 		/* Stop Display thread */
 		if (mfd->disp_thread)
@@ -2415,7 +2415,7 @@ static int mdss_fb_blank_unblank(struct msm_fb_data_type *mfd)
 			return ret;
 	}
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for support face fill light feature
 	*/
@@ -2424,7 +2424,7 @@ static int mdss_fb_blank_unblank(struct msm_fb_data_type *mfd)
 		if (IS_ERR_VALUE((unsigned long)ret))
 			return ret;
 	}
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	cur_power_state = mfd->panel_power_state;
 	pr_debug("Transitioning from %d --> %d\n", cur_power_state,
@@ -2602,7 +2602,7 @@ static int mdss_fb_blank(int blank_mode, struct fb_info *info)
 	int ret;
 	struct mdss_panel_data *pdata;
 	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)info->par;
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	struct mdss_data_type *mdata;
 	#endif
 	ret = mdss_fb_pan_idle(mfd);
@@ -2631,7 +2631,7 @@ static int mdss_fb_blank(int blank_mode, struct fb_info *info)
 	}
 	pr_debug("mode: %d\n", blank_mode);
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	mdata = mfd_to_mdata(mfd);
 	mdata->scm_set_allowable = false;
 	#endif
@@ -3268,14 +3268,14 @@ static int mdss_fb_register(struct msm_fb_data_type *mfd)
 	init_waitqueue_head(&mfd->ioctl_q);
 	init_waitqueue_head(&mfd->kickoff_wait_q);
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for support face fill light feature
 	*/
 	atomic_set(&ffl_pending, 0);
 	init_waitqueue_head(&ffl_wait_q);
 	initial_ffl_light_save();
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	ret = fb_alloc_cmap(&fbi->cmap, 256, 0);
 	if (ret)

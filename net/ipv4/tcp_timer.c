@@ -158,13 +158,13 @@ static void tcp_mtu_probing(struct inet_connection_sock *icsk, struct sock *sk)
 {
 	struct net *net = sock_net(sk);
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	 * Modify for [804055] enabling mtu probing when an ICMP black hole detected,
 	 * help avoid the problem of MTU black holes.
 	*/
 	net->ipv4.sysctl_tcp_mtu_probing = 1;
-	#endif /* VENDOR_EDIT */
+	#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/* Black hole detection */
 	if (net->ipv4.sysctl_tcp_mtu_probing) {

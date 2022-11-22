@@ -186,14 +186,14 @@ static void alarmtimer_dequeue(struct alarm_base *base, struct alarm *alarm)
 	alarm->state &= ~ALARMTIMER_STATE_ENQUEUED;
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //add for count alarm times
 static atomic_t alarm_atomic = ATOMIC_INIT(0);
 static atomic_t alarm_sleep_busy_atomic = ATOMIC_INIT(0);
 extern u64 alarm_count;
 extern u64 wakeup_source_count_rtc;
 extern enum alarmtimer_restart	(*net_alarm_func)(struct alarm *, ktime_t now);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 /**
  * alarmtimer_fired - Handles alarm hrtimer being fired.
@@ -218,7 +218,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
 
 	if (alarm->function)
 		restart = alarm->function(alarm, base->gettime());
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//Yunqing.Zeng@BSP.Power.Basic 2017/12/12 add for count alarm times
 	if (alarm->type == ALARM_REALTIME || alarm->type == ALARM_BOOTTIME) {
 //wenxian.zhen msm-4.9 no ALARM_POWEROFF_REALTIME 	if (alarm->type == ALARM_POWEROFF_REALTIME || alarm->type == ALARM_BOOTTIME) {
@@ -242,7 +242,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
 			}
 		}
 	}
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	spin_lock_irqsave(&base->lock, flags);
 	if (restart != ALARMTIMER_NORESTART) {
 		hrtimer_set_expires(&alarm->timer, alarm->node.expires);
@@ -287,10 +287,10 @@ static int alarmtimer_suspend(struct device *dev)
 	freezer_delta = ktime_set(0, 0);
 	spin_unlock_irqrestore(&freezer_delta_lock, flags);
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//add for count alarm times
 	atomic_set(&alarm_atomic, 1);
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	rtc = alarmtimer_get_rtcdev();
 	/* If we have no rtcdev, just return */
@@ -317,11 +317,11 @@ static int alarmtimer_suspend(struct device *dev)
 
 	if (ktime_to_ns(min) < 2 * NSEC_PER_SEC) {
 		__pm_wakeup_event(ws, 2 * MSEC_PER_SEC);
-		#ifdef VENDOR_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		//Yunqing.Zeng@BSP.Power.Basic 2017/12/12 add for count alarm times
 		atomic_set(&alarm_atomic, 0);
 		atomic_set(&alarm_sleep_busy_atomic, 1);
-		#endif /* VENDOR_EDIT */
+		#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		
 		return -EBUSY;
 	}
@@ -343,10 +343,10 @@ static int alarmtimer_resume(struct device *dev)
 {
 	struct rtc_device *rtc;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//add for count alarm times
 	atomic_set(&alarm_atomic, 0);
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	rtc = alarmtimer_get_rtcdev();
 	if (rtc)
 		rtc_timer_cancel(rtc, &rtctimer);

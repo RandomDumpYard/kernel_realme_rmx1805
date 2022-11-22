@@ -61,10 +61,10 @@ struct wakeup_source {
 	ktime_t total_time;
 	
 	
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 // Wenxian.Zhen@PSW.BSP.Power.Basic,, 2018/05/21, add for analysis power consumption
     ktime_t total_time_backup;
-#endif //VENDOR_EDIT	
+#endif //CONFIG_PRODUCT_REALME_RMX1805	
 	ktime_t max_time;
 	ktime_t last_time;
 	ktime_t start_prevent_time;
@@ -116,7 +116,7 @@ extern void __pm_wakeup_event(struct wakeup_source *ws, unsigned int msec);
 extern void pm_wakeup_event(struct device *dev, unsigned int msec);
 
 /* OPPO 2013-09-17 wangjc Add begin for print wakeup source */
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern void pm_print_active_wakeup_sources(void);
 #endif
 

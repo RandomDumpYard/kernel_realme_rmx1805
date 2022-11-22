@@ -34,12 +34,12 @@
 #define PANIC_TIMER_STEP 100
 #define PANIC_BLINK_SPD 18
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef HANG_OPPO_ALL
 int kernel_panic_happened = 0;
 int hwt_happened = 0;
 #endif
-#endif  // VENDOR_EDIT
+#endif  // CONFIG_PRODUCT_REALME_RMX1805
 
 int panic_on_oops = CONFIG_PANIC_ON_OOPS_VALUE;
 static unsigned long tainted_mask;
@@ -56,7 +56,7 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
 
 EXPORT_SYMBOL(panic_notifier_list);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef HANG_OPPO_ALL
 #include <linux/timer.h>
 #include <linux/timex.h>
@@ -148,7 +148,7 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
 }
 EXPORT_SYMBOL(nmi_panic);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef HANG_OPPO_ALL
 void deal_fatal_err(void)
 {
@@ -228,7 +228,7 @@ void deal_fatal_err(void)
 
 }
 #endif
-#endif  /*VENDOR_EDIT*/
+#endif  /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 /**
  *	panic - halt the system
@@ -247,15 +247,15 @@ void panic(const char *fmt, ...)
 	int old_cpu, this_cpu;
 	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
 
-#ifdef VENDOR_EDIT //yixue.ge@bsp.drv add for dump cpu contex for minidump
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge@bsp.drv add for dump cpu contex for minidump
 #ifdef CONFIG_QCOM_MINIDUMP
 	in_panic++;
 	dumpcpuregs(NULL);
 
 #endif /*CONFIG_QCOM_COMMON_LOG*/
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef HANG_OPPO_ALL
 
     kernel_panic_happened = 1;
@@ -265,7 +265,7 @@ void panic(const char *fmt, ...)
 #endif
 
 #endif
-#endif  /*VENDOR_EDIT*/
+#endif  /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	trace_kernel_panic(0);
 

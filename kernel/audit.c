@@ -904,7 +904,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
 			audit_sock = skb->sk;
 		}
 		if (s.mask & AUDIT_STATUS_RATE_LIMIT) {
-#if defined(VENDOR_EDIT) && defined(CONFIG_OPPO_DAILY_BUILD)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_OPPO_DAILY_BUILD)
 			return 0;
 #endif
 			err = audit_set_rate_limit(s.rate_limit);

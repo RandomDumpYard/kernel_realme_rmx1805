@@ -9683,7 +9683,7 @@ find_first_cpu_bit(struct task_struct *p, const cpumask_t *search_cpus,
 }
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 struct task_struct *oppo_get_cpu_task(int cpu)
 {
 	return cpu_curr(cpu);

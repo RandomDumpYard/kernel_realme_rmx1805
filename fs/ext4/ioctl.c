@@ -19,9 +19,9 @@
 #include "ext4_jbd2.h"
 #include "ext4.h"
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <soc/oppo/boot_mode.h>
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 /**
  * Swap memory between @a and @b for @len bytes.
@@ -281,7 +281,7 @@ static int ext4_ioctl_setflags(struct inode *inode,
 	inode->i_ctime = ext4_current_time(inode);
 
 	err = ext4_mark_iloc_dirty(handle, inode, &iloc);
-#if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
 	ext4_update_time(EXT4_SB(inode->i_sb));
 #endif
 flags_err:
@@ -456,7 +456,7 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	case EXT4_IOC_SETFLAGS: {
 		int err;
 
-#if defined(VENDOR_EDIT) && defined(OPPO_DISALLOW_KEY_INTERFACES)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(OPPO_DISALLOW_KEY_INTERFACES)
 		if (get_boot_mode() == MSM_BOOT_MODE__NORMAL) {
 			char *fpath, *pathbuf;
 			pathbuf = kmalloc(PATH_MAX, GFP_TEMPORARY);
@@ -475,7 +475,7 @@ is not permitted\n", fpath);
 			}
 			kfree(pathbuf);
 		}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 		if (!inode_owner_or_capable(inode))
 			return -EACCES;
@@ -772,7 +772,7 @@ resizefs_out:
 		struct fstrim_range range;
 		int ret = 0;
 		int flags  = cmd == FIDTRIM ? BLKDEV_DISCARD_SECURE : 0;
-#if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
 		if (test_opt(sb, ASYNC_DISCARD))  
 			return 0;
 #endif

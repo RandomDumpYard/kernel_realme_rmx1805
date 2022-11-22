@@ -62,13 +62,13 @@
 
 #define SPMI_PROTOCOL_IRQ_STATUS	0x6000
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #define WAKEUP_SOURCE_RTC	101777422
 #define WAKEUP_SOURCE_KPDPWR	8388645
 u64 alarm_count = 0;
 u64	wakeup_source_count_rtc;
 u64 wakeup_source_count_kpdpwr;
-#endif  /* VENDOR_EDIT */
+#endif  /* CONFIG_PRODUCT_REALME_RMX1805 */
 /* Channel Status fields */
 enum pmic_arb_chnl_status {
 	PMIC_ARB_STATUS_DONE	= BIT(0),
@@ -586,12 +586,12 @@ static void periph_interrupt(struct spmi_pmic_arb *pa, u16 apid, bool show)
 
 			pr_warn("spmi_show_resume_irq: %d triggered [0x%01x, 0x%02x, 0x%01x] %s\n",
 				irq, sid, per, id, name);
-            #ifdef VENDOR_EDIT
+            #ifdef CONFIG_PRODUCT_REALME_RMX1805
             if (WAKEUP_SOURCE_RTC == HWIRQ(sid, per, id, apid))
 			wakeup_source_count_rtc++;
             if (WAKEUP_SOURCE_KPDPWR == HWIRQ(sid, per, id, apid))
             wakeup_source_count_kpdpwr++;
-            #endif /* VENDOR_EDIT  */				
+            #endif /* CONFIG_PRODUCT_REALME_RMX1805  */				
 		} else {
 			generic_handle_irq(irq);
 		}

@@ -695,9 +695,9 @@ again:
 	}
 
 	dev_set_name(&host->class_dev, "mmc%d", host->index);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
         host->card_stuck_in_programing_status = false;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	host->parent = dev;
 	host->class_dev.parent = dev;
@@ -724,9 +724,9 @@ again:
 
 	mutex_init(&host->rpmb_req_mutex);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	host->detect_change_retry = 5;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/*
 	 * By default, hosts do not support SGIO or large requests.

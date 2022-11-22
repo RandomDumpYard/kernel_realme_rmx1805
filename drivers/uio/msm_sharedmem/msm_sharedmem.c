@@ -90,7 +90,7 @@ static void setup_shared_ram_perms(u32 client_id, phys_addr_t addr, u32 size)
 	int dest_vmids[2] = {VMID_HLOS, VMID_MSS_MSA};
 	int dest_perms[2] = {PERM_READ|PERM_WRITE,
 			     PERM_READ|PERM_WRITE};
-	//#ifndef VENDOR_EDIT
+	//#ifndef CONFIG_PRODUCT_REALME_RMX1805
 	//add for nv backup and restore
 	//if (client_id != MPSS_RMTS_CLIENT_ID)
 	if ((client_id != MPSS_RMTS_CLIENT_ID) && (client_id != MPSS_OEMBACK_CLIENT_ID))

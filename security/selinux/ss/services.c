@@ -746,11 +746,11 @@ out:
 	kfree(n);
 	kfree(t);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
     if (!is_selinux_enforcing())
 #else
 	if (!selinux_enforcing)
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		return 0;
 	return -EPERM;
 }
@@ -1533,11 +1533,11 @@ out:
 	kfree(s);
 	kfree(t);
 	kfree(n);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
     if (!is_selinux_enforcing())
 #else
 	if (!selinux_enforcing)
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		return 0;
 	return -EACCES;
 }
@@ -1828,11 +1828,11 @@ static inline int convert_context_handle_invalid_context(struct context *context
 	char *s;
 	u32 len;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
     if (is_selinux_enforcing())
 #else
 	if (selinux_enforcing)
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		return -EINVAL;
 
 	if (!context_struct_to_string(context, &s, &len)) {

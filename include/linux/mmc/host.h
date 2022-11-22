@@ -556,9 +556,9 @@ struct mmc_host {
 
 	struct delayed_work	detect;
 	int			detect_change;	/* card detect flag */
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
     int detect_change_retry;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	struct mmc_slot		slot;
 
 	const struct mmc_bus_ops *bus_ops;	/* current bus driver */
@@ -574,9 +574,9 @@ struct mmc_host {
 	bool			sdio_irq_pending;
 	atomic_t		sdio_irq_thread_abort;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
         bool                    card_stuck_in_programing_status;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	mmc_pm_flag_t		pm_flags;	/* requested pm features */
 

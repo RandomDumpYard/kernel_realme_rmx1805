@@ -29,9 +29,9 @@
 #include <linux/slab.h>
 #include <linux/tty.h>
 #include <linux/tty_flip.h>
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <soc/oppo/boot_mode.h>
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 /* UART specific GENI registers */
 #define SE_UART_LOOPBACK_CFG		(0x22C)
 #define SE_UART_TX_TRANS_CFG		(0x25C)
@@ -200,7 +200,7 @@ static atomic_t uart_line_id = ATOMIC_INIT(0);
 static struct msm_geni_serial_port msm_geni_console_port;
 static struct msm_geni_serial_port msm_geni_serial_ports[GENI_UART_NR_PORTS];
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*Tong.han@BSP.group.TP, Modify for selct console config for diffrent scene,2015/11/15*/
 static bool boot_with_console(void)
 {
@@ -217,7 +217,7 @@ static bool boot_with_console(void)
 	}
 #endif /* CONFIG_OPPO_DAILY_BUILD */
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static void msm_geni_serial_config_port(struct uart_port *uport, int cfg_flags)
 {
@@ -734,7 +734,7 @@ __msm_geni_serial_console_write(struct uart_port *uport, const char *s,
 	int fifo_depth = DEF_FIFO_DEPTH_WORDS;
 	int tx_wm = DEF_TX_WM;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (boot_with_console() == false) {
 		return;
 	}
@@ -2225,7 +2225,7 @@ static struct uart_driver msm_geni_console_driver = {
 	.cons = &cons_ops,
 };
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static struct uart_driver msm_geni_console_driver_no_cons = {
 	.owner = THIS_MODULE,
 	.driver_name = "msm_geni_console",
@@ -2380,7 +2380,7 @@ static int msm_geni_serial_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (boot_with_console() == false) {
 		if (drv->cons) {
 			dev_info(&pdev->dev, "boot with console false\n");
@@ -2767,7 +2767,7 @@ static int __init msm_geni_serial_init(void)
 		msm_geni_console_port.uport.flags = UPF_BOOT_AUTOCONF;
 		msm_geni_console_port.uport.line = i;
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (boot_with_console() == true) {
 		ret = console_register(&msm_geni_console_driver);
 	} else {
@@ -2783,7 +2783,7 @@ static int __init msm_geni_serial_init(void)
 
 	ret = uart_register_driver(&msm_geni_serial_hs_driver);
 	if (ret) {
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (boot_with_console() == true) {
 			uart_unregister_driver(&msm_geni_console_driver);
 		} else {
@@ -2797,7 +2797,7 @@ static int __init msm_geni_serial_init(void)
 
 	ret = platform_driver_register(&msm_geni_serial_platform_driver);
 	if (ret) {
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (boot_with_console() == true) {
 			console_unregister(&msm_geni_console_driver);
 		} else {
@@ -2819,7 +2819,7 @@ static void __exit msm_geni_serial_exit(void)
 {
 	platform_driver_unregister(&msm_geni_serial_platform_driver);
 	uart_unregister_driver(&msm_geni_serial_hs_driver);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (boot_with_console() == true) {
 		console_unregister(&msm_geni_console_driver);
 	} else {

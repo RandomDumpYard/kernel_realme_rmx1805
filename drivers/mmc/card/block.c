@@ -1553,9 +1553,9 @@ static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
 	unsigned long timeout = jiffies + msecs_to_jiffies(timeout_ms);
 	int err = 0;
 	u32 status;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	char *envp[2] = {"sdcard_ro=1", NULL};
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	do {
 		err = get_card_status(card, &status, 5);
@@ -1585,12 +1585,12 @@ static int card_busy_detect(struct mmc_card *card, unsigned int timeout_ms,
 				mmc_hostname(card->host),
 				req->rq_disk->disk_name, __func__);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			kobject_uevent_env(
 					&(card->dev.kobj),
 					KOBJ_CHANGE, envp);
 			card->host->card_stuck_in_programing_status = true;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 			return -ETIMEDOUT;
 		}
 
@@ -4800,7 +4800,7 @@ static int mmc_blk_probe(struct mmc_card *card)
 	/*
 	 * Check that the card supports the command class(es) we need.
 	 */
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 	if (!(card->csd.cmdclass & CCC_BLOCK_READ))
 		return -ENODEV;
 
@@ -4864,10 +4864,10 @@ static int mmc_blk_probe(struct mmc_card *card)
 
 	dev_set_drvdata(&card->dev, md);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Guohua.Zhong@BSP.Storage.Sdcard,1411172 2018-07-18 disable CONFIG_MMC_BLOCK_DEFERRED_RESUME for sdcard only
 	if (!(mmc_card_is_removable(card->host) && !(card->host->caps & MMC_CAP_NEEDS_POLL)))
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 		mmc_set_bus_resume_policy(card->host, 1);
 
 	if (mmc_add_disk(md))
@@ -4913,10 +4913,10 @@ static void mmc_blk_remove(struct mmc_card *card)
 	pm_runtime_put_noidle(&card->dev);
 	mmc_blk_remove_req(md);
 	dev_set_drvdata(&card->dev, NULL);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Guohua.Zhong@BSP.Storage.Sdcard,1411172 2018-07-18 disable CONFIG_MMC_BLOCK_DEFERRED_RESUME for sdcard only
 	if (!(mmc_card_is_removable(card->host) && !(card->host->caps & MMC_CAP_NEEDS_POLL)))
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 		mmc_set_bus_resume_policy(card->host, 0);
 }
 

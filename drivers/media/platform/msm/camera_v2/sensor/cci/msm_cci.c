@@ -32,7 +32,7 @@
 #define CYCLES_PER_MICRO_SEC_DEFAULT 4915
 #define CCI_MAX_DELAY 1000000
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*oppo hufeng modify to add cci timeout time*/
 #define CCI_TIMEOUT msecs_to_jiffies(500)
 #else
@@ -1668,7 +1668,7 @@ static int32_t msm_cci_write(struct v4l2_subdev *sd,
 	return rc;
 }
 
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 /*modified by Jinshui.Liu@Camera 20151229 for [cci retry]*/
 static int32_t msm_cci_config(struct v4l2_subdev *sd,
 	struct msm_camera_cci_ctrl *cci_ctrl)
@@ -1763,7 +1763,7 @@ static int32_t msm_cci_config(struct v4l2_subdev *sd,
 	mutex_unlock(&cci_dev->mutex);
 	return rc;
 }
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 static irqreturn_t msm_cci_irq(int irq_num, void *data)
 {
@@ -2159,7 +2159,7 @@ static int msm_cci_probe(struct platform_device *pdev)
 		return -ENOMEM;
 	}
 
-        #ifdef VENDOR_EDIT
+        #ifdef CONFIG_PRODUCT_REALME_RMX1805
         /* Add by Liubin for cci dev mutex at 20160730 */
         mutex_init(&new_cci_dev->mutex);
         #endif
@@ -2262,7 +2262,7 @@ cci_release_mem:
 	msm_camera_put_reg_base(pdev, new_cci_dev->base, "cci", true);
 cci_no_resource:
 
-        #ifdef VENDOR_EDIT
+        #ifdef CONFIG_PRODUCT_REALME_RMX1805
         /* Add by liubin for cci dev mutex at 20160730 */
         mutex_destroy(&new_cci_dev->mutex);
         #endif

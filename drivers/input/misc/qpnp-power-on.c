@@ -38,16 +38,16 @@
 #include <linux/hardware_info.h>
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include "oppo_proj_def.h"
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef WT_COMPILE_FACTORY_VERSION
 //zengyunqing@PSW.BSP.Boot  2018-10-03  modify for getting project info from cdt.
 #include <soc/oppo/oppo_project.h>
 #endif
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #define PMIC_VER_8941           0x01
 #define PMIC_VERSION_REG        0x0105
@@ -941,9 +941,9 @@ static int qpnp_pon_store_and_clear_warm_reset(struct qpnp_pon *pon)
 	return 0;
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern void diss_update_key_code(unsigned int psw, unsigned int code, int state);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static int
 qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
@@ -1013,7 +1013,7 @@ qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 		input_report_key(pon->pon_input, cfg->key_code, 1);
 		input_sync(pon->pon_input);
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fanhong.Kong@ProDrv.CHG,add 2016/7/26 for keycode
 	pr_err("keycode = %d,key_st = %d\n",cfg->key_code, key_status);
 #endif
@@ -1022,11 +1022,11 @@ qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 
 	cfg->old_state = !!key_status;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if(((cfg->key_code == KEY_VOLUMEUP) ||(cfg->key_code == KEY_VOLUMEDOWN)) && !!key_status) {
 		diss_update_key_code(86521, cfg->key_code, key_status);
     }
-	#endif /* VENDOR_EDIT */
+	#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	return 0;
 }
@@ -2333,11 +2333,11 @@ static int pon_register_twm_notifier(struct qpnp_pon *pon)
 	return rc;
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern char pon_reason[];
 extern char poff_reason[];
 int preason_initialized;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 static int qpnp_pon_probe(struct platform_device *pdev)
 {
 	struct qpnp_pon *pon;
@@ -2473,12 +2473,12 @@ static int qpnp_pon_probe(struct platform_device *pdev)
 		dev_err(&pon->pdev->dev,
 			"Unable to read PON_RESASON1 reg rc: %d\n",
 			rc);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (!preason_initialized) {
 			snprintf(pon_reason, 128, "Unable to read PON_RESASON1 reg rc: %d\n", rc);
 			preason_initialized = 1;
 		}
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 		goto err_out;
 	}
 
@@ -2486,20 +2486,20 @@ static int qpnp_pon_probe(struct platform_device *pdev)
 		boot_reason = ffs(pon_sts);
 
 	index = ffs(pon_sts) - 1;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (pon_sts & 0x80)
 		index = 7;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	cold_boot = !qpnp_pon_is_warm_reset();
 	if (index >= ARRAY_SIZE(qpnp_pon_reason) || index < 0) {
 		dev_info(&pon->pdev->dev,
 			"PMIC@SID%d Power-on reason: Unknown and '%s' boot\n",
 			to_spmi_device(pon->pdev->dev.parent)->usid,
 			 cold_boot ? "cold" : "warm");
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (!preason_initialized)
 			snprintf(pon_reason, 128, "Unknown[0x%02X] and '%s' boot\n", pon_sts, cold_boot ? "cold" : "warm");
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	} else {
 		pon->pon_trigger_reason = index;
 		dev_info(&pon->pdev->dev,
@@ -2507,11 +2507,11 @@ static int qpnp_pon_probe(struct platform_device *pdev)
 			to_spmi_device(pon->pdev->dev.parent)->usid,
 			 qpnp_pon_reason[index],
 			cold_boot ? "cold" : "warm");
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (!preason_initialized)
 			snprintf(pon_reason, 128, "[0x%02X]%s and '%s' boot\n", pon_sts,
 				qpnp_pon_reason[index],	cold_boot ? "cold" : "warm");
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	}
 
 	/* POFF reason */
@@ -2526,12 +2526,12 @@ static int qpnp_pon_probe(struct platform_device *pdev)
 		if (rc) {
 			dev_err(&pon->pdev->dev, "Unable to read POFF_REASON regs rc:%d\n",
 				rc);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (!preason_initialized) {
 			snprintf(poff_reason, 128, "Unable to read POFF_RESASON regs rc:%d\n", rc);
 			preason_initialized = 1;
 		}
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 			goto err_out;
 		}
 		poff_sts = buf[0] | (buf[1] << 8);
@@ -2541,24 +2541,24 @@ static int qpnp_pon_probe(struct platform_device *pdev)
 		dev_info(&pon->pdev->dev,
 				"PMIC@SID%d: Unknown power-off reason\n",
 				to_spmi_device(pon->pdev->dev.parent)->usid);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (!preason_initialized) {
 			snprintf(poff_reason, 128, "Unknown[0x%04X]\n", poff_sts);
 			preason_initialized = 1;
 		}
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	} else {
 		pon->pon_power_off_reason = index;
 		dev_info(&pon->pdev->dev,
 				"PMIC@SID%d: Power-off reason: %s\n",
 				to_spmi_device(pon->pdev->dev.parent)->usid,
 				qpnp_poff_reason[index]);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (!preason_initialized) {
 			snprintf(poff_reason, 128, "[0x%04X]%s\n", poff_sts, qpnp_poff_reason[index]);
 			preason_initialized = 1;
 		}
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	}
 
 	if (pon->pon_trigger_reason == PON_SMPL ||

@@ -881,7 +881,7 @@ long msm_ion_custom_ioctl(struct ion_client *client,
 	return 0;
 }
 
-#if defined(VENDOR_EDIT) && defined(CONFIG_ARM64) /* Shiming.Zhang@PSW.BSP.Driver.ION */
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_ARM64) /* Shiming.Zhang@PSW.BSP.Driver.ION */
 int msm_ion_heap_pages_zero(struct page **pages, int num_pages)
 {
         int i;
@@ -950,7 +950,7 @@ int msm_ion_heap_alloc_pages_mem(struct pages_mem *pages_mem)
 		 * Do fallback to ensure we have a balance between
 		 * performance and availability.
 		 */
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			pages = vmalloc(page_tbl_size);
 			pages_mem->free_fn = vfree;
 #else
@@ -961,7 +961,7 @@ int msm_ion_heap_alloc_pages_mem(struct pages_mem *pages_mem)
 			pages = vmalloc(page_tbl_size);
 			pages_mem->free_fn = vfree;
 		}
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	} else {
 		pages = kmalloc(page_tbl_size, GFP_KERNEL);
 	}

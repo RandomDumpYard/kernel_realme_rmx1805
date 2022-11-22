@@ -151,7 +151,7 @@ struct scan_control {
  */
 int vm_swappiness = 60;
 
-#ifdef VENDOR_EDIT //yixue.ge@psw.bsp.kernel 20170720 add for add direct_vm_swappiness
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge@psw.bsp.kernel 20170720 add for add direct_vm_swappiness
 /*
  * Direct reclaim swappiness, exptct 0 - 60. Higher means more swappy and slower.
  */
@@ -724,11 +724,11 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
 		swp_entry_t swap = { .val = page_private(page) };
 		mem_cgroup_swapout(page, swap);
 		__delete_from_swap_cache(page);
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
                spin_unlock_irqrestore(&mapping->tree_lock, flags);
 #endif
                swapcache_free(swap);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
                spin_unlock_irqrestore(&mapping->tree_lock, flags);
 #endif
 	} else {
@@ -1820,7 +1820,7 @@ static bool inactive_reclaimable_pages(struct lruvec *lruvec,
 
 	return false;
 }
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern bool is_fg(int uid);
 static inline int get_current_adj(void)
 {
@@ -1982,7 +1982,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
 	 * is congested. Allow kswapd to continue until it starts encountering
 	 * unqueued dirty pages or cycling through the LRU too quickly.
 	 */
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (!sc->hibernation_mode && !current_is_kswapd() &&
 	    current_may_throttle() && get_current_adj())
 #else
@@ -2195,13 +2195,13 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
 	inactive = lruvec_lru_size(lruvec, inactive_lru, sc->reclaim_idx);
 	active = lruvec_lru_size(lruvec, active_lru, sc->reclaim_idx);
 	gb = (inactive + active) >> (30 - PAGE_SHIFT);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (gb && file)
 		inactive_ratio = min(2UL, int_sqrt(10 * gb));
 #else
 	if (gb)
 		inactive_ratio = int_sqrt(10 * gb);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	else
 		inactive_ratio = 1;
 	return inactive * inactive_ratio < active;
@@ -2254,7 +2254,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
 		swappiness = direct_vm_swappiness;
 	}
 	/* If we have no swap space, do not bother scanning anon pages. */
-#ifndef VENDOR_EDIT //yixue.ge@psw.bsp.kernel.driver 20170810 modify for reserver some zram disk size
+#ifndef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge@psw.bsp.kernel.driver 20170810 modify for reserver some zram disk size
 	if (!sc->may_swap || mem_cgroup_get_nr_swap_pages(memcg) <= 0) {
 #else
 	if (!sc->may_swap || (mem_cgroup_get_nr_swap_pages(memcg) <= total_swap_pages>>6)) {
@@ -2431,13 +2431,13 @@ out:
 		nr[lru] = scan;
 	}
 }
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*Huacai.Zhou@PSW.BSP.Kernel.MM 20171227 modify for filelru first */
 #define for_each_evictable_lru_file(lru) for (lru = LRU_INACTIVE_FILE; lru <= LRU_ACTIVE_FILE; lru++)
 #define for_each_evictable_lru_anon(lru) for (lru = LRU_INACTIVE_ANON; lru <= LRU_ACTIVE_ANON; lru++)
 static unsigned  int swap_max_ratio = 1;
 module_param_named(swap_max_ratio, swap_max_ratio, uint, S_IRUGO | S_IWUSR);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 /*
  * This is a basic per-node page freer.  Used by both kswapd and direct reclaim.
@@ -2479,7 +2479,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
 					nr[LRU_INACTIVE_FILE]) {
 		unsigned long nr_anon, nr_file, percentage;
 		unsigned long nr_scanned;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*Huacai.Zhou@PSW.BSP.Kernel.MM 20171227 modify for filelru first */
 		for_each_evictable_lru_file(lru) {
 			if (nr[lru]) {
@@ -2509,7 +2509,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
 							    lruvec, sc);
 			}
 		}
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 		cond_resched();
 
 		if (nr_reclaimed < nr_to_reclaim || scan_adjusted)
@@ -3106,10 +3106,10 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
 		.may_unmap = 1,
 		.may_swap = 1,
 	};
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*Huacai.Zhou@PSW.BSP.Kernel.MM 2018-08-30 increase nr_to_reclaim*/
 	sc.nr_to_reclaim = SWAP_CLUSTER_MAX  <<  swap_max_ratio;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	/*
 	 * Do not enter reclaim if fatal signal was delivered while throttled.
 	 * 1 is returned so that the page allocator does not OOM kill at this
@@ -3705,7 +3705,7 @@ void wakeup_kswapd(struct zone *zone, int order, enum zone_type classzone_idx)
 	wake_up_interruptible(&pgdat->kswapd_wait);
 }
 
-//#ifndef VENDOR_EDIT
+//#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Remove for low memory shrink
 /*
  * Try to free `nr_to_reclaim' of memory, system-wide, and return the number of
@@ -3745,7 +3745,7 @@ unsigned long shrink_all_memory(unsigned long nr_to_reclaim)
 
 	return nr_reclaimed;
 }
-//#ifndef VENDOR_EDIT
+//#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Modify for low memory shrink
 EXPORT_SYMBOL(shrink_all_memory);
 

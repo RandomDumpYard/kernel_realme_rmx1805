@@ -16,7 +16,7 @@
                             INCLUDE FILES FOR MODULE
 
 =============================================================================*/
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef HANG_OPPO_ALL
 
 #define OPPO_PARTITION_OPPORESERVE1_EMMC "/dev/block/platform/soc/c0c4000.sdhci/by-name/opporeserve1"

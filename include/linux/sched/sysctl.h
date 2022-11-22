@@ -10,7 +10,7 @@ extern int sysctl_hung_task_selective_monitoring;
 extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int write,
 					 void __user *buffer,
 					 size_t *lenp, loff_t *ppos);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern char sysctl_hung_task_oppo_kill[];
 #endif
 

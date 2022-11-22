@@ -39,12 +39,12 @@
 
 #define VSYNC_DELAY msecs_to_jiffies(17)
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #define LCD_SCREEN_ON 1
 #define LCD_SCREEN_OFF 0
 #define LCD_BACKLIGHT_OFF 0
 extern void wakeup_src_clean(void);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 #ifdef CONFIG_PRODUCT_REALME_SDM450
 extern int g_shutdown_pending;
 extern int g_gesture;
@@ -56,14 +56,14 @@ extern int mdss_dsi_panel_hx_power_off(struct mdss_panel_data *pdata);
 
 
 DEFINE_LED_TRIGGER(bl_led_trigger);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*
 * add for silence and sau mode
 */
 extern int lcd_closebl_flag;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //add for lcd cabc
 static int cabc_lastlevel = 1;
 #endif
@@ -252,7 +252,7 @@ static struct dsi_cmd_desc backlight_cmd = {
 	{DTYPE_DCS_LWRITE, 1, 0, 0, 1, sizeof(led_pwm1)},
 	led_pwm1
 	};
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*
 * add for lcd driver cabc
 */
@@ -306,17 +306,17 @@ int set_cabc(int level)
     }
 
     cabc_mode = level;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //add for lcd cabc
     if(level > 0) {
         cabc_lastlevel = level;
     }
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
     mutex_unlock(&lcd_mutex);
     return ret;
 }
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 static char led_pwm2[2] = {0x53, 0x2C};
 static struct dsi_cmd_desc backlight_dimming_cmd[2] = {
@@ -981,7 +981,7 @@ static void mdss_dsi_panel_bl_ctrl(struct mdss_panel_data *pdata,
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for silence and sau mode
 	*/
@@ -1000,11 +1000,11 @@ static void mdss_dsi_panel_bl_ctrl(struct mdss_panel_data *pdata,
 	if ((bl_level < pdata->panel_info.bl_min) && (bl_level != 0))
 		bl_level = pdata->panel_info.bl_min;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
     if(LCD_BACKLIGHT_OFF == bl_level) {
         wakeup_src_clean();
     }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	switch (ctrl_pdata->bklt_ctrl) {
 	case BL_WLED:
@@ -1107,13 +1107,13 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 	/* Ensure low persistence mode is set as before */
 	mdss_dsi_panel_apply_display_setting(pdata, pinfo->persist_mode);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //add for lcd cabc
     if ( cabc_lastlevel > 1) {
         pr_err("%s:set cabc_lastlevel=%d",__func__,cabc_lastlevel);
         set_cabc(cabc_lastlevel);
     }
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 end:
 	pr_debug("%s:-\n", __func__);
@@ -3174,7 +3174,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	mdss_dsi_parse_reset_seq(np, pinfo->rst_seq, &(pinfo->rst_seq_len),
 		"qcom,mdss-dsi-reset-sequence");
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for lcd driver cabc
 	*/
@@ -3186,7 +3186,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	    "qcom,mdss-dsi-cabc-image-command", "qcom,mdss-dsi-off-command-state");
 	mdss_dsi_parse_dcs_cmds(np, &ctrl_pdata->cabc_video_mode_cmds,
 	    "qcom,mdss-dsi-cabc-video-command", "qcom,mdss-dsi-off-command-state");
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	mdss_dsi_parse_dcs_cmds(np, &ctrl_pdata->off_cmds,
 		"qcom,mdss-dsi-off-command", "qcom,mdss-dsi-off-command-state");
@@ -3249,12 +3249,12 @@ int mdss_dsi_panel_init(struct device_node *node,
 		return -ENODEV;
 	}
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for lcd driver cabc
 	*/
 	gl_ctrl_pdata = ctrl_pdata;
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	pinfo = &ctrl_pdata->panel_data.panel_info;
 
@@ -3268,7 +3268,7 @@ int mdss_dsi_panel_init(struct device_node *node,
 		pr_info("%s: Panel Name = %s\n", __func__, panel_name);
 		strlcpy(&pinfo->panel_name[0], panel_name, MDSS_MAX_PANEL_LEN);
 
-        #ifdef VENDOR_EDIT
+        #ifdef CONFIG_PRODUCT_REALME_RMX1805
         strlcpy(Lcm_name, panel_name, HARDWARE_MAX_ITEM_LONGTH);
 
         devinfo_info_set("lcd", "v001", Lcm_name);

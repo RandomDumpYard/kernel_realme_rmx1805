@@ -706,7 +706,7 @@ static struct ctl_table ipv4_table[] = {
 		.extra1		= &tcp_use_userconfig_min,
 		.extra2		= &tcp_use_userconfig_max,
 	},
-	 #ifdef VENDOR_EDIT
+	 #ifdef CONFIG_PRODUCT_REALME_RMX1805
     //add for: [monitor tcp info]
 	{
 		.procname	= "tcp_info_print",
@@ -715,7 +715,7 @@ static struct ctl_table ipv4_table[] = {
 		.mode		= 0664,
 		.proc_handler	= proc_do_print_tcpinfo
 	},
-    #endif /* VENDOR_EDIT */
+    #endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	{ }
 };

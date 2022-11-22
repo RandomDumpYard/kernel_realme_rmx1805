@@ -2549,7 +2549,7 @@ extern void thread_group_cputime_adjusted(struct task_struct *p, cputime_t *ut, 
 /*
  * Per process flags
  */
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #define PF_OPPO_KILLING	0x00000001
 #endif
 #define PF_WAKE_UP_IDLE 0x00000002	/* try to wake up on an idle CPU */
@@ -3398,7 +3398,7 @@ extern bool current_is_single_threaded(void);
 #define for_each_process_thread(p, t)	\
 	for_each_process(p) for_each_thread(p, t)
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef CONFIG_OPPO_FG_OPT
 extern bool is_fg(int uid);
 static inline int current_is_fg(void)
@@ -3415,7 +3415,7 @@ static inline int current_is_fg(void)
 	return 0;
 }
 #endif /*CONFIG_OPPO_FG_OPT*/
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 static inline int get_nr_threads(struct task_struct *tsk)
 {
@@ -3695,7 +3695,7 @@ static inline int fatal_signal_pending(struct task_struct *p)
 	return signal_pending(p) && __fatal_signal_pending(p);
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static inline int hung_long_and_fatal_signal_pending(struct task_struct *p)
 {
 #ifdef CONFIG_DETECT_HUNG_TASK

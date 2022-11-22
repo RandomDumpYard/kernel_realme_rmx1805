@@ -94,10 +94,10 @@ config PROC_DELLOG
 	depends on PROC_FS
 	default y
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 config OPPO_FG_OPT
 	bool "Enable /proc/fg_info/ if EXPERT"
 	default y
 	help
 	  Add foreground process optimize support to promote performance .
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/

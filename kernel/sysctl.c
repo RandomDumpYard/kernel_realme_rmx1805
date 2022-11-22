@@ -64,10 +64,10 @@
 #include <linux/binfmts.h>
 #include <linux/sched/sysctl.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //add for: [monitor tcp info]
 #include <net/tcp.h>
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #include <linux/kexec.h>
 #include <linux/bpf.h>
@@ -134,7 +134,7 @@ static int __maybe_unused four = 4;
 static unsigned long one_ul = 1;
 static int one_hundred = 100;
 
-#ifdef VENDOR_EDIT //yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness
 extern int direct_vm_swappiness;
 static int two_hundred = 200;
 #endif
@@ -1228,7 +1228,7 @@ static struct ctl_table kern_table[] = {
 		.proc_handler	= proc_dointvec_minmax,
 		.extra1		= &neg_one,
 	},
-	#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+	#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 	{
 		.procname	= "hung_task_oppo_kill",
 		.data		= &sysctl_hung_task_oppo_kill,
@@ -1524,7 +1524,7 @@ static struct ctl_table vm_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_dointvec_minmax,
 		.extra1		= &zero,
-#ifdef VENDOR_EDIT //yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness
 		.extra2		= &two_hundred,
 #else
 		.extra2		= &one_hundred,
@@ -1539,7 +1539,7 @@ static struct ctl_table vm_table[] = {
 		.extra1         = &zero,
 		.extra2         = &one,
 	},
-#ifdef VENDOR_EDIT //yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness
         {
                 .procname       = "direct_swappiness",
                 .data           = &direct_vm_swappiness,
@@ -2405,7 +2405,7 @@ static int __do_proc_dointvec(void *tbl_data, struct ctl_table *table,
 		*lenp = 0;
 		return 0;
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifndef CONFIG_OPPO_DAILY_BUILD
 	if((oem_get_uartlog_status() == true) && (table->procname != NULL)) {
 		if((write == 1) && (strncmp(table->procname, "printk", 6) == 0)) {
@@ -2413,7 +2413,7 @@ static int __do_proc_dointvec(void *tbl_data, struct ctl_table *table,
 		}
 	}
 #endif
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	i = (int *) tbl_data;
 	vleft = table->maxlen / sizeof(*i);
 	left = *lenp;
@@ -2518,7 +2518,7 @@ int proc_dointvec(struct ctl_table *table, int write,
 	return do_proc_dointvec(table, write, buffer, lenp, ppos, NULL, NULL);
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //add for: [monitor tcp info]
 static int proc_put_string(void __user **dst_buf, size_t *buf_size, char * src_str, int str_len)
 {
@@ -2662,7 +2662,7 @@ put_return:
 
 	return 0;
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 /**
  * proc_douintvec - read a vector of unsigned integers

@@ -287,7 +287,7 @@ struct media_entity {
 		} dev;
 	} info;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*added by houyujun@Camera 20180429 for AT test*/
 	u32 revision;
 	u32 group_id;

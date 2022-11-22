@@ -1224,7 +1224,7 @@ static int smb5_usb_main_set_prop(struct power_supply *psy,
 				&& (chg->flash_active != val->intval)) {
 			chg->flash_active = val->intval;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  PSW.BSP.CHG  2018-06-28  avoid flash current ripple when flash work */
                         smblib_set_opt_switcher_freq(chg,
                                 chg->flash_active ? chg->chg_freq.freq_removal : chg->chg_freq.freq_5V);
@@ -2841,12 +2841,12 @@ static int smb5_init_hw(struct smb5 *chip)
 			return rc;
 		}
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  PSW.BSP.CHG  2018-06-27  reduce DCD time */
         smblib_masked_write(chg, 0x1363, 0x20, 0);
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  PSW.BSP.CHG  2018-06-08  increase OTG_CURRENT_LIMIT to recognize 500G Seagate disk */
         smblib_write(chg, 0x1152, 0x02);
 #endif

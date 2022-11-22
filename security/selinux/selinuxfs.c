@@ -40,9 +40,9 @@
 #include "security.h"
 #include "objsec.h"
 #include "conditional.h"
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include "proc.h"
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 /* Policy capability filenames */
 static char *policycap_names[] = {
@@ -138,11 +138,11 @@ static ssize_t sel_read_enforce(struct file *filp, char __user *buf,
 	char tmpbuf[TMPBUFLEN];
 	ssize_t length;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
     length = scnprintf(tmpbuf, TMPBUFLEN, "%d", is_selinux_enforcing());
 #else
 	length = scnprintf(tmpbuf, TMPBUFLEN, "%d", selinux_enforcing);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	return simple_read_from_buffer(buf, count, ppos, tmpbuf, length);
 }
 
@@ -180,7 +180,7 @@ static ssize_t sel_write_enforce(struct file *file, const char __user *buf,
 			from_kuid(&init_user_ns, audit_get_loginuid(current)),
 			audit_get_sessionid(current));
 		selinux_enforcing = new_value;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
         if (is_selinux_enforcing())
             avc_ss_reset(0);
         selnl_notify_setenforce(is_selinux_enforcing());
@@ -190,7 +190,7 @@ static ssize_t sel_write_enforce(struct file *file, const char __user *buf,
 			avc_ss_reset(0);
 		selnl_notify_setenforce(selinux_enforcing);
 		selinux_status_update_setenforce(selinux_enforcing);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	}
 	length = count;
 out:
@@ -1932,9 +1932,9 @@ static int __init init_sel_fs(void)
 		selinuxfs_mount = NULL;
 	}
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	init_denied_proc();
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	return err;
 }

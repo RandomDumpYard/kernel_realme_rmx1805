@@ -944,7 +944,7 @@ static const struct file_operations mmc_dbg_bkops_stats_fops = {
 	.write		= mmc_bkops_stats_write,
 };
 
-#ifdef VENDOR_EDIT 
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 
 //Fanhong.Kong@ProDrv.CHG,add 2016/6/24 for kernel 3.18 
 #define SECTOR_COUNT_BUF_LEN 16
 static int mmc_sector_count_open(struct inode *inode, struct file *filp)
@@ -1206,7 +1206,7 @@ void mmc_add_card_debugfs(struct mmc_card *card)
 					 &mmc_dbg_bkops_stats_fops))
 			goto err;
 
-#ifdef VENDOR_EDIT 
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 
 	if (mmc_card_mmc(card))
 		if (!debugfs_create_file("sector_count", S_IRUSR, root, card,
 						&mmc_dbg_sector_count_fops))

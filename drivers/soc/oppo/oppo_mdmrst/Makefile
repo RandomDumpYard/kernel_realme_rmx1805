@@ -1,3 +1,3 @@
-# ifdef VENDOR_EDIT 
+# ifdef CONFIG_PRODUCT_REALME_RMX1805 
 obj-$(CONFIG_RECORD_MDMRST)	+=  oppo_mdmrst.o
-# endif /* VENDOR_EDIT */
+# endif /* CONFIG_PRODUCT_REALME_RMX1805 */

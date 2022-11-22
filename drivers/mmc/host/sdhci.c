@@ -58,7 +58,7 @@ static void sdhci_enable_sdio_irq_nolock(struct sdhci_host *host, int enable);
 
 static void sdhci_enable_preset_value(struct sdhci_host *host, bool enable);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //yixue.ge@BSP.drv 2014-06-04 modify for disable sdcard log
 #ifndef CONFIG_OPPO_DAILY_BUILD
 static int flag = 0;
@@ -69,7 +69,7 @@ static void sdhci_dump_state(struct sdhci_host *host)
 {
 	struct mmc_host *mmc = host->mmc;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //yixue.ge@BSP.drv 2014-06-04 modify for disable sdcard log
 #ifndef CONFIG_OPPO_DAILY_BUILD
 	if(!flag)
@@ -1241,7 +1241,7 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
 
 	WARN_ON(host->cmd);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if(host->mmc->card_stuck_in_programing_status)
 	{
 		//pr_info("%s:card_stuck_in_programing_status cmd:%d\n", mmc_hostname(host->mmc), cmd->opcode );
@@ -1250,7 +1250,7 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
 		sdhci_finish_mrq(host, cmd->mrq);
 		return;
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/* Initially, a command has no error */
 	cmd->error = 0;

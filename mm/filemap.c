@@ -2729,7 +2729,7 @@ ssize_t generic_perform_write(struct file *file,
 						iov_iter_count(i));
 
 again:
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 		/*
 		 * Bring in the user page that we will copy from _first_.
 		 * Otherwise there's a nasty deadlock on copying from the
@@ -2757,7 +2757,7 @@ again:
 
 		if (mapping_writably_mapped(mapping))
 			flush_dcache_page(page);
-#if defined(VENDOR_EDIT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805)
 		/*
 		 * 'page' is now locked.  If we are trying to copy from a
 		 * mapping of 'page' in userspace, the copy might fault and
@@ -2769,7 +2769,7 @@ again:
 		pagefault_disable();
 #endif
 		copied = iov_iter_copy_from_user_atomic(page, i, offset, bytes);
-#if defined(VENDOR_EDIT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805)
 		pagefault_enable();
 #endif
 		flush_dcache_page(page);
@@ -2794,7 +2794,7 @@ again:
 			 */
 			bytes = min_t(unsigned long, PAGE_SIZE - offset,
 						iov_iter_single_seg_count(i));
-#if defined(VENDOR_EDIT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805)
 			/*
 			 * This is the fallback to recover if the copy from
 			 * userspace above faults.

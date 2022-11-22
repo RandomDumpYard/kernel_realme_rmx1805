@@ -473,7 +473,7 @@ struct mdss_dsi_ctrl_pdata {
 	struct mdss_intf_recovery *recovery;
 	struct mdss_intf_recovery *mdp_callback;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for lcd driver cabc
 	*/
@@ -481,7 +481,7 @@ struct mdss_dsi_ctrl_pdata {
 	struct dsi_panel_cmds cabc_ui_mode_cmds;
 	struct dsi_panel_cmds cabc_image_mode_cmds;
 	struct dsi_panel_cmds cabc_video_mode_cmds;
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	struct dsi_panel_cmds on_cmds;
 	struct dsi_panel_cmds post_dms_on_cmds;
 	struct dsi_panel_cmds post_panel_on_cmds;

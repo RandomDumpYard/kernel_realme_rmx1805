@@ -593,7 +593,7 @@ power_attr(pm_freeze_timeout);
 
 #endif	/* CONFIG_FREEZER*/
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* OPPO 2012-11-05 heiwei Modify begin for add interface start reason and boot_mode begin */
 extern char pwron_event[];
 
@@ -637,10 +637,10 @@ static ssize_t app_boot_store(struct kobject *kobj, struct kobj_attribute *attr,
 }
 power_attr(app_boot);
 /* OPPO 2012-11-05 Van heiwei begin for add interface start reason and boot_mode end */
-#endif //VENDOR_EDIT
+#endif //CONFIG_PRODUCT_REALME_RMX1805
 
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 char pon_reason[128];
 static ssize_t pon_reason_show(struct kobject *kobj,
 			struct kobj_attribute *attr, char *buf)
@@ -670,7 +670,7 @@ static ssize_t poff_reason_store(struct kobject *kobj,
 	return -EINVAL;
 }
 power_attr(poff_reason);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 
 static struct attribute * g[] = {
@@ -701,17 +701,17 @@ static struct attribute * g[] = {
 	&pm_freeze_timeout_attr.attr,
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* OPPO 2012-11-05 heiwei Modify begin for add interface start reason and boot_mode begin */
 	&app_boot_attr.attr,
 	&startup_mode_attr.attr,
 /* OPPO 2012-11-05 heiwei Modify begin for add interface start reason and boot_mode end */
-#endif //VENDOR_EDIT
+#endif //CONFIG_PRODUCT_REALME_RMX1805
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	&pon_reason_attr.attr,
 	&poff_reason_attr.attr,
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	NULL,
 };
 

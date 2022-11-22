@@ -130,7 +130,7 @@ static DEFINE_RAW_SPINLOCK(cpu_map_lock);
 static u8 gic_cpu_map[NR_GIC_CPU_IF] __read_mostly;
 
 static struct static_key supports_deactivate = STATIC_KEY_INIT_TRUE;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #define WAKEUP_SOURCE_WIFI_TX	177
 #define WAKEUP_SOURCE_WIFI_RX	178
 #define WAKEUP_SOURCE_MODEM_57	57
@@ -151,7 +151,7 @@ extern int modem_wakeup_src_count[MODEM_WAKEUP_SRC_NUM];
 extern char modem_wakeup_src_string[MODEM_WAKEUP_SRC_NUM][10];
 //Yongyao.Song add end
 extern u64	wakeup_source_count_rtc;
-#endif //VENDOR_EDIT 
+#endif //CONFIG_PRODUCT_REALME_RMX1805 
 static struct gic_chip_data gic_data[CONFIG_ARM_GIC_MAX_NR] __read_mostly;
 
 static struct gic_kvm_info gic_v2_kvm_info;
@@ -1301,11 +1301,11 @@ static void gic_show_resume_irq(struct gic_chip_data *gic)
 	unsigned int i;
 	u32 enabled;
 	u32 pending[32];
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	unsigned int int_id_1 = 0;
 	unsigned int int_id_2 = 0;
 	unsigned int int_count = 0;
-#endif //VENDOR_EDIT 	
+#endif //CONFIG_PRODUCT_REALME_RMX1805 	
 	void __iomem *base = gic_data_dist_base(gic);
 
 #if 0
@@ -1331,7 +1331,7 @@ static void gic_show_resume_irq(struct gic_chip_data *gic)
 			name = desc->action->name;
 
 		pr_warn("%s: %d triggered %s\n", __func__, i, name);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if ((WAKEUP_SOURCE_WIFI_TX == i ) || (WAKEUP_SOURCE_WIFI_RX == i ))
 			wakeup_source_count_wifi++;
 		if ((WAKEUP_SOURCE_MODEM_57 == i ) || (WAKEUP_SOURCE_MODEM_58 == i ))
@@ -1348,12 +1348,12 @@ static void gic_show_resume_irq(struct gic_chip_data *gic)
 			int_id_1 = i;
 		if (int_count == WAKEUP_SOURCE_INT_SECOND)
 			int_id_2 = i;
-#endif //VENDOR_EDIT 	
+#endif //CONFIG_PRODUCT_REALME_RMX1805 	
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if ((WAKEUP_SOURCE_RTC_INT_NUM == int_count) && (WAKEUP_SOURCE_AP_RPM == int_id_1) && (WAKEUP_SOURCE_PMIC_ALARM == int_id_2))
 		wakeup_source_count_rtc++;
-#endif //VENDOR_EDIT 	
+#endif //CONFIG_PRODUCT_REALME_RMX1805 	
 	
 }
 
@@ -1576,10 +1576,10 @@ gic_of_init(struct device_node *node, struct device_node *parent)
 		gicv2m_init(&node->fwnode, gic_data[gic_cnt].domain);
 
 	gic_cnt++;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		wakeup_source_count_wifi = 0;
 		wakeup_source_count_modem = 0;		
-#endif //VENDOR_EDIT 
+#endif //CONFIG_PRODUCT_REALME_RMX1805 
 	return 0;
 }
 IRQCHIP_DECLARE(gic_400, "arm,gic-400", gic_of_init);

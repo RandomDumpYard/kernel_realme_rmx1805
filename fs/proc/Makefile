@@ -40,6 +40,6 @@ endif
 ifeq ($(CONFIG_PRODUCT_REALME_SDM450),yes)
 obj-y += devinfo.o
 endif
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 proc-$(CONFIG_OPPO_FG_OPT)	+= fg_uid.o
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */

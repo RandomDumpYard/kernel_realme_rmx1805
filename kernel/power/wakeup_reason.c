@@ -27,10 +27,10 @@
 #include <linux/notifier.h>
 #include <linux/suspend.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <linux/notifier.h>
 #include <linux/fb.h>
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #define MAX_WAKEUP_REASON_IRQS 32
 static int irq_list[MAX_WAKEUP_REASON_IRQS];
@@ -44,10 +44,10 @@ static ktime_t last_monotime; /* monotonic time before last suspend */
 static ktime_t curr_monotime; /* monotonic time after last suspend */
 static ktime_t last_stime; /* monotonic boottime offset before last suspend */
 static ktime_t curr_stime; /* monotonic boottime offset after last suspend */
-#ifdef VENDOR_EDIT
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern u16 modem_wakeup_source;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 #define MODEM_WAKEUP_SRC_NUM 3
 extern int modem_wakeup_src_count[MODEM_WAKEUP_SRC_NUM];
 extern char modem_wakeup_src_string[MODEM_WAKEUP_SRC_NUM][10];
@@ -74,9 +74,9 @@ static ssize_t modem_resume_reason_stastics_show(struct kobject *kobj, struct ko
 
 	return sprintf(buf, "%s:%d:%d\n", modem_wakeup_src_string[max_wakeup_src_index], max_wakeup_src_count, total);
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //extern struct work_struct wakeup_reason_work;
 static struct kset *wakeup_reason_kset;
 //void wakeup_reason_work_func(struct work_struct *work)
@@ -110,7 +110,7 @@ static int wakeup_uevent_ops_uevent(struct kset *kset, struct kobject *kobj,
 static struct kset_uevent_ops wakeup_uevent_ops = {
     .uevent = wakeup_uevent_ops_uevent,
 };
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static ssize_t last_resume_reason_show(struct kobject *kobj, struct kobj_attribute *attr,
 		char *buf)
@@ -163,7 +163,7 @@ static ssize_t last_suspend_time_show(struct kobject *kobj,
 				sleep_time.tv_sec, sleep_time.tv_nsec);
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern u64 	alarm_count;
 extern u64	wakeup_source_count_rtc;
 extern u64	wakeup_source_count_wifi;
@@ -196,24 +196,24 @@ static ssize_t ap_resume_reason_stastics_show(struct kobject *kobj, struct kobj_
 	printk(KERN_WARNING "%s wakeup %lld times\n","power_key",wakeup_source_count_kpdpwr);
 	return buf_offset;
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 static struct kobj_attribute resume_reason = __ATTR_RO(last_resume_reason);
 static struct kobj_attribute suspend_time = __ATTR_RO(last_suspend_time);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static struct kobj_attribute ap_resume_reason_stastics = __ATTR_RO(ap_resume_reason_stastics);
 static struct kobj_attribute modem_resume_reason_stastics = __ATTR_RO(modem_resume_reason_stastics);
 //Yongyao.Song, add end
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 
 static struct attribute *attrs[] = {
 	&resume_reason.attr,
 	&suspend_time.attr,
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			&ap_resume_reason_stastics.attr,
 	&modem_resume_reason_stastics.attr,
 	//Yongyao.Song, add end
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	NULL,
 };
@@ -312,7 +312,7 @@ static struct notifier_block wakeup_reason_pm_notifier_block = {
 	.notifier_call = wakeup_reason_pm_event,
 };
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static void wakeup_reason_count_clear(void)
 {
     printk(KERN_INFO  "ENTER %s\n", __func__);	
@@ -380,7 +380,7 @@ EXPORT_SYMBOL(wakeup_src_clean);
 static struct notifier_block wakeup_src_fb_notif = {
 	.notifier_call = wakeup_src_fb_notifier_callback,
 };
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 
 /* Initializes the sysfs parameter
@@ -407,7 +407,7 @@ int __init wakeup_reason_init(void)
 		printk(KERN_WARNING "[%s] failed to create a sysfs group %d\n",
 				__func__, retval);
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
     wakeup_reason_kset = kset_create_and_add("wakeup_reason_uevent", &wakeup_uevent_ops, kernel_kobj);
     if (!wakeup_reason_kset) {
         printk(KERN_WARNING "[%s] failed to create a kset\n", __func__);
@@ -418,10 +418,10 @@ int __init wakeup_reason_init(void)
         printk(KERN_WARNING "[%s] failed to create a sysfs group %d\n", __func__, retval);
     }
 //    INIT_WORK(&wakeup_reason_work, wakeup_reason_work_func);
-#endif /* VENDOR_EDIT */
-#ifdef VENDOR_EDIT
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	fb_register_client(&wakeup_src_fb_notif);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	return 0;
 }

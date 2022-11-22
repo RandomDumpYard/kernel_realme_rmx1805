@@ -240,9 +240,9 @@ static int is_sensor_port(struct msm_ipc_router_remote_port *rport)
 	if (rport && rport->server) {
 		svcid = rport->server->name.service;
 		if ((svcid == 400 || (svcid >= 256 && svcid <= 320))
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			&& ((svcid != 277) && (svcid != 289) && (svcid != 296) && (svcid != 260))
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
            )
 			return true;
 	}

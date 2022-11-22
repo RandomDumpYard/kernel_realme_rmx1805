@@ -5283,7 +5283,7 @@ out:
 	return ret;
 }
 
-#if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
 /**
  * ext4_trim_group_partial_seq -- function to trim all free space in alloc. group
  * @sb:			super block for file system

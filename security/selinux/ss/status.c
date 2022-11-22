@@ -58,11 +58,11 @@ struct page *selinux_kernel_status_page(void)
 
 			status->version = SELINUX_KERNEL_STATUS_VERSION;
 			status->sequence = 0;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
             status->enforcing = is_selinux_enforcing();
 #else
 			status->enforcing = selinux_enforcing;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 			/*
 			 * NOTE: the next policyload event shall set
 			 * a positive value on the status->policyload,

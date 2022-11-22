@@ -1417,7 +1417,7 @@ FREE_GPIO_CONF:
 	return rc;
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*Add by Zhengrong.Zhang@Camera 20161003 for cam vio ctrl*/
 int msm_camera_power_up_vendor(struct msm_camera_power_ctrl_t *ctrl,
 	enum msm_camera_device_type_t device_type,

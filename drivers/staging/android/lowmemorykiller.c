@@ -49,16 +49,16 @@
 #include <linux/cpuset.h>
 #include <linux/vmpressure.h>
 #include <linux/freezer.h>
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <linux/module.h>
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/almk.h>
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*yixue.ge@PSW.BSP.Kernel.Driver 20170808 modify for get some data about performance */
 #include <linux/proc_fs.h>
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 #include <linux/show_mem_notifier.h>
 
 #ifdef CONFIG_HIGHMEM
@@ -69,11 +69,11 @@
 
 #define CREATE_TRACE_POINTS
 #include "trace/lowmemorykiller.h"
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include "oppo_lowmemorymonitor.h"
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static struct kobject *lmk_module_kobj = NULL;
 static struct work_struct lowmemorykiller_work;
 static char *lmklowmem[2] = { "LMK=LOWMEM", NULL };
@@ -81,7 +81,7 @@ static int uevent_threshold[6] = {0, 0, 0, 0, }; // 1: 58, 2: 117, 3: 176
 static int last_selected_adj = 0;
 static void lowmemorykiller_uevent(short adj, int index);
 static void lowmemorykiller_work_func(struct work_struct *work);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 /* to enable lowmemorykiller */
 static int enable_lmk = 1;
@@ -105,12 +105,12 @@ static int lowmem_minfree[6] = {
 
 static int lowmem_minfree_size = 4;
 static int lmk_fast_run = 1;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*huacai.zhou@PSW.BSP.Kernel.MM 2018-01-15 modify for lowmemkill count */
 static bool lmk_cnt_enable = false;
 static unsigned long adaptive_lowmem_kill_count = 0;
 static unsigned long tatal_lowmem_kill_count = 0;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 static unsigned long lowmem_deathpending_timeout;
 
@@ -161,7 +161,7 @@ enum {
 };
 
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*tangshaoqing@RM.BSP.Kernel.MM 2019-03-28 modify for adaptive lowmemkill adj */
 #define ALMK_NR_PAGES_1GB (SZ_1G >> PAGE_SHIFT)
 
@@ -209,14 +209,14 @@ static int almk_adjust_minadj_level = ALMK_ADJUST_MINADJ_LEVEL_INVALID;
 static int adjust_minadj(short *min_score_adj)
 {
 	int ret = VMPRESSURE_NO_ADJUST;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*tangshaoqing@RM.BSP.Kernel.MM 2019-03-28 modify for adaptive lowmemkill adj */
 	long almk_pages_swap = total_swap_pages - get_nr_swap_pages();
 	unsigned long almk_pages_anon = global_node_page_state(NR_ACTIVE_ANON) + global_node_page_state(NR_INACTIVE_ANON);
 	unsigned long almk_pages_file = global_node_page_state(NR_ACTIVE_FILE) + global_node_page_state(NR_INACTIVE_FILE);
 
 	almk_adjust_minadj_level = ALMK_ADJUST_MINADJ_LEVEL_INVALID;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	if (!enable_adaptive_lmk)
 		return 0;
@@ -228,15 +228,15 @@ static int adjust_minadj(short *min_score_adj)
 		else
 			ret = VMPRESSURE_ADJUST_NORMAL;
 		*min_score_adj = adj_max_shift;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*huacai.zhou@PSW.BSP.Kernel.MM 2018-01-15 modify for adaptive lowmemkill count */
 /*Maybe it can not select task to kill, it's just a rough number */
 		if (lmk_cnt_enable)
 			adaptive_lowmem_kill_count++;
 	}
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*tangshaoqing@RM.BSP.Kernel.MM 2019-03-28 modify for adaptive lowmemkill adj */
 	if (totalram_pages <= (ALMK_NR_PAGES_1GB*2)) {
 		int i;
@@ -265,7 +265,7 @@ static int adjust_minadj(short *min_score_adj)
 		}
 	}
 
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	atomic_set(&shift_adj, 0);
 
 	return ret;
@@ -551,7 +551,7 @@ void tune_lmk_param(int *other_free, int *other_file, struct shrink_control *sc)
 	}
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static void orphan_foreground_task_kill(struct task_struct *task, short adj, short min_score_adj)
 {
 		if (min_score_adj == 0)
@@ -563,7 +563,7 @@ static void orphan_foreground_task_kill(struct task_struct *task, short adj, sho
 		send_sig(SIGKILL, task, 0);
 		}
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static void mark_lmk_victim(struct task_struct *tsk)
 {
@@ -575,7 +575,7 @@ static void mark_lmk_victim(struct task_struct *tsk)
 	}
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*yixue.ge@PSW.BSP.Kernel.Driver 20170808 modify for get some data about performance */
 static ssize_t lowmem_kill_count_proc_read(struct file *file, char __user *buf,
 		size_t count,loff_t *off)
@@ -613,7 +613,7 @@ static int __init setup_lowmem_killinfo(void)
 	return 0;
 }
 module_init(setup_lowmem_killinfo);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 {
@@ -718,7 +718,7 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 			if (!p)
 				continue;
 		}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (p->state & TASK_UNINTERRUPTIBLE) {
 			task_unlock(p);
 			continue;
@@ -728,9 +728,9 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 			task_unlock(p);
 			continue;
 		}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (p->state & TASK_UNINTERRUPTIBLE) {
 			task_unlock(p);
 			continue;
@@ -740,15 +740,15 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 			task_unlock(p);
 			continue;
 		}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 		oom_score_adj = p->signal->oom_score_adj;
 		if (oom_score_adj < min_score_adj) {
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			tasksize = get_mm_rss(p->mm);
 #endif /* VENDOR_EIDT */
 			task_unlock(p);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			if (tasksize > 0) {
 				orphan_foreground_task_kill(p, oom_score_adj, min_score_adj);
 			}
@@ -760,11 +760,11 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 		task_unlock(p);
 		if (tasksize <= 0)
 			continue;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (oppo_lowmemory_detect(p, tasksize)) {
 			continue;
 		}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		if (selected) {
 			if (oom_score_adj < selected_oom_score_adj)
 				continue;
@@ -805,17 +805,17 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 		}
 		task_unlock(selected);
 		trace_lowmemory_kill(selected, cache_size, cache_limit, free);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*yixue.ge@PSW.BSP.Kernel.Driver 20170808 modify for get some data about performance */
 		if (lmk_cnt_enable)
 			tatal_lowmem_kill_count++;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*tangshaoqing@RM.BSP.Kernel.MM 2019-04-01 modify for adaptive lowmemkill adj */
 		if (ALMK_ADJUST_MINADJ_LEVEL_INVALID != almk_adjust_minadj_level)
 			lowmem_print(1, "almk_adjust_minadj_level=%d\n", almk_adjust_minadj_level);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		lowmem_print(1, "Killing '%s' (%d) (tgid %d), adj %hd,\n"
 			"to free %ldkB on behalf of '%s' (%d) because\n"
 			"cache %ldkB is below limit %ldkB for oom score %hd\n"
@@ -841,17 +841,17 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 			(long)(PAGE_SIZE / 1024),
 			sc->gfp_mask);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			show_mem(SHOW_MEM_FILTER_NODES);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 		if (lowmem_debug_level >= 2 && selected_oom_score_adj == 0) {
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 			show_mem(SHOW_MEM_FILTER_NODES);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 			dump_tasks(NULL, NULL);
 		}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (selected_oom_score_adj == 0) {
 			lowmem_print(1, "Killing %s, adj is %hd, so send uevent to userspace\n",
 					selected->comm, selected_oom_score_adj);
@@ -882,9 +882,9 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 			schedule_work(&lowmemorykiller_work);
 		}
 #endif
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (selected_oom_score_adj == 0) {
 			lowmem_print(1, "Killing %s, adj is %hd, so send uevent to userspace\n",
 					selected->comm, selected_oom_score_adj);
@@ -907,7 +907,7 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 				}
 			}
 		}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 		lowmem_deathpending_timeout = jiffies + HZ;
 		rem += selected_tasksize;
@@ -928,7 +928,7 @@ static unsigned long lowmem_scan(struct shrinker *s, struct shrink_control *sc)
 	return rem;
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 void lowmemorykiller_work_func(struct work_struct *work)
 {
 	kobject_uevent_env(lmk_module_kobj, KOBJ_CHANGE, lmklowmem);
@@ -939,7 +939,7 @@ static void lowmemorykiller_uevent(short adj, int index)
 	lowmem_print(1, "kill adj %hd more than %d times and so send uevent to userspace\n", adj, index * 5);
 	schedule_work(&lowmemorykiller_work);
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static struct shrinker lowmem_shrinker = {
 	.scan_objects = lowmem_scan,
@@ -951,11 +951,11 @@ static int __init lowmem_init(void)
 {
 	register_shrinker(&lowmem_shrinker);
 	vmpressure_notifier_register(&lmk_vmpr_nb);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	lmk_module_kobj = kset_find_obj(module_kset, KBUILD_MODNAME);
 	lowmem_print(1, "kernel obj name %s\n", lmk_module_kobj->name);
 	INIT_WORK(&lowmemorykiller_work, lowmemorykiller_work_func);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	return 0;
 }
 device_initcall(lowmem_init);
@@ -1055,8 +1055,8 @@ module_param_array_named(minfree, lowmem_minfree, uint, &lowmem_minfree_size,
 module_param_named(debug_level, lowmem_debug_level, uint, S_IRUGO | S_IWUSR);
 module_param_named(lmk_fast_run, lmk_fast_run, int, S_IRUGO | S_IWUSR);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*huacai.zhou@PSW.BSP.Kernel.MM 2018-01-15 modify for lowmemkill count */
 module_param_named(lmk_cnt_enable, lmk_cnt_enable, bool, S_IRUGO | S_IWUSR);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 

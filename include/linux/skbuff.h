@@ -40,10 +40,10 @@
 #include <linux/if_packet.h>
 #include <net/flow.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 #include <linux/imq.h>
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 
 /* The interface for checksum offload between the stack and networking drivers
@@ -660,10 +660,10 @@ struct sk_buff {
 	 * first. This is owned by whoever has the skb queued ATM.
 	 */
 	char			cb[48] __aligned(8);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 	void			*cb_next;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	unsigned long		_skb_refdst;
 	void			(*destructor)(struct sk_buff *skb);
@@ -673,10 +673,10 @@ struct sk_buff {
 #if defined(CONFIG_NF_CONNTRACK) || defined(CONFIG_NF_CONNTRACK_MODULE)
 	struct nf_conntrack	*nfct;
 #endif
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
        struct nf_queue_entry   *nf_queue_entry;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 #if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
 	struct nf_bridge_info	*nf_bridge;
 #endif
@@ -761,10 +761,10 @@ struct sk_buff {
 	__u8			offload_fwd_mark:1;
 #endif
 	/* 2, 4 or 5 bit hole */
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 	__u8			imq_flags:IMQ_F_BITS;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 #ifdef CONFIG_NET_SCHED
 	__u16			tc_index;	/* traffic control index */
@@ -926,11 +926,11 @@ void skb_tx_error(struct sk_buff *skb);
 void consume_skb(struct sk_buff *skb);
 void  __kfree_skb(struct sk_buff *skb);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 int skb_save_cb(struct sk_buff *skb);
 int skb_restore_cb(struct sk_buff *skb);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 extern struct kmem_cache *skbuff_head_cache;
 
@@ -3632,11 +3632,11 @@ static inline void __nf_copy(struct sk_buff *dst, const struct sk_buff *src,
 	if (copy)
 		dst->nfctinfo = src->nfctinfo;
 #endif
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
        dst->imq_flags = src->imq_flags;
        dst->nf_queue_entry = src->nf_queue_entry;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 #if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
 	dst->nf_bridge  = src->nf_bridge;
 	nf_bridge_get(src->nf_bridge);

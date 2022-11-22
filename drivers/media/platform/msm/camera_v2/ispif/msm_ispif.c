@@ -425,7 +425,7 @@ static int msm_ispif_reset_hw(struct ispif_device *ispif)
 	int rc = 0;
 	long timeout = 0;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	uint32_t ispifIrqStatus;
 
 	ispif->clk_idx = 0;
@@ -460,7 +460,7 @@ static int msm_ispif_reset_hw(struct ispif_device *ispif)
 	CDBG("%s: VFE0 done\n", __func__);
 
 	if (timeout <= 0) {
-	    #ifdef VENDOR_EDIT
+	    #ifdef CONFIG_PRODUCT_REALME_RMX1805
         ispifIrqStatus = msm_camera_io_r(ispif->base +
             ISPIF_VFE_m_IRQ_STATUS_0(VFE0));
         if (ispifIrqStatus & RESET_DONE_IRQ) {
@@ -489,7 +489,7 @@ static int msm_ispif_reset_hw(struct ispif_device *ispif)
 				msecs_to_jiffies(500));
 		CDBG("%s: VFE1 done\n", __func__);
 		if (timeout <= 0) {
-	        #ifdef VENDOR_EDIT
+	        #ifdef CONFIG_PRODUCT_REALME_RMX1805
 			ispifIrqStatus = msm_camera_io_r(ispif->base +
 				ISPIF_VFE_m_IRQ_STATUS_0(VFE1));
 			if (ispifIrqStatus & RESET_DONE_IRQ) {

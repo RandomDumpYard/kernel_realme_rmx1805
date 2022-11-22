@@ -265,7 +265,7 @@ int pil_do_ramdump(struct pil_desc *desc,
 	int count = 0, ret;
 	u32 encryption_status = 0;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//Add for customized subsystem ramdump to skip generate dump cause by SAU
 	if (SKIP_GENERATE_RAMDUMP) {
 		pil_err(desc, "%s: Skip ramdump cuase by ap normal trigger.\n %s",
@@ -297,7 +297,7 @@ int pil_do_ramdump(struct pil_desc *desc,
 			(desc->minidump_ss->md_ss_enable_status ==
 				MD_SS_ENABLED)) {
 
-			#ifndef VENDOR_EDIT
+			#ifndef CONFIG_PRODUCT_REALME_RMX1805
 			//Add for skip mini dump encryption
 			if (encryption_status == MD_SS_ENCR_DONE ||
 				encryption_status == MD_SS_ENCR_NOTREQ) {

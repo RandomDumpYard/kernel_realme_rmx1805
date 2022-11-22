@@ -83,10 +83,10 @@ obj-$(CONFIG_QRTR)		+= qrtr/
 obj-$(CONFIG_NET_NCSI)		+= ncsi/
 obj-$(CONFIG_RMNET_DATA) += rmnet_data/
 obj-$(CONFIG_IPC_ROUTER)	+= ipc_router/
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #Add code for appo sla function
 obj-y                   	+= oppo_sla/
-#endif /* VENDOR_EDIT */#ifdef VENDOR_EDIT
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #Add for WeChat lucky money recognition
 obj-y				+= oppo_nf_hooks/
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */

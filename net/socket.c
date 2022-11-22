@@ -411,11 +411,11 @@ struct file *sock_alloc_file(struct socket *sock, int flags, const char *dname)
 	struct qstr name = { .name = "" };
 	struct path path;
 	struct file *file;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //process which use the same uid
 	struct pid *pid;
 	struct task_struct *task;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	if (dname) {
 		name.name = dname;
@@ -444,7 +444,7 @@ struct file *sock_alloc_file(struct socket *sock, int flags, const char *dname)
 	file->f_flags = O_RDWR | (flags & O_NONBLOCK);
 	file->private_data = sock;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //process which use the same uid
 	pid = find_get_pid(current->tgid);
 	if (pid) {
@@ -455,7 +455,7 @@ struct file *sock_alloc_file(struct socket *sock, int flags, const char *dname)
 		put_task_struct(task);
 	}
 	put_pid(pid);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	return file;
 }
 EXPORT_SYMBOL(sock_alloc_file);
@@ -2023,11 +2023,11 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
 
 out_freectl:
 	if (ctl_buf != ctl) {
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef CONFIG_OPPO_ROOT_CHECK
 		memset(ctl_buf, 0, ctl_len);
 #endif /* CONFIG_OPPO_ROOT_CHECK */
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		sock_kfree_s(sock->sk, ctl_buf, ctl_len);
 	}
 

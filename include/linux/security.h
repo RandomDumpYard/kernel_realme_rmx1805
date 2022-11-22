@@ -1744,11 +1744,11 @@ static inline void free_secdata(void *secdata)
 { }
 #endif /* CONFIG_SECURITY */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern int is_oppo_permissive(u32 ssid, u32 tsid, u32 requested);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef CONFIG_SECURITY
 extern int get_current_security_context(char **context, u32 *context_len);
 #else
@@ -1757,7 +1757,7 @@ static inline int get_current_security_context(char **context, u32 *context_len)
 	return -EOPNOTSUPP;
 }
 #endif
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #endif /* ! __LINUX_SECURITY_H */
 

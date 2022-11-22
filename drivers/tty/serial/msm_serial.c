@@ -39,10 +39,10 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/wait.h>
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 add for console
 #include <soc/oppo/boot_mode.h>
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #define UART_MR1			0x0000
 
@@ -197,7 +197,7 @@ struct msm_port {
 };
 
 #define UART_TO_MSM(uart_port)	container_of(uart_port, struct msm_port, uart)
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Tong.han@BSP.group.TP, Modify for selct console config for diffrent scene,2015/11/15
 static bool boot_with_console(void)
 {
@@ -221,7 +221,7 @@ static bool boot_with_console(void)
 #endif /* CONFIG_OPPO_DAILY_BUILD */
 #endif /* WT_COMPILE_FACTORY_VERSION */
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static
 void msm_write(struct uart_port *port, unsigned int val, unsigned int off)
@@ -1530,12 +1530,12 @@ static int msm_poll_get_char(struct uart_port *port)
 	int c;
 	struct msm_port *msm_port = UART_TO_MSM(port);
 	
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 add for console
 	if(boot_with_console() == false) {
 		return 0;
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	/* Disable all interrupts */
 	imr = msm_read(port, UART_IMR);
 	msm_write(port, 0, UART_IMR);
@@ -1556,12 +1556,12 @@ static void msm_poll_put_char(struct uart_port *port, unsigned char c)
 	u32 imr;
 	struct msm_port *msm_port = UART_TO_MSM(port);
 	
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 add for console
 	if(boot_with_console() == false) {
 		return;
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/* Disable all interrupts */
 	imr = msm_read(port, UART_IMR);
@@ -1656,12 +1656,12 @@ static void __msm_console_write(struct uart_port *port, const char *s,
 	bool replaced = false;
 	void __iomem *tf;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 add for console
 	if(boot_with_console() == false) {
 		return;
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	if (is_uartdm)
 		tf = port->membase + UARTDM_TF;
 	else
@@ -1821,7 +1821,7 @@ static struct uart_driver msm_uart_driver = {
 	.cons = MSM_CONSOLE,
 };
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/02/24 add for console
 static struct uart_driver msm_uart_driver_no_console = {
 	.owner = THIS_MODULE,
@@ -1830,7 +1830,7 @@ static struct uart_driver msm_uart_driver_no_console = {
 	.nr = UART_NR,
 	.cons = NULL,
 };
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static atomic_t msm_uart_next_id = ATOMIC_INIT(0);
 
@@ -1861,13 +1861,13 @@ static int msm_serial_probe(struct platform_device *pdev)
 	if (unlikely(line < 0 || line >= UART_NR))
 		return -ENXIO;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 modify for console
 	if(boot_with_console() == false) {
 		dev_info(&pdev->dev, "boot with console false\n");
 		return -ENODEV;
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	dev_info(&pdev->dev, "msm_serial: detected port #%d\n", line);
 
 	port = msm_get_port_from_line(line);
@@ -1905,7 +1905,7 @@ static int msm_serial_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, port);
 
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/02/24 modify for console
 	return uart_add_one_port(&msm_uart_driver, port);
 #else
@@ -1914,14 +1914,14 @@ static int msm_serial_probe(struct platform_device *pdev)
 	} else {
 		return uart_add_one_port(&msm_uart_driver_no_console, port);
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 }
 
 static int msm_serial_remove(struct platform_device *pdev)
 {
 	struct uart_port *port = platform_get_drvdata(pdev);
 
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 modify for console
 	uart_remove_one_port(&msm_uart_driver, port);
 #else
@@ -1930,7 +1930,7 @@ static int msm_serial_remove(struct platform_device *pdev)
 	} else {
 		uart_remove_one_port(&msm_uart_driver_no_console, port);
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	return 0;
 }
@@ -1947,7 +1947,7 @@ static int msm_serial_suspend(struct device *dev)
 {
 	struct uart_port *port = dev_get_drvdata(dev);
 	
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 modify for console
 	uart_suspend_port(&msm_uart_driver, port);
 #else
@@ -1956,7 +1956,7 @@ static int msm_serial_suspend(struct device *dev)
 	} else {
 		uart_suspend_port(&msm_uart_driver_no_console, port);
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	return 0;
 }
 
@@ -1964,7 +1964,7 @@ static int msm_serial_resume(struct device *dev)
 {
 	struct uart_port *port = dev_get_drvdata(dev);
 	
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 modify for console
 	uart_resume_port(&msm_uart_driver, port);
 #else
@@ -1973,7 +1973,7 @@ static int msm_serial_resume(struct device *dev)
 	} else {
 		uart_resume_port(&msm_uart_driver_no_console, port);
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	return 0;
 }
 static int msm_serial_freeze(struct device *dev)
@@ -2020,7 +2020,7 @@ static int __init msm_serial_init(void)
 {
 	int ret;
 	
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 modify for console
 	ret = uart_register_driver(&msm_uart_driver);
 #else
@@ -2029,12 +2029,12 @@ static int __init msm_serial_init(void)
 	} else {
 		ret = uart_register_driver(&msm_uart_driver_no_console);
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	if (unlikely(ret))
 		return ret;
 
 	ret = platform_driver_register(&msm_platform_driver);
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 modify for console
 	if (unlikely(ret))
 		uart_unregister_driver(&msm_uart_driver);
@@ -2046,7 +2046,7 @@ static int __init msm_serial_init(void)
 			uart_unregister_driver(&msm_uart_driver_no_console);
 		}
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	pr_info("msm_serial: driver initialized\n");
 
 	return ret;
@@ -2055,7 +2055,7 @@ static int __init msm_serial_init(void)
 static void __exit msm_serial_exit(void)
 {
 	platform_driver_unregister(&msm_platform_driver);
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.CHG.Basic 2017/03/11 modify for console
 	uart_unregister_driver(&msm_uart_driver);
 #else
@@ -2064,7 +2064,7 @@ static void __exit msm_serial_exit(void)
 	} else {
 		uart_unregister_driver(&msm_uart_driver_no_console);
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 }
 
 module_init(msm_serial_init);

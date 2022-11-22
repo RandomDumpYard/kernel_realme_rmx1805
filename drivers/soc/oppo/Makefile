@@ -1,8 +1,8 @@
 obj-$(CONFIG_OPPO_COMMON_SOFT)	+=  oppo_project/
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 obj-$(CONFIG_RECORD_MDMRST)     +=  oppo_mdmrst/
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 obj-$(CONFIG_OPPO_DEVICE_IFNO)	+=  oppo_devinfo/
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 obj-y     +=  oppo_healthinfo/
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */

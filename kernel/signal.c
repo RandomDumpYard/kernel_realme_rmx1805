@@ -978,11 +978,11 @@ static inline void userns_fixup_signal_uid(struct siginfo *info, struct task_str
 	return;
 }
 #endif
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern char last_stopper_comm[];
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static bool is_zygote_process(struct task_struct *t)
 {
 	const struct cred *tcred = __task_cred(t);
@@ -1037,13 +1037,13 @@ static int __send_signal(int sig, struct siginfo *info, struct task_struct *t,
 	assert_spin_locked(&t->sighand->siglock);
 
 	result = TRACE_SIGNAL_IGNORED;
-#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 	if (sig == SIGSTOP && (!strncmp(t->comm,"main", TASK_COMM_LEN) ||
 		!strncmp(t->comm,"system_server", TASK_COMM_LEN) || !strncmp(t->comm,"surfaceflinger", TASK_COMM_LEN)))
 		snprintf(last_stopper_comm, 64, "%s[%d]", current->comm, current->pid);
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
         if(1) {
                 /*add the SIGKILL print log for some debug*/
                 if((sig == SIGHUP || sig == 33 || sig == SIGKILL || sig == SIGSTOP || sig == SIGABRT || sig == SIGTERM || sig == SIGCONT) && is_key_process(t)) {

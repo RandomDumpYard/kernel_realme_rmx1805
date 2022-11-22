@@ -18,9 +18,9 @@
 #include <asm/page.h>
 #include <asm/pgtable.h>
 #include "internal.h"
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <linux/ion.h>
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
 {
@@ -157,12 +157,12 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 		    global_page_state(NR_FREE_CMA_PAGES));
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	show_val_kb(m, "Oppo2Free:        ",global_page_state(NR_FREE_OPPO2_PAGES));
-#endif /* VENDOR_EDIT */
-#ifdef VENDOR_EDIT
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	show_val_kb(m, "IonTotalUsed:   ", ion_total() >> PAGE_SHIFT);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 
 	hugetlb_report_meminfo(m);

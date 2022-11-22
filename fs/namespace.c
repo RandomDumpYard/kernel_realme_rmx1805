@@ -26,14 +26,14 @@
 #include <linux/task_work.h>
 #include "pnode.h"
 #include "internal.h"
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <soc/oppo/boot_mode.h>
 #ifdef OPPO_DISALLOW_KEY_INTERFACES
 #ifdef CONFIG_OPPO_KEVENT_UPLOAD
 #include <linux/oppo_kevent.h>
 #endif /* CONFIG_OPPO_KEVENT_UPLOAD */
 #endif /* OPPO_DISALLOW_KEY_INTERFACES */
-#endif /* VENDOR_EDIT*/
+#endif /* CONFIG_PRODUCT_REALME_RMX1805*/
 
 /* Maximum number of mounts in a mount namespace */
 unsigned int sysctl_mount_max __read_mostly = 100000;
@@ -2776,7 +2776,7 @@ long do_mount(const char *dev_name, const char __user *dir_name,
 	int retval = 0;
 	int mnt_flags = 0;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef OPPO_DISALLOW_KEY_INTERFACES
 #ifdef CONFIG_OPPO_KEVENT_UPLOAD
 	struct kernel_packet_info* dcs_event;
@@ -2786,9 +2786,9 @@ long do_mount(const char *dev_name, const char __user *dir_name,
 	char* dcs_event_payload = NULL;
 #endif /* CONFIG_OPPO_KEVENT_UPLOAD */
 #endif /* OPPO_DISALLOW_KEY_INTERFACES */
-#endif /* VENDOR_EDIT*/
+#endif /* CONFIG_PRODUCT_REALME_RMX1805*/
 
-#if defined(VENDOR_EDIT) && defined(OPPO_DISALLOW_KEY_INTERFACES)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(OPPO_DISALLOW_KEY_INTERFACES)
  	char dname[16] = {0};
 	if (dir_name != NULL && copy_from_user(dname,dir_name,8) == 0){
 		if ((!strncmp(dname, "/system", 8) || !strncmp(dname, "/vendor", 8))&& !(flags & MS_RDONLY)
@@ -2818,7 +2818,7 @@ long do_mount(const char *dev_name, const char __user *dir_name,
 			return -EPERM;
 		}
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/* Discard magic */
 	if ((flags & MS_MGC_MSK) == MS_MGC_VAL)

@@ -194,7 +194,7 @@ static int32_t msm_sensor_driver_create_v4l_subdev
 	s_ctrl->msm_sd.sd.entity.name = s_ctrl->msm_sd.sd.name;
 	s_ctrl->msm_sd.close_seq = MSM_SD_CLOSE_2ND_CATEGORY | 0x3;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	s_ctrl->msm_sd.sd.entity.group_id = MSM_CAMERA_SUBDEV_SENSOR;
 	pr_err("sensor_info->position %d", s_ctrl->sensordata->sensor_info->position);
 	if (s_ctrl->sensordata->sensor_info->position == 0) //back sensor
@@ -206,7 +206,7 @@ static int32_t msm_sensor_driver_create_v4l_subdev
 	    s_ctrl->msm_sd.sd.entity.revision = 3;
 	else
 	    s_ctrl->msm_sd.sd.entity.revision = 0;
-	#endif /* VENDOR_EDIT */
+	#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	rc = msm_sd_register(&s_ctrl->msm_sd);
 	if (rc < 0) {

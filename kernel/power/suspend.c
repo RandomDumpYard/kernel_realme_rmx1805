@@ -32,7 +32,7 @@
 #include <linux/moduleparam.h>
 #include <linux/wakeup_reason.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <soc/qcom/smsm.h>
 #endif
 
@@ -489,7 +489,7 @@ static void suspend_finish(void)
 	pm_restore_console();
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /**
 * Sync the filesystem in seperate workqueue.
 * Then check it finishing or not periodically and
@@ -548,7 +548,7 @@ static int sys_sync_queue(void)
 abort:
 	return -EAGAIN;
 }
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 /**
  * enter_state - Do common work needed to enter system sleep state.
@@ -580,7 +580,7 @@ static int enter_state(suspend_state_t state)
 		freeze_begin();
 
 #ifndef CONFIG_SUSPEND_SKIP_SYNC
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 	trace_suspend_resume(TPS("sync_filesystems"), 0, true);
 	pr_info("PM: Syncing filesystems ... ");
 	sys_sync();
@@ -645,12 +645,12 @@ int pm_suspend(suspend_state_t state)
 		return -EINVAL;
 
 	pm_suspend_marker("entry");
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	smsm_change_state(SMSM_APPS_STATE, SMSM_PROC_AWAKE, 0);
 	pr_err("%s: PM_SUSPEND_PREPARE smsm_change_state clear %d", __func__, SMSM_APPS_STATE);
 	#endif
         error = enter_state(state);
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	smsm_change_state(SMSM_APPS_STATE, 0, SMSM_PROC_AWAKE);
 	pr_err("%s: PM_POST_SUSPEND smsm_change_state set %d", __func__, SMSM_APPS_STATE);
 	#endif

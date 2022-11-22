@@ -55,9 +55,9 @@ enum {
 	 */
 	MIGRATE_CMA,
 #endif
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
         MIGRATE_OPPO2,
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	MIGRATE_PCPTYPES, /* the number of types on the pcp lists */
 	MIGRATE_HIGHATOMIC = MIGRATE_PCPTYPES,
 #ifdef CONFIG_MEMORY_ISOLATION
@@ -151,9 +151,9 @@ enum zone_stat_item {
 	NUMA_OTHER,		/* allocation from other node */
 #endif
 	NR_FREE_CMA_PAGES,
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	NR_FREE_OPPO2_PAGES,
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	NR_VM_ZONE_STAT_ITEMS };
 
 enum node_stat_item {
@@ -365,9 +365,9 @@ struct zone {
 
 	unsigned long nr_reserved_highatomic;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	unsigned long nr_migrate_oppo2_block;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/*
 	 * We don't know if the memory that we're going to allocate will be

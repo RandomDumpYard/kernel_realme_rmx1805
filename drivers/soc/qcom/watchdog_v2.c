@@ -33,7 +33,7 @@
 #include <soc/qcom/watchdog.h>
 #include <linux/dma-mapping.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include "oppo_watchdog_util.h"
 #endif
 
@@ -396,20 +396,20 @@ static void keep_alive_response(void *info)
 static void ping_other_cpus(struct msm_watchdog_data *wdog_dd)
 {
 	int cpu;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	cpumask_t mask;
 	get_cpu_ping_mask(&mask);
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	cpumask_clear(&wdog_dd->alive_mask);
 	/* Make sure alive mask is cleared and set in order */
 	smp_mb();
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	for_each_cpu(cpu, &mask) {
 #else
 	for_each_cpu(cpu, cpu_online_mask) {
 		if (!cpu_idle_pc_state[cpu] && !cpu_isolated(cpu))
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 			smp_call_function_single(cpu, keep_alive_response,
 						 wdog_dd, 1);
 	}
@@ -453,7 +453,7 @@ static __ref int watchdog_kthread(void *arg)
 			pet_watchdog(wdog_dd);
 		}
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		reset_recovery_tried();
 #endif
 		/* Check again before scheduling
@@ -465,7 +465,7 @@ static __ref int watchdog_kthread(void *arg)
 }
 
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef HANG_OPPO_ALL
 
 #ifdef CONFIG_OPPO_DAILY_BUILD    // user version, not release
@@ -743,7 +743,7 @@ static int opmonitor_boot_kthread(void *dummy)
     return 0;
 }
 #endif
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 static int wdog_cpu_pm_notify(struct notifier_block *self,
 			      unsigned long action, void *v)
 {
@@ -847,11 +847,11 @@ static irqreturn_t wdog_bark_handler(int irq, void *dev_id)
 
 	if (wdog_dd->do_ipi_ping) {
 		dump_cpu_alive_mask(wdog_dd);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		dump_cpu_online_mask();
 #endif
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (try_to_recover_pending(wdog_dd->watchdog_task)) {
 		pet_watchdog(wdog_dd);
 		return IRQ_HANDLED;
@@ -860,7 +860,7 @@ static irqreturn_t wdog_bark_handler(int irq, void *dev_id)
 	print_smp_call_cpu();
 	dump_wdog_cpu(wdog_dd->watchdog_task);
 #endif
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	panic("Handle a watchdog bite! - Falling back to kernel panic!");
 #else
 	msm_trigger_wdog_bite();
@@ -1224,7 +1224,7 @@ static int msm_watchdog_probe(struct platform_device *pdev)
 	md_entry.size = sizeof(*wdog_dd);
 	if (msm_minidump_add_region(&md_entry))
 		pr_info("Failed to add Watchdog data in Minidump\n");
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
         ret = init_oppo_watchlog();
         if (ret < 0) {
                 pr_info("Failed to init oppo watchlog");

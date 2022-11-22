@@ -338,12 +338,12 @@ struct msm_fb_data_type {
 	/* for non-blocking */
 	struct task_struct *disp_thread;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	/*
 	* add for support face fill light feature
 	*/
 	struct task_struct *ffl_thread;
-	#endif /*VENDOR_EDIT*/
+	#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	atomic_t commits_pending;
 	atomic_t kickoff_pending;

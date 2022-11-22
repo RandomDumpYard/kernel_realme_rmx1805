@@ -2017,10 +2017,10 @@ EXPORT_SYMBOL(mmc_start_req);
  */
 void mmc_wait_for_req(struct mmc_host *host, struct mmc_request *mrq)
 {
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Guohua.Zhong@BSP.Storage.Sdcard,1411172 2018-07-18 disable CONFIG_MMC_BLOCK_DEFERRED_RESUME for sdcard only
 	if (!(mmc_card_is_removable(host) && !(host->caps & MMC_CAP_NEEDS_POLL)))
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 		if (mmc_bus_needs_resume(host))
 			mmc_resume_bus(host);
 	__mmc_start_req(host, mrq);
@@ -2466,10 +2466,10 @@ void mmc_get_card(struct mmc_card *card)
 	pm_runtime_get_sync(&card->dev);
 	mmc_claim_host(card->host);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Guohua.Zhong@BSP.Storage.Sdcard,1411172 2018-07-18 disable CONFIG_MMC_BLOCK_DEFERRED_RESUME for sdcard only
 	if (!(mmc_card_is_removable(card->host) && !(card->host->caps & MMC_CAP_NEEDS_POLL)))
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 		if (mmc_bus_needs_resume(card->host))
 			mmc_resume_bus(card->host);
 }
@@ -4610,10 +4610,10 @@ EXPORT_SYMBOL(mmc_flush_detect_work);
 void mmc_rescan(struct work_struct *work)
 {
 	unsigned long flags;
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//weiguixiong@RM.BSP.Storage.sdcard 2019/03/22 add sdcard retry time
 	unsigned int i;
-	#endif //VENDOR_EDIT
+	#endif //CONFIG_PRODUCT_REALME_RMX1805
 	struct mmc_host *host =
 		container_of(work, struct mmc_host, detect.work);
 
@@ -4695,7 +4695,7 @@ void mmc_rescan(struct work_struct *work)
 		mmc_release_host(host);
 		goto out;
 	}
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
         //weiguixiong@RM.BSP.Storage.sdcard 2019/03/22 add sdcard retry time
 	for (i = 0; i < ARRAY_SIZE(freqs); i++) {
 		if(!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
@@ -4703,7 +4703,7 @@ void mmc_rescan(struct work_struct *work)
 	}
 	#else
 	mmc_rescan_try_freq(host, host->f_min);
-	#endif //VENDOR_EDIT
+	#endif //CONFIG_PRODUCT_REALME_RMX1805
 	host->err_stats[MMC_ERR_CMD_TIMEOUT] = 0;
 	mmc_release_host(host);
 
@@ -4750,7 +4750,7 @@ void mmc_stop_host(struct mmc_host *host)
 		disable_irq(host->slot.cd_irq);
 
 	host->rescan_disable = 1;
-#ifndef VENDOR_EDIT //yixue.ge@bsp.drv modify
+#ifndef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge@bsp.drv modify
 	cancel_delayed_work_sync(&host->detect);
 #else
 	cancel_delayed_work(&host->detect);

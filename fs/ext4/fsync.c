@@ -156,7 +156,7 @@ int ext4_sync_file(struct file *file, loff_t start, loff_t end, int datasync)
 	}
 out:
 	trace_ext4_sync_file_exit(inode, ret);
-#if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
 	ext4_update_time(EXT4_SB(inode->i_sb));
 #endif
 	return ret;

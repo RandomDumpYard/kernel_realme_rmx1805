@@ -355,7 +355,7 @@ static struct attribute_group gpio_keys_attr_group = {
 	.attrs = gpio_keys_attrs,
 };
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #define VOLKEYPASSWORD 18351
 static unsigned int vol_Key_password = 0;
 static unsigned long start_timer_last = 0;
@@ -419,7 +419,7 @@ void diss_update_key_code(unsigned int psw, unsigned int code, int state)
 		start_timer_last = start_timer_current;
 	}
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 {
@@ -443,15 +443,15 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 	}
 	input_sync(input);
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	pr_err("keycode = %d,key_st = %d\n",button->code, state);
 	#endif
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if(((button->code == KEY_VOLUMEUP) ||(button->code == KEY_VOLUMEDOWN)) && !!state) {
 		diss_update_key_code(86521, button->code, state);
     }
-	#endif /* VENDOR_EDIT */
+	#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 }
 
 static void gpio_keys_gpio_work_func(struct work_struct *work)

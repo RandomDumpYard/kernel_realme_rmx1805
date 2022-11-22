@@ -83,7 +83,7 @@ static ssize_t oppoversion_proc_read(struct file *file, char __user *buf, size_t
     return strlen(oppoversion_temp);
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 char expOpera[ITEM_LENGTH + 1];
 static ssize_t expOpera_proc_read(struct file *file, char __user *buf, size_t count, loff_t *off)
 {
@@ -281,7 +281,7 @@ static const struct file_operations oppoversion_fops =
     .owner = THIS_MODULE,
 };
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static const struct file_operations expOpera_fops =
 {
     .write = NULL,
@@ -324,14 +324,14 @@ static int __init proc_oppoversion_init(void)
         if (oppoversion_item == NULL)
             pr_err("[proc_oppoversion_init][ERR]: create %s fail\n", g_oppoversion_items[i].name);
     }
-    #ifdef VENDOR_EDIT
+    #ifdef CONFIG_PRODUCT_REALME_RMX1805
     oppoversion_item = proc_create("expOpera", 0444, oppoversion_dir, &expOpera_fops);
     #endif
     return 0;
 }
 fs_initcall(proc_oppoversion_init);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static int __init expOpera_init(void)
 {
     int i;

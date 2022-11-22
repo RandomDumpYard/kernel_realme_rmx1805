@@ -83,12 +83,12 @@ static struct kmem_cache *skbuff_fclone_cache __read_mostly;
 int sysctl_max_skb_frags __read_mostly = MAX_SKB_FRAGS;
 EXPORT_SYMBOL(sysctl_max_skb_frags);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 static struct kmem_cache *skbuff_cb_store_cache __read_mostly;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 /* Control buffer save/restore for IMQ devices */
 struct skb_cb_table {
@@ -165,7 +165,7 @@ static void skb_copy_stored_cb(struct sk_buff *new, const struct sk_buff *__old)
 
 	spin_unlock(&skb_cb_store_lock);
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 /**
  *	skb_panic - private function for out-of-line support
@@ -744,7 +744,7 @@ static void skb_release_head_state(struct sk_buff *skb)
 		WARN_ON(in_irq());
 		skb->destructor(skb);
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 	/*
 	 * This should not happen. When it does, avoid memleak by restoring
@@ -766,7 +766,7 @@ static void skb_release_head_state(struct sk_buff *skb)
 	 */
 	if (skb->nf_queue_entry && net_ratelimit())
 		pr_warn("%s\n", "IMQ: kfree_skb: skb->nf_queue_entry != NULL");
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 #if IS_ENABLED(CONFIG_NF_CONNTRACK)
 	nf_conntrack_put(skb->nfct);
 #endif
@@ -956,11 +956,11 @@ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
 	new->sp			= secpath_get(old->sp);
 #endif
 	__nf_copy(new, old, false);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 	new->cb_next = NULL;
 	/*skb_copy_stored_cb(new, old);*/
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/* Note : this field could be in headers_start/headers_end section
 	 * It is not yet because we do not want to have a 16 bit hole
@@ -3593,14 +3593,14 @@ void __init skb_init(void)
 						0,
 						SLAB_HWCACHE_ALIGN|SLAB_PANIC,
 						NULL);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 	skbuff_cb_store_cache = kmem_cache_create("skbuff_cb_store_cache",
 						  sizeof(struct skb_cb_table),
 						  0,
 						  SLAB_HWCACHE_ALIGN|SLAB_PANIC,
 						  NULL);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 }
 
 static int

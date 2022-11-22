@@ -39,15 +39,15 @@ static DEFINE_IDR(zram_index_idr);
 static DEFINE_MUTEX(zram_index_mutex);
 
 static int zram_major;
-#ifdef VENDOR_EDIT //YiXue.Ge@PSW.kernel.drv 20170703 modify for enable lz4 default
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 //YiXue.Ge@PSW.kernel.drv 20170703 modify for enable lz4 default
 #ifdef CONFIG_CRYPTO_LZ4
 static const char *default_compressor = "lz4";
 #else /*CONFIG_ZRAM_LZ4_COMPRESS*/
 static const char *default_compressor = "lzo";
 #endif /*CONFIG_ZRAM_LZ4_COMPRESS*/
-#else /*VENDOR_EDIT*/
+#else /*CONFIG_PRODUCT_REALME_RMX1805*/
 static const char *default_compressor = "lzo";
-#endif/*VENDOR_EDIT*/
+#endif/*CONFIG_PRODUCT_REALME_RMX1805*/
 
 /*
  * We don't need to see memory allocation errors more than once every 1

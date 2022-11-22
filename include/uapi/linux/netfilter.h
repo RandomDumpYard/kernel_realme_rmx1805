@@ -15,13 +15,13 @@
 #define NF_REPEAT 4
 #define NF_STOP 5
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Add for limit speed function
 #define NF_IMQ_QUEUE 6
 #define NF_MAX_VERDICT NF_IMQ_QUEUE
-#else /* VENDOR_EDIT */
+#else /* CONFIG_PRODUCT_REALME_RMX1805 */
 #define NF_MAX_VERDICT NF_STOP
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 
 /* we overload the higher bits for encoding auxiliary data such as the queue

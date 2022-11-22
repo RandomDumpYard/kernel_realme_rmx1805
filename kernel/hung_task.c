@@ -19,7 +19,7 @@
 #include <trace/events/sched.h>
 #include <linux/sched/sysctl.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #define HUNG_TASK_OPPO_KILL_LEN	128
 char __read_mostly sysctl_hung_task_oppo_kill[HUNG_TASK_OPPO_KILL_LEN];
 char last_stopper_comm[64];
@@ -91,7 +91,7 @@ static struct notifier_block panic_block = {
 	.notifier_call = hung_task_panic,
 };
 
-#if defined(VENDOR_EDIT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805)
 static bool is_zygote_process(struct task_struct *t)
 {
 	const struct cred *tcred = __task_cred(t);
@@ -103,7 +103,7 @@ static bool is_zygote_process(struct task_struct *t)
 }
 #endif
 
-#if defined(VENDOR_EDIT)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805)
 static bool is_fsck_process(struct task_struct *t)
 {
 	if (!strcmp(t->comm, "fsck.fat") || !strcmp(t->comm, "fsck_msdos") || !strcmp(t->comm, "criticallog_syn") || !strncmp(t->comm, "kworker/u16", 11))
@@ -114,7 +114,7 @@ static bool is_fsck_process(struct task_struct *t)
 }
 #endif
 
-#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 static void check_hung_task(struct task_struct *t, unsigned long timeout, unsigned int *iowait_count)
 #else
 static void check_hung_task(struct task_struct *t, unsigned long timeout)
@@ -122,13 +122,13 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
 {
 	unsigned long switch_count = t->nvcsw + t->nivcsw;
 
-	#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+	#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 	static unsigned long long last_death_time = 0;
 	unsigned long long cur_death_time = 0;
 	static int death_count = 0;
-	#endif /* VENDOR_EDIT */
+	#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	#define DISP_TASK_COMM_LEN_MASK 10 //SDM845 change the new display thread with multi output, use len for masking
 	if(!strncmp(t->comm,"mdss_dsi_event", TASK_COMM_LEN)||
 		!strncmp(t->comm,"msm-core:sampli", TASK_COMM_LEN)||
@@ -146,7 +146,7 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
 	 * Also, skip vfork and any other user process that freezer should skip.
 	 */
 	if (unlikely(t->flags & (PF_FROZEN | PF_FREEZER_SKIP)))
-	#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+	#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 	{
 		if (is_zygote_process(t) || is_fsck_process(t) || !strncmp(t->comm,"system_server", TASK_COMM_LEN)
 			|| !strncmp(t->comm,"surfaceflinger", TASK_COMM_LEN)) {
@@ -175,7 +175,7 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
 
 	trace_sched_process_hang(t);
 
-	#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+	#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 	//if this task blocked at iowait. so maybe we should reboot system first
 	if(t->in_iowait && !is_fsck_process(t)) {
 		printk(KERN_ERR "DeathHealer io wait too long time\n");
@@ -249,7 +249,7 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
 	touch_nmi_watchdog();
 
 	if (sysctl_hung_task_panic) {
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (is_zygote_process(t) || !strncmp(t->comm,"system_server", TASK_COMM_LEN)
 			|| !strncmp(t->comm,"surfaceflinger", TASK_COMM_LEN)) {
 			if (!is_fsck_process(t)) {
@@ -296,7 +296,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
 	int max_count = sysctl_hung_task_check_count;
 	int batch_count = HUNG_TASK_BATCHING;
 	struct task_struct *g, *t;
-	#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+	#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 	unsigned int iowait_count = 0;
 	#endif
 
@@ -317,7 +317,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
 				goto unlock;
 		}
 		/* use "==" to skip the TASK_KILLABLE tasks waiting on NFS */
-		#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+		#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 		if (t->state == TASK_UNINTERRUPTIBLE || t->state == TASK_STOPPED || t->state == TASK_TRACED)
 			check_hung_task(t, timeout,&iowait_count);
 		#else
@@ -329,7 +329,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
 		#endif
 	}
  unlock:
-	#if defined(VENDOR_EDIT) && defined(CONFIG_DEATH_HEALER)
+	#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_DEATH_HEALER)
 	if(iowait_count >= MAX_IO_WAIT_HUNG){
 		if(!is_fsck_process(t)) {
 			panic("hung_task:%s=[%u]IO blocked too long time",t->comm, iowait_count);

@@ -157,7 +157,7 @@ int main(void)
 #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
   DEFINE(TRAMP_VALIAS,		TRAMP_VALIAS);
 #endif
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef CONFIG_OPPO_ROOT_CHECK
   DEFINE(PROOT_TSK_CRED,	offsetof(struct task_struct, cred));
   DEFINE(PROOT_CRED_UID,	offsetof(struct cred, uid));
@@ -170,6 +170,6 @@ int main(void)
   DEFINE(PROOT_THREAD_ADDR_LIMIT,	offsetof(struct thread_info, addr_limit));
 #endif
 #endif /* CONFIG_OPPO_ROOT_CHECK */
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
   return 0;
 }

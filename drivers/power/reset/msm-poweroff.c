@@ -76,13 +76,13 @@ static int download_mode = 1;
 #endif
 #endif
 
-#ifdef VENDOR_EDIT //Tong.han@BSP.group.TP, Modify for selct dump config for diffrent sw version,2015/06/28
+#ifdef CONFIG_PRODUCT_REALME_RMX1805 //Tong.han@BSP.group.TP, Modify for selct dump config for diffrent sw version,2015/06/28
 #if defined(CONFIG_OPPO_DAILY_BUILD)
 	static int download_mode = 1;
 #else
 	static int download_mode = 0;
 #endif
-#endif/*VENDOR_EDIT*/
+#endif/*CONFIG_PRODUCT_REALME_RMX1805*/
 static struct kobject dload_kobj;
 static void scm_disable_sdi(void);
 
@@ -157,7 +157,7 @@ static int scm_set_dload_mode(int arg1, int arg2)
 				&desc);
 }
 
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 static void set_dload_mode(int on)
 #else
 void set_dload_mode(int on)

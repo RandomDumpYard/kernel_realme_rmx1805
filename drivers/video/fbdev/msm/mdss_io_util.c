@@ -16,7 +16,7 @@
 #include <linux/delay.h>
 #include <linux/mdss_io_util.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <linux/regulator/of_regulator.h>
 #include <linux/regulator/consumer.h>
 #include <linux/regulator/driver.h>
@@ -31,7 +31,7 @@ extern int g_shutdown_pending;
 extern int g_gesture;
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern int himax_tp;
 #endif
 
@@ -411,7 +411,7 @@ int msm_mdss_enable_vreg_truly(struct mdss_vreg *in_vreg, int num_vreg, int enab
 			if (in_vreg[i].post_on_sleep && need_sleep)
 				usleep_range((in_vreg[i].post_on_sleep * 1000),
 					(in_vreg[i].post_on_sleep * 1000) + 10);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
                 if(!strcmp("ibb",in_vreg[i].vreg_name)){
                     pr_info("%s-%d: vreg_name=%s,current_usecount=%d\n",__func__,__LINE__,
                         in_vreg[i].vreg_name,in_vreg[i].vreg->rdev->use_count);
@@ -436,13 +436,13 @@ int msm_mdss_enable_vreg_truly(struct mdss_vreg *in_vreg, int num_vreg, int enab
 				in_vreg[i].load[DSS_REG_MODE_DISABLE]);
 			if (regulator_is_enabled(in_vreg[i].vreg))
 				regulator_disable(in_vreg[i].vreg);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
                 if(!strcmp("ibb",in_vreg[i].vreg_name)){
                     pr_info("%s-%d: vreg_name=%s,current_usecount=%d\n",__func__,__LINE__,
                         in_vreg[i].vreg_name,in_vreg[i].vreg->rdev->use_count);
                 }
 #endif
-                #ifdef VENDOR_EDIT
+                #ifdef CONFIG_PRODUCT_REALME_RMX1805
                 if ((himax_tp == 1) && (strcmp(in_vreg[i].vreg_name, "ibb") == 0)) {
 
                     while ((in_vreg[i].vreg->rdev->use_count > 0) && (ibb_disable_count > 0)) {

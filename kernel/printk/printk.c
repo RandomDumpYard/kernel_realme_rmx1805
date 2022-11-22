@@ -56,7 +56,7 @@
 #include "braille.h"
 #include "internal.h"
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <soc/oppo/boot_mode.h>
 
 #ifdef CONFIG_OPPO_DAILY_BUILD
@@ -68,7 +68,7 @@ bool oem_get_uartlog_status(void)
 {
 	return !printk_disable_uart;
 }
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 
 #ifdef CONFIG_EARLY_PRINTK_DIRECT
@@ -1198,11 +1198,11 @@ static inline void boot_delay_msec(int level)
 }
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #if !(defined(CONFIG_OPPO_DAILY_BUILD) || defined(CONFIG_OPPO_SPECIAL_BUILD))
 module_param_named(disable_uart, printk_disable_uart, bool, S_IRUGO | S_IWUSR);
 #endif
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 static bool printk_time = IS_ENABLED(CONFIG_PRINTK_TIME);
 module_param_named(time, printk_time, bool, S_IRUGO | S_IWUSR);
@@ -1622,7 +1622,7 @@ static void call_console_drivers(int level,
 		return;
 
 	for_each_console(con) {
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (get_boot_mode() == MSM_BOOT_MODE__FACTORY) {
 			printk_disable_uart = true;
 		}

@@ -278,7 +278,7 @@ static int msm_rpm_master_copy_stats(
 	master_cnt++;
 	return RPM_MASTERS_BUF_LEN - count;
 }
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Yunqing.Zeng@BSP.Power.Basic 2017/11/13 add for get rpm_stats
 #define MSM_ARCH_TIMER_FREQ 19200000
 static inline u64 get_time_in_msec(u64 counter)
@@ -287,8 +287,8 @@ static inline u64 get_time_in_msec(u64 counter)
 	counter *= MSEC_PER_SEC;
 	return counter;
 }
-#endif /* VENDOR_EDIT */
-#ifdef VENDOR_EDIT
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.Power.Basic 2017/09/05 add for get rpm_stats
 static int oppo_rpm_master_copy_stats(
 		struct msm_rpm_master_stats_private_data *prvdata)
@@ -341,7 +341,7 @@ static int oppo_rpm_master_copy_stats(
 	master_cnt++;
 	return RPM_MASTERS_BUF_LEN - count;
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static ssize_t msm_rpm_master_stats_file_read(struct file *file,
 				char __user *bufu, size_t count, loff_t *ppos)
@@ -379,7 +379,7 @@ exit:
 	mutex_unlock(&msm_rpm_master_stats_mutex);
 	return ret;
 }
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.Power.Basic 2017/09/05 add for get rpm_stats
 static ssize_t oppo_rpm_master_stats_file_read(struct file *file,
 				char __user *bufu, size_t count, loff_t *ppos)
@@ -417,7 +417,7 @@ exit:
 	mutex_unlock(&msm_rpm_master_stats_mutex);
 	return ret;
 }
-#endif	/* VENDOR_EDIT */				
+#endif	/* CONFIG_PRODUCT_REALME_RMX1805 */				
 
 static int msm_rpm_master_stats_file_open(struct inode *inode,
 		struct file *file)
@@ -468,7 +468,7 @@ static const struct file_operations msm_rpm_master_stats_fops = {
 	.release  = msm_rpm_master_stats_file_close,
 	.llseek   = no_llseek,
 };
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.Power.Basic 2017/09/05 add for get rpm_stats
 static const struct file_operations oppo_rpm_master_stats_fops = {
 	.owner	  = THIS_MODULE,
@@ -477,7 +477,7 @@ static const struct file_operations oppo_rpm_master_stats_fops = {
 	.release  = msm_rpm_master_stats_file_close,
 	.llseek   = no_llseek,
 };
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static struct msm_rpm_master_stats_platform_data
 			*msm_rpm_master_populate_pdata(struct device *dev)
@@ -575,7 +575,7 @@ static  int msm_rpm_master_stats_probe(struct platform_device *pdev)
 								__func__);
 		return -ENOMEM;
 	}
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Fuchun.Liao@BSP.Power.Basic 2017/09/05 add for get rpm_stats
 	dent = debugfs_create_file("oppo_rpm_master_stats", 0444, NULL,
 					pdata, &oppo_rpm_master_stats_fops);
@@ -585,7 +585,7 @@ static  int msm_rpm_master_stats_probe(struct platform_device *pdev)
 								__func__);
 		return -ENOMEM;
 	}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	platform_set_drvdata(pdev, dent);
 	return 0;
 }

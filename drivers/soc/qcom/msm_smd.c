@@ -508,13 +508,13 @@ static int smsm_pm_notifier(struct notifier_block *nb,
 {
 	switch (event) {
 	case PM_SUSPEND_PREPARE:
-		#ifndef VENDOR_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_RMX1805
 		smsm_change_state(SMSM_APPS_STATE, SMSM_PROC_AWAKE, 0);
 		#endif
                 break;
 
 	case PM_POST_SUSPEND:
-		#ifndef VENDOR_EDIT
+		#ifndef CONFIG_PRODUCT_REALME_RMX1805
 		smsm_change_state(SMSM_APPS_STATE, 0, SMSM_PROC_AWAKE);
 		#endif
                 break;

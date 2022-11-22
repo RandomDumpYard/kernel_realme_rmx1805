@@ -4385,7 +4385,7 @@ static int dwc3_msm_gadget_vbus_draw(struct dwc3_msm *mdwc, unsigned int mA)
 	if (mdwc->max_power == mA || psy_type != POWER_SUPPLY_TYPE_USB)
 		return 0;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
     dev_info(mdwc->dev, "Avail curr from USB = %u, max_power = %u\n", mA, mdwc->max_power);
     if ((mdwc->max_power > 2) && (mA == 0 || mA == 2))
         return 0;

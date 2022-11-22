@@ -270,7 +270,7 @@ config RIONET_RX_SIZE
 	depends on RIONET
 	default "128"
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #Add for limit speed function
 config IMQ
 	tristate "IMQ (intermediate queueing device) support"
@@ -302,7 +302,7 @@ config IMQ_NUM_DEVS
 	  More information can be found at: https://github.com/imq/linuximq
 
 	  If not sure leave the default settings alone.
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 config TUN
 	tristate "Universal TUN/TAP device driver support"

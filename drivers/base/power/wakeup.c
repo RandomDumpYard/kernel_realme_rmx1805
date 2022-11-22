@@ -17,18 +17,18 @@
 #include <linux/pm_wakeirq.h>
 #include <linux/types.h>
 #include <trace/events/power.h>
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <linux/rtc.h>
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 #include <linux/irq.h>
 #include <linux/irqdesc.h>
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 
 //Yunqing.Zeng@BSP.Power.Basic 2017/11/09 add for wakelock profiler
 #include <linux/kobject.h>
 #include <linux/sysfs.h>
 #include <linux/fb.h>
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 #include "power.h"
 
 /*
@@ -42,7 +42,7 @@ unsigned int pm_wakeup_irq __read_mostly;
 
 /* If set and the system is suspending, terminate the suspend. */
 static bool pm_abort_suspend __read_mostly;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //add for modem wake up source
 #define MODEM_WAKEUP_SRC_NUM 3
 #define MODEM_DIAG_WS_INDEX 0
@@ -54,10 +54,10 @@ char modem_wakeup_src_string[MODEM_WAKEUP_SRC_NUM][10] =
 		{"DIAG_WS",
 		"IPA_WS",
 		"QMI_WS"};
-#endif /* VENDOR_EDIT */
-#ifdef VENDOR_EDIT
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern u16 modem_wakeup_source;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 /*
  * Combined counters of registered wakeup events and wakeup events in progress.
@@ -65,7 +65,7 @@ extern u16 modem_wakeup_source;
  * atomic variable to hold them both.
  */
 static atomic_t combined_event_count = ATOMIC_INIT(0);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Yunqing.Zeng@BSP.Power.Basic 2017/11/28 add for kernel wakelock time statistics
 static atomic_t ws_all_release_flag = ATOMIC_INIT(1);
 static ktime_t ws_start_node;
@@ -73,7 +73,7 @@ static ktime_t ws_end_node;
 static ktime_t ws_hold_all_time;
 static ktime_t reset_time;
 static spinlock_t statistics_lock;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #define IN_PROGRESS_BITS	(sizeof(int) * 4)
 #define MAX_IN_PROGRESS		((1 << IN_PROGRESS_BITS) - 1)
@@ -564,7 +564,7 @@ static void wakeup_source_activate(struct wakeup_source *ws)
 			"unregistered wakeup source\n"))
 		return;
 
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//Yunqing.Zeng@BSP.Power.Basic 2017/11/28 add for kernel wakelock time statistics
 	if(atomic_read(&ws_all_release_flag)) {
 		atomic_set(&ws_all_release_flag, 0);
@@ -572,7 +572,7 @@ static void wakeup_source_activate(struct wakeup_source *ws)
 		ws_start_node = ktime_get();
 		spin_unlock(&statistics_lock);
 	}
-	#endif /* VENDOR_EDIT */
+	#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	/*
 	 * active wakeup source should bring the system
 	 * out of PM_SUSPEND_FREEZE state
@@ -717,7 +717,7 @@ static void wakeup_source_deactivate(struct wakeup_source *ws)
 
 	split_counters(&cnt, &inpr);
 	if (!inpr && waitqueue_active(&wakeup_count_wait_queue)) {
-		#ifdef VENDOR_EDIT
+		#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		//Yunqing.Zeng@BSP.Power.Basic 2017/11/28 add for kernel wakelock time statistics
 		ktime_t ws_hold_delta = ktime_set(0, 0);
 		atomic_set(&ws_all_release_flag, 1);
@@ -726,7 +726,7 @@ static void wakeup_source_deactivate(struct wakeup_source *ws)
 		ws_hold_delta = ktime_sub(ws_end_node, ws_start_node);
 		ws_hold_all_time = ktime_add(ws_hold_all_time, ws_hold_delta);
 		spin_unlock(&statistics_lock);
-		#endif /* VENDOR_EDIT */
+		#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		wake_up(&wakeup_count_wait_queue);
 	}
 }
@@ -898,7 +898,7 @@ void pm_print_active_wakeup_sources(void)
 	struct wakeup_source *ws;
 	int srcuidx, active = 0;
 	struct wakeup_source *last_activity_ws = NULL;
-	#ifdef VENDOR_EDIT
+	#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	//add for modem wake up source
 	int i = 0;
 	#endif
@@ -908,7 +908,7 @@ void pm_print_active_wakeup_sources(void)
 		if (ws->active) {
 			pr_info("active wakeup source: %s\n", ws->name);
 			active = 1;
-			#ifdef VENDOR_EDIT
+			#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			//add for modem wake up source
 			for(i = 0; i < MODEM_WAKEUP_SRC_NUM - 1; i++)
 			{
@@ -929,7 +929,7 @@ void pm_print_active_wakeup_sources(void)
 		}
 	}
 
-	#ifndef VENDOR_EDIT
+	#ifndef CONFIG_PRODUCT_REALME_RMX1805
 	//modify for modem wake up source
 	/*
 	if (!active && last_activity_ws)
@@ -979,7 +979,7 @@ bool pm_wakeup_pending(void)
 	}
 	spin_unlock_irqrestore(&events_lock, flags);
 
-	#ifndef VENDOR_EDIT //yixue.ge@bsp.drv modify for maybe pm_abort_suspend happend here
+	#ifndef CONFIG_PRODUCT_REALME_RMX1805 //yixue.ge@bsp.drv modify for maybe pm_abort_suspend happend here
 	if (ret) {
 	#else
 	if (ret || pm_abort_suspend) {
@@ -1195,7 +1195,7 @@ static int wakeup_sources_stats_open(struct inode *inode, struct file *file)
 	return single_open(file, wakeup_sources_stats_show, NULL);
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 static ssize_t watchdog_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
 {
 	s32 value;
@@ -1239,7 +1239,7 @@ static ssize_t watchdog_write(struct file *file, const char __user *buf, size_t 
 
 	return count;
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static const struct file_operations wakeup_sources_stats_fops = {
 	.owner = THIS_MODULE,
@@ -1247,23 +1247,23 @@ static const struct file_operations wakeup_sources_stats_fops = {
 	.read = seq_read,
 	.llseek = seq_lseek,
 	.release = single_release,
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	.write          = watchdog_write,
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 };
 
 static int __init wakeup_sources_debugfs_init(void)
 {
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 	wakeup_sources_stats_dentry = debugfs_create_file("wakeup_sources",
 			S_IRUGO, NULL, NULL, &wakeup_sources_stats_fops);
-#else /* VENDOR_EDIT */
+#else /* CONFIG_PRODUCT_REALME_RMX1805 */
 	wakeup_sources_stats_dentry = debugfs_create_file("wakeup_sources",
 			S_IRUGO| S_IWUGO, NULL, NULL, &wakeup_sources_stats_fops);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	return 0;
 }
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Yunqing.Zeng@BSP.Power.Basic 2017/11/09 add for wakelock profiler
 ktime_t active_max_reset_time;
 static ssize_t active_max_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
@@ -1481,10 +1481,10 @@ static int __init wakelock_profiler_init(void)
 	}
 	return 0;
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 postcore_initcall(wakeup_sources_debugfs_init);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //Yunqing.Zeng@BSP.Power.Basic 2017/11/09 add for wakelock profiler
 postcore_initcall(wakelock_profiler_init);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */

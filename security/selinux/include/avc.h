@@ -25,7 +25,7 @@ extern int selinux_enforcing;
 #define selinux_enforcing 1
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #include <soc/oppo/boot_mode.h>
 
 static inline int is_selinux_enforcing(void)
@@ -40,7 +40,7 @@ static inline int is_selinux_enforcing(void)
 #endif /* OPPO_DISALLOW_KEY_INTERFACES */
     return selinux_enforcing;
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 /*
  * An entry in the AVC.

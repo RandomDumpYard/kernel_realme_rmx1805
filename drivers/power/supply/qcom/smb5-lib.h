@@ -660,7 +660,7 @@ int smblib_icl_override(struct smb_charger *chg, bool override);
 int smblib_init(struct smb_charger *chg);
 int smblib_deinit(struct smb_charger *chg);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /* Yichun.Chen  PSW.BSP.CHG  2018-06-28  avoid flash current ripple when flash work */
 int smblib_set_opt_switcher_freq(struct smb_charger *chg, int fsw_khz);
 #endif

@@ -12,10 +12,10 @@
 #include <linux/cputime.h>
 #include <linux/tick.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 // Add for get cpu load
 #include <linux/delay.h>
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 #ifndef arch_irq_stat_cpu
 #define arch_irq_stat_cpu(cpu) 0
@@ -200,7 +200,7 @@ static const struct file_operations proc_stat_operations = {
 	.release	= single_release,
 };
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 // Add for get cpu load
 struct cpu_load_stat {
         u64 t_user;
@@ -255,7 +255,7 @@ int healthinfo_get_cur_cpuload(bool para_switch)
 	return 100 * load / sum;
 }
 
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 static int __init proc_stat_init(void)
 {

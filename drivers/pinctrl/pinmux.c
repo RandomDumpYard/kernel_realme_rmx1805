@@ -514,7 +514,7 @@ void pinmux_disable_setting(struct pinctrl_setting const *setting)
 
 			gname = pctlops->get_group_name(pctldev,
 						setting->data.mux.group);
-            #ifndef VENDOR_EDIT
+            #ifndef CONFIG_PRODUCT_REALME_RMX1805
 			dev_warn(pctldev->dev,
 				 "not freeing pin %d (%s) as part of "
 				 "deactivating group %s - it is already "

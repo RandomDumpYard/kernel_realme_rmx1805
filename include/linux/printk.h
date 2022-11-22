@@ -10,7 +10,7 @@
 extern const char linux_banner[];
 extern const char linux_proc_banner[];
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 extern bool oem_get_uartlog_status(void);
 #endif
 

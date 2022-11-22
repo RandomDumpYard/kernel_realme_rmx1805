@@ -837,7 +837,7 @@ config NETFILTER_XT_TARGET_LOG
 
 	  To compile it as a module, choose M here.  If unsure, say N.
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #Add for limit speed function
 config NETFILTER_XT_TARGET_IMQ
         tristate '"IMQ" target support'
@@ -850,7 +850,7 @@ config NETFILTER_XT_TARGET_IMQ
           to which imq device packets should get enqueued/dequeued.
 
           To compile it as a module, choose M here.  If unsure, say N.
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 config NETFILTER_XT_TARGET_MARK
 	tristate '"MARK" target support'

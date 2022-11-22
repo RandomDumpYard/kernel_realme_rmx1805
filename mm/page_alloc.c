@@ -70,9 +70,9 @@
 #include <asm/tlbflush.h>
 #include <asm/div64.h>
 #include "internal.h"
-#if defined(VENDOR_EDIT) && defined(CONFIG_OPPO_MEM_MONITOR)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_OPPO_MEM_MONITOR)
 #include <linux/memory_monitor.h>
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 /* prevent >1 _updater_ of zone percpu pageset ->high and ->batch fields */
 static DEFINE_MUTEX(pcp_batch_high_lock);
@@ -240,9 +240,9 @@ char * const migratetype_names[MIGRATE_TYPES] = {
 #ifdef CONFIG_CMA
 	"CMA",
 #endif
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	"OPPO2",
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	"HighAtomic",
 #ifdef CONFIG_MEMORY_ISOLATION
 	"Isolate",
@@ -2074,11 +2074,11 @@ static void reserve_highatomic_pageblock(struct page *page, struct zone *zone,
 
 	/* Yoink! */
 	mt = get_pageblock_migratetype(page);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (mt != MIGRATE_HIGHATOMIC && mt != MIGRATE_OPPO2 &&
 #else
 	if (mt != MIGRATE_HIGHATOMIC &&
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 			!is_migrate_isolate(mt) && !is_migrate_cma(mt)) {
 		zone->nr_reserved_highatomic += pageblock_nr_pages;
 		set_pageblock_migratetype(page, MIGRATE_HIGHATOMIC);
@@ -2195,12 +2195,12 @@ __rmqueue_fallback(struct zone *zone, unsigned int order, int start_migratetype)
 		page = list_first_entry(&area->free_list[fallback_mt],
 						struct page, lru);
 		if (can_steal &&
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 			get_pageblock_migratetype(page) != MIGRATE_HIGHATOMIC &&
 			get_pageblock_migratetype(page) != MIGRATE_OPPO2)
 #else
 			get_pageblock_migratetype(page) != MIGRATE_HIGHATOMIC)
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 			steal_suitable_fallback(zone, page, start_migratetype);
 
 		/* Remove the page from the freelists */
@@ -2311,11 +2311,11 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
 		if (is_migrate_cma(get_pcppage_migratetype(page)))
 			__mod_zone_page_state(zone, NR_FREE_CMA_PAGES,
 					      -(1 << order));
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (get_pcppage_migratetype(page) == MIGRATE_OPPO2)
 			__mod_zone_page_state(zone, NR_FREE_OPPO2_PAGES,
 					      -(1 << order));
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 	}
 
 	/*
@@ -2660,12 +2660,12 @@ int __isolate_free_page(struct page *page, unsigned int order)
 		for (; page < endpage; page += pageblock_nr_pages) {
 			int mt = get_pageblock_migratetype(page);
 			if (!is_migrate_isolate(mt) && !is_migrate_cma(mt)
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 				&& mt != MIGRATE_HIGHATOMIC
 				&& mt != MIGRATE_OPPO2)
 #else
 				&& mt != MIGRATE_HIGHATOMIC)
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 				set_pageblock_migratetype(page,
 							  MIGRATE_MOVABLE);
 		}
@@ -2766,20 +2766,20 @@ struct page *buffered_rmqueue(struct zone *preferred_zone,
 			if (!page && migratetype == MIGRATE_MOVABLE &&
 					gfp_flags & __GFP_CMA)
 				page = __rmqueue_cma(zone, order);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (!page && ((order == 2)||
 		   ((order == 3) && !(gfp_flags & ALLOC_UNMOVABLE)))) {
 			page = __rmqueue_smallest(zone, order, MIGRATE_OPPO2);
 		}
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 		if (!page)
 			page = __rmqueue(zone, order, migratetype);
 		} while (page && check_new_pages(page, order));
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (!page && order == 2)
 			page = __rmqueue_smallest(zone, order, MIGRATE_HIGHATOMIC);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 		spin_unlock(&zone->lock);
 		if (!page)
@@ -2906,11 +2906,11 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
 	if (likely(!alloc_harder))
 		free_pages -= z->nr_reserved_highatomic;
 	else
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		min -= min / 4 + min / 8;
 #else
 		min -= min / 4;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #ifdef CONFIG_CMA
 	/* If allocation can't use CMA areas don't use free CMA pages */
@@ -2918,10 +2918,10 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
 		free_pages -= zone_page_state(z, NR_FREE_CMA_PAGES);
 #endif
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (order != 2)
 		free_pages -= zone_page_state(z, NR_FREE_OPPO2_PAGES);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	/*
 	 * Check watermarks for an order-0 allocation request. If these
@@ -2943,10 +2943,10 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
 		if (!area->nr_free)
 			continue;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (order == 2 && !list_empty(&area->free_list[MIGRATE_OPPO2]))
 			return true;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 		for (mt = 0; mt < MIGRATE_PCPTYPES; mt++) {
 #ifdef CONFIG_CMA
@@ -2961,10 +2961,10 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
 				return true;
 		}
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		if (order == 2 && !list_empty(&area->free_list[MIGRATE_HIGHATOMIC]))
 			return true;
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 #ifdef CONFIG_CMA
 		if ((alloc_flags & ALLOC_CMA) &&
@@ -3048,10 +3048,10 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
 	struct zoneref *z = ac->preferred_zoneref;
 	struct zone *zone;
 	struct pglist_data *last_pgdat_dirty_limit = NULL;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	if (ac->migratetype == MIGRATE_UNMOVABLE)
 		alloc_flags |= ALLOC_UNMOVABLE;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	/*
 	 * Scan zonelist, looking for a zone with enough free.
@@ -3727,9 +3727,9 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
 	unsigned long alloc_start = jiffies;
 	unsigned int stall_timeout = 10 * HZ;
 	unsigned int cpuset_mems_cookie;
-#if defined(VENDOR_EDIT) && defined(CONFIG_OPPO_MEM_MONITOR)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_OPPO_MEM_MONITOR)
 	unsigned long oppo_alloc_start = jiffies;
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 
 	/*
 	 * In the slowpath, we sanity check order to avoid ever trying to
@@ -3958,9 +3958,9 @@ nopage:
 	warn_alloc(gfp_mask,
 			"page allocation failure: order:%u", order);
 got_pg:
-#if defined(VENDOR_EDIT) && defined(CONFIG_OPPO_MEM_MONITOR)
+#if defined(CONFIG_PRODUCT_REALME_RMX1805) && defined(CONFIG_OPPO_MEM_MONITOR)
 	memory_alloc_monitor(order, jiffies_to_msecs(jiffies - oppo_alloc_start));
-#endif /*VENDOR_EDIT*/
+#endif /*CONFIG_PRODUCT_REALME_RMX1805*/
 	return page;
 }
 
@@ -4472,9 +4472,9 @@ static void show_migration_types(unsigned char type)
 		[MIGRATE_MOVABLE]	= 'M',
 		[MIGRATE_RECLAIMABLE]	= 'E',
 		[MIGRATE_HIGHATOMIC]	= 'H',
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		[MIGRATE_OPPO2]		= 'P',
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 #ifdef CONFIG_CMA
 		[MIGRATE_CMA]		= 'C',
 #endif
@@ -6869,7 +6869,7 @@ static void setup_per_zone_lowmem_reserve(void)
 	calculate_totalreserve_pages();
 }
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 /*
  * Check if a pageblock contains reserved pages
  */
@@ -7025,7 +7025,7 @@ static void setup_zone_migrate_oppo(struct zone *zone, int reserve_migratetype)
 		}
 	}
 }
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 static void __setup_per_zone_wmarks(void)
 {
@@ -7087,9 +7087,9 @@ static void __setup_per_zone_wmarks(void)
 		zone->watermark[WMARK_HIGH] = min_wmark_pages(zone) +
 					low + min * 2;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 		setup_zone_migrate_oppo(zone, MIGRATE_OPPO2);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 		spin_unlock_irqrestore(&zone->lock, flags);
 	}
 

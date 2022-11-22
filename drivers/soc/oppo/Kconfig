@@ -1,4 +1,4 @@
-# ifdef VENDOR_EDIT 
+# ifdef CONFIG_PRODUCT_REALME_RMX1805 
 # yixue.ge add for config oppo software common soft
 config OPPO_ARCH_FILE
 	bool "for build directory oppo"
@@ -21,10 +21,10 @@ config OPPO_DEVICE_IFNO
 		.
 source "drivers/soc/oppo/oppo_project/Kconfig"
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 source "drivers/soc/oppo/oppo_mdmrst/Kconfig"
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 source "drivers/soc/oppo/oppo_healthinfo/Kconfig"
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */

@@ -293,7 +293,7 @@ static void smpboot_park_thread(struct smp_hotplug_thread *ht, unsigned int cpu)
 int smpboot_park_threads(unsigned int cpu)
 {
 	struct smp_hotplug_thread *cur;
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 	struct task_struct *tsk;
 	int cnt;
 #endif
@@ -302,7 +302,7 @@ int smpboot_park_threads(unsigned int cpu)
 	list_for_each_entry_reverse(cur, &hotplug_threads, list)
 		smpboot_park_thread(cur, cpu);
 	mutex_unlock(&smpboot_threads_lock);
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 next:
 	cnt = 0;
 	list_for_each_entry(cur, &hotplug_threads, list) {

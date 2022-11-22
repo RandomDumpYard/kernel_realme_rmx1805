@@ -44,11 +44,11 @@ extern int proc_dostring(struct ctl_table *, int,
 extern int proc_dointvec(struct ctl_table *, int,
 			 void __user *, size_t *, loff_t *);
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 //add for: [monitor tcp info]
 extern int proc_do_print_tcpinfo(struct ctl_table *, int,
 			 void __user *, size_t *, loff_t *);
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 extern int proc_douintvec(struct ctl_table *, int,
 			 void __user *, size_t *, loff_t *);

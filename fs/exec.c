@@ -67,7 +67,7 @@
 
 #include <trace/events/sched.h>
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef OPPO_DISALLOW_KEY_INTERFACES
 #if defined(CONFIG_OPPO_EXECVE_BLOCK) || defined(CONFIG_OPPO_EXECVE_REPORT)
 #ifdef CONFIG_OPPO_KEVENT_UPLOAD
@@ -76,7 +76,7 @@
 #endif /* CONFIG_OPPO_KEVENT_UPLOAD */
 #endif /* CONFIG_OPPO_EXECVE_BLOCK or CONFIG_OPPO_EXECVE_REPORT*/
 #endif /* OPPO_DISALLOW_KEY_INTERFACES */
-#endif /* VENDOR_EDIT*/
+#endif /* CONFIG_PRODUCT_REALME_RMX1805*/
 
 int suid_dumpable = 0;
 
@@ -1685,7 +1685,7 @@ static int exec_binprm(struct linux_binprm *bprm)
 
 #ifdef OPPO_DISALLOW_KEY_INTERFACES
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #if defined(CONFIG_OPPO_EXECVE_BLOCK) || defined(CONFIG_OPPO_EXECVE_REPORT)
 static int boot_state = -1;
 int get_oem_boot_state(void)
@@ -1806,7 +1806,7 @@ out_ret:
 #endif /* CONFIG_OPPO_EXECVE_BLOCK or CONFIG_OPPO_EXECVE_REPORT*/
 
 #endif /* OPPO_DISALLOW_KEY_INTERFACES */
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 
 /*
@@ -1863,7 +1863,7 @@ static int do_execveat_common(int fd, struct filename *filename,
 	if (IS_ERR(file))
 		goto out_unmark;
 
-#ifdef VENDOR_EDIT
+#ifdef CONFIG_PRODUCT_REALME_RMX1805
 #ifdef OPPO_DISALLOW_KEY_INTERFACES
 #if defined(CONFIG_OPPO_EXECVE_BLOCK) || defined(CONFIG_OPPO_EXECVE_REPORT)
     //printk("kevent exec check, is_unlocked:%d\n", is_oem_unlocked());
@@ -1876,7 +1876,7 @@ static int do_execveat_common(int fd, struct filename *filename,
 	}
 #endif /* CONFIG_OPPO_EXECVE_BLOCK or CONFIG_OPPO_EXECVE_REPORT */
 #endif /* OPPO_DISALLOW_KEY_INTERFACES */
-#endif /* VENDOR_EDIT */
+#endif /* CONFIG_PRODUCT_REALME_RMX1805 */
 
 	sched_exec();
 

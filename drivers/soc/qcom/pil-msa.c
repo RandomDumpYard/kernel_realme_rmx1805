@@ -663,7 +663,7 @@ int pil_mss_reset_load_mba(struct pil_desc *pil)
 	const struct firmware *fw = NULL, *dp_fw = NULL;
 	char fw_name_legacy[10] = "mba.b00";
 	char fw_name[10] = "mba.mbn";
-	//#ifndef VENDOR_EDIT
+	//#ifndef CONFIG_PRODUCT_REALME_RMX1805
 	//Add for customized subsystem ramdump
 	//char *dp_name = "msadp";
 	char *dp_name = "msadp.mbn";
@@ -800,7 +800,7 @@ err_invalid_fw:
 int pil_mss_debug_reset(struct pil_desc *pil)
 {
 	struct q6v5_data *drv = container_of(pil, struct q6v5_data, desc);
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
     u32 encryption_status;
 #endif
 	int ret;
@@ -809,7 +809,7 @@ int pil_mss_debug_reset(struct pil_desc *pil)
 	if (!pil->minidump_ss)
 		return 0;
     
-#ifndef VENDOR_EDIT
+#ifndef CONFIG_PRODUCT_REALME_RMX1805
 	//Add for skip mini dump encryption
 	encryption_status = pil->minidump_ss->encryption_status;
 
