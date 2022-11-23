@@ -28,8 +28,8 @@
 	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend>;
 
 	qcom,platform-bklight-en-gpio = <&pm8953_gpios 4 0>;
-	lab-supply = <&lcdb_ldo_vreg>;
-	ibb-supply = <&lcdb_ncp_vreg>;
+	//lab-supply = <&lcdb_ldo_vreg>;
+	//ibb-supply = <&lcdb_ncp_vreg>;
 };
 
 &dsi_truly_1080_vid {
