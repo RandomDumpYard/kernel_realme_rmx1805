@@ -12,4 +12,4 @@ config FINGERPRINT_FPC_1020
          default y
          help
             FPC Fingerprint
-source "drivers/input/oppo_fp_drivers/fpc1020/Kconfig
+source "drivers/input/oppo_fp_drivers/fpc1020/Kconfig"

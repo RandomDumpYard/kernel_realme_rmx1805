@@ -14,8 +14,8 @@
 #include "apq8053-lite-dragon.dtsi"
 
 &mdss_dsi0 {
-	pinctrl-0 = <&mdss_dsi_active &mdss_te_active &mdss_dsi_gpio>;
-	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend &mdss_dsi_gpio>;
+	pinctrl-0 = <&mdss_dsi_active &mdss_te_active>;
+	pinctrl-1 = <&mdss_dsi_suspend &mdss_te_suspend>;
 };
 
 &pm8953_l4 {
