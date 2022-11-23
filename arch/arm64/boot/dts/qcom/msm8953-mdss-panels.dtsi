@@ -10,7 +10,6 @@
  * GNU General Public License for more details.
  */
 
-/*  remove not to use panel
 #include "dsi-panel-sim-video.dtsi"
 #include "dsi-panel-sim-dualmipi-video.dtsi"
 #include "dsi-panel-sim-cmd.dtsi"
@@ -204,7 +203,7 @@
 		25 20 08 0A 06 03 04 a0
 		25 1D 08 0A 06 03 04 a0];
 };
-*/
+
 #include "dsi-panel-sim-video.dtsi"
 #include "dsi-panel-ilt9881h-hlt-new-id-hdp-video.dtsi"
 #include "dsi-panel-nt36525-truly-hdp-video.dtsi"
