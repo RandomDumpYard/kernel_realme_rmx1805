@@ -32,7 +32,7 @@ extern int g_gesture;
 #endif
 
 #ifdef CONFIG_PRODUCT_REALME_RMX1805
-extern int himax_tp;
+int himax_tp;
 #endif
 
 void mdss_reg_w(struct mdss_io_data *io, u32 offset, u32 value, u32 debug)
